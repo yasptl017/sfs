@@ -22,9 +22,14 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
     Route::get('ranges', [RangeController::class, 'index'])->name('ranges.index');
     Route::post('ranges', [RangeController::class, 'store'])->name('ranges.store');
+    Route::get('finance/registration/parties', [PartyRegistrationController::class, 'index'])->name('finance.registration.parties.index');
     Route::get('finance/registration/party', [PartyRegistrationController::class, 'create'])->name('finance.registration.party');
     Route::post('finance/registration/party', [PartyRegistrationController::class, 'store'])->name('finance.registration.party.store');
     Route::get('finance/registration/party/copy/{serialNumber}', [PartyRegistrationController::class, 'copy'])->name('finance.registration.party.copy');
+    Route::get('finance/registration/party/{party}/edit', [PartyRegistrationController::class, 'edit'])->name('finance.registration.party.edit');
+    Route::put('finance/registration/party/{party}', [PartyRegistrationController::class, 'update'])->name('finance.registration.party.update');
+    Route::patch('finance/registration/party/{party}/status', [PartyRegistrationController::class, 'toggleStatus'])->name('finance.registration.party.status');
+    Route::delete('finance/registration/party/{party}', [PartyRegistrationController::class, 'destroy'])->name('finance.registration.party.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

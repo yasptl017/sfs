@@ -5,12 +5,25 @@ namespace App\Http\Controllers\Admin\Finance;
 use App\Http\Controllers\Controller;
 use App\Models\PartyRegistration;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class PartyRegistrationController extends Controller
 {
+    public function index(Request $request): View
+    {
+        abort_unless($request->user()->isRange(), 403);
+
+        return view('admin.finance.registration.parties.index', [
+            'parties' => PartyRegistration::query()
+                ->where('range_id', $request->user()->id)
+                ->latest('serial_number')
+                ->paginate(10),
+        ]);
+    }
+
     public function create(Request $request): View
     {
         abort_unless($request->user()->isRange(), 403);
@@ -18,6 +31,7 @@ class PartyRegistrationController extends Controller
         return view('admin.finance.registration.party', [
             'banks' => $this->banks(),
             'nextSerial' => $this->nextSerial($request),
+            'party' => null,
         ]);
     }
 
@@ -36,6 +50,49 @@ class PartyRegistrationController extends Controller
             'party' => $party->toFormArray(),
             'next_serial' => $this->nextSerial($request),
         ]);
+    }
+
+    public function edit(Request $request, PartyRegistration $party): View
+    {
+        $this->authorizeRangeParty($request, $party);
+
+        return view('admin.finance.registration.party', [
+            'banks' => $this->banks(),
+            'nextSerial' => $party->serial_number,
+            'party' => $party,
+        ]);
+    }
+
+    public function update(Request $request, PartyRegistration $party): JsonResponse
+    {
+        $this->authorizeRangeParty($request, $party);
+
+        $party->update($this->validated($request));
+
+        return response()->json([
+            'message' => 'Party details updated successfully.',
+            'redirect_url' => route('finance.registration.parties.index'),
+        ]);
+    }
+
+    public function toggleStatus(Request $request, PartyRegistration $party): RedirectResponse
+    {
+        $this->authorizeRangeParty($request, $party);
+
+        $party->update([
+            'party_status' => $party->party_status === 'Active' ? 'Deactive' : 'Active',
+        ]);
+
+        return back()->with('status', 'Party status updated successfully.');
+    }
+
+    public function destroy(Request $request, PartyRegistration $party): RedirectResponse
+    {
+        $this->authorizeRangeParty($request, $party);
+
+        $party->delete();
+
+        return back()->with('status', 'Party deleted successfully.');
     }
 
     public function copy(Request $request, int $serialNumber): JsonResponse
@@ -61,6 +118,11 @@ class PartyRegistrationController extends Controller
         return ((int) PartyRegistration::query()
             ->where('range_id', $request->user()->id)
             ->max('serial_number')) + 1;
+    }
+
+    private function authorizeRangeParty(Request $request, PartyRegistration $party): void
+    {
+        abort_unless($request->user()->isRange() && $party->range_id === $request->user()->id, 403);
     }
 
     /**

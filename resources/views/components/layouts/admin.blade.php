@@ -62,6 +62,7 @@
                             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                         </summary>
                         <div class="nav-submenu">
+                            <a class="{{ request()->routeIs('finance.registration.parties.*') ? 'active' : '' }}" href="{{ route('finance.registration.parties.index') }}" title="Party Details">Party Details</a>
                             <a class="{{ request()->routeIs('finance.registration.party') ? 'active' : '' }}" href="{{ route('finance.registration.party') }}" title="Party Registration">Party Registration</a>
                             <a href="#" title="WL Bene. Registration">WL Bene. Registration</a>
                             <a href="#" title="SF Bene. Registration">SF Bene. Registration</a>
