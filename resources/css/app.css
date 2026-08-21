@@ -132,6 +132,11 @@
         color: rgb(4 120 87);
     }
 
+    .nav-submenu a.active {
+        background: rgb(236 253 245);
+        color: rgb(4 120 87);
+    }
+
     .icon-button {
         display: grid;
         height: 2.5rem;
@@ -165,7 +170,9 @@
         color: rgb(51 65 85);
     }
 
-    .form-input {
+    .form-input,
+    .form-select,
+    .form-textarea {
         width: 100%;
         border-radius: 0.5rem;
         border: 1px solid rgb(203 213 225);
@@ -176,9 +183,33 @@
         transition: border-color 150ms ease, box-shadow 150ms ease;
     }
 
-    .form-input:focus {
+    .form-select {
+        appearance: none;
+        background-image: linear-gradient(45deg, transparent 50%, rgb(71 85 105) 50%), linear-gradient(135deg, rgb(71 85 105) 50%, transparent 50%);
+        background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+        background-repeat: no-repeat;
+        background-size: 5px 5px, 5px 5px;
+        padding-right: 2.4rem;
+    }
+
+    .form-textarea {
+        min-height: 6rem;
+        resize: vertical;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
         border-color: rgb(5 150 105);
         box-shadow: 0 0 0 3px rgb(16 185 129 / 0.18);
+    }
+
+    .form-input:disabled,
+    .form-select:disabled,
+    .form-textarea:disabled {
+        cursor: not-allowed;
+        background: rgb(248 250 252);
+        color: rgb(100 116 139);
     }
 
     .form-error {
@@ -219,6 +250,82 @@
     .secondary-button:hover {
         border-color: rgb(16 185 129);
         background: white;
+    }
+
+    .toggle-field {
+        display: inline-flex;
+        min-height: 2.75rem;
+        align-items: center;
+        gap: 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgb(209 250 229);
+        background: rgb(248 250 252);
+        padding: 0.55rem 0.7rem;
+        color: rgb(51 65 85);
+        font-size: 0.9rem;
+    }
+
+    .toggle-field input {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .toggle-field span {
+        position: relative;
+        height: 1.35rem;
+        width: 2.45rem;
+        border-radius: 999px;
+        background: rgb(148 163 184);
+        transition: background-color 150ms ease;
+    }
+
+    .toggle-field span::after {
+        content: '';
+        position: absolute;
+        left: 0.2rem;
+        top: 0.2rem;
+        height: 0.95rem;
+        width: 0.95rem;
+        border-radius: 999px;
+        background: white;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.15);
+        transition: transform 150ms ease;
+    }
+
+    .toggle-field input:checked + span {
+        background: rgb(5 150 105);
+    }
+
+    .toggle-field input:checked + span::after {
+        transform: translateX(1.1rem);
+    }
+
+    .toggle-field strong {
+        font-weight: 700;
+    }
+
+    .radio-pill input {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .radio-pill span {
+        display: inline-flex;
+        min-width: 6rem;
+        justify-content: center;
+        border-radius: 0.5rem;
+        border: 1px solid rgb(203 213 225);
+        background: white;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: rgb(71 85 105);
+    }
+
+    .radio-pill input:checked + span {
+        border-color: rgb(5 150 105);
+        background: rgb(236 253 245);
+        color: rgb(4 120 87);
     }
 
     .data-table {

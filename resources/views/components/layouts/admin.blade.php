@@ -55,14 +55,14 @@
                         </div>
                     </details>
 
-                    <details class="nav-group">
+                    <details class="nav-group" {{ request()->routeIs('finance.registration.*') ? 'open' : '' }}>
                         <summary class="nav-link" title="Registration Entry">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
                             <span>Registration Entry</span>
                             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                         </summary>
                         <div class="nav-submenu">
-                            <a href="#" title="Party Registration">Party Registration</a>
+                            <a class="{{ request()->routeIs('finance.registration.party') ? 'active' : '' }}" href="{{ route('finance.registration.party') }}" title="Party Registration">Party Registration</a>
                             <a href="#" title="WL Bene. Registration">WL Bene. Registration</a>
                             <a href="#" title="SF Bene. Registration">SF Bene. Registration</a>
                         </div>
