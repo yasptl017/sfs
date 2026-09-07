@@ -46,6 +46,25 @@
                     </a>
                 @endif
 
+                @if(auth()->user()->isDivision())
+                    <div class="nav-section-title">Division Finance System</div>
+
+                    <details class="nav-group">
+                        <summary class="nav-link" title="Bill / Advice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg><span>Bill / Advice</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></summary>
+                        <div class="nav-submenu"><a href="#">Process Bill (Advice)</a><a href="#">Update GST Challan No.</a><a href="#">Bill / Advice Reports</a><a href="#">Add Treasury Details</a><a href="#">Change Bill No. and Order No.</a><a href="#">Delete Advice</a></div>
+                    </details>
+
+                    <details class="nav-group">
+                        <summary class="nav-link" title="Monthly Reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 6h12l-1 4 1 4H4"/><path d="M8 19h12"/></svg><span>Monthly Reports</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></summary>
+                        <div class="nav-submenu"><a href="#">Monthly Reports</a><a href="#">Summary Reports</a><a href="#">Final Voucher Nos. &amp; Form No. 35 &amp; Cashbook</a></div>
+                    </details>
+
+                    <details class="nav-group" open>
+                        <summary class="nav-link" title="Entry"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg><span>Entry</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></summary>
+                        <div class="nav-submenu"><a href="#">Party Registration</a><a href="#">Allotment from Circle</a><a href="#">Allotment to Range</a><a href="#">Allotment Adjustment</a><a href="#">LC Entry</a><a href="#">Edit LC Entry</a></div>
+                    </details>
+                @endif
+
                 @if(auth()->user()->isRange())
                     <div class="nav-section-title">Range Finance System</div>
 
