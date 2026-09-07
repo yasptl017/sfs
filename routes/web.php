@@ -28,8 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::get('division/parties', [DivisionTenderPartyController::class, 'index'])->name('division.parties.index');
     Route::get('division/parties/create', [DivisionTenderPartyController::class, 'create'])->name('division.parties.create');
     Route::post('division/parties', [DivisionTenderPartyController::class, 'store'])->name('division.parties.store');
+    Route::get('division/parties/copy/{serialNumber}', [DivisionTenderPartyController::class, 'copy'])->name('division.parties.copy');
     Route::get('division/parties/{party}/edit', [DivisionTenderPartyController::class, 'edit'])->name('division.parties.edit');
     Route::put('division/parties/{party}', [DivisionTenderPartyController::class, 'update'])->name('division.parties.update');
+    Route::patch('division/parties/{party}/status', [DivisionTenderPartyController::class, 'toggleStatus'])->name('division.parties.status');
     Route::delete('division/parties/{party}', [DivisionTenderPartyController::class, 'destroy'])->name('division.parties.destroy');
     Route::get('admin/divisions', [DivisionController::class, 'index'])->name('admin.divisions.index');
     Route::post('admin/divisions', [DivisionController::class, 'store'])->name('admin.divisions.store');
