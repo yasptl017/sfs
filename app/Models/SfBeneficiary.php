@@ -1,0 +1,4 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model; use Illuminate\Database\Eloquent\Relations\BelongsTo;
+class SfBeneficiary extends Model { protected $fillable=['range_id','serial_number','sf_bene_code','round','beat','yojana_name','full_name','name_gujarati','mobile_no','gender','father_name','birth_date','address','pin_code','bank_name','account_no','ifsc','branch','category','taluka','district','village','survey_block_no','id_type','id_no','gps_n','gps_e','gps','selection_year','hactor_dcp_plants','link_of_doc','attachments','party_status']; protected function casts(): array { return ['attachments'=>'array','birth_date'=>'date']; } public function range(): BelongsTo { return $this->belongsTo(User::class,'range_id'); } }

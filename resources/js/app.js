@@ -198,3 +198,4 @@ wlBeneficiarySearch?.addEventListener('input', () => {
         row.hidden = query !== '' && !row.textContent.toLocaleLowerCase().includes(query);
     });
 });
+const sfSearch = document.querySelector('[data-sf-search]'); sfSearch?.addEventListener('input', () => { const q = sfSearch.value.toLocaleLowerCase(); document.querySelectorAll('[data-sf-row]').forEach((row) => row.hidden = q !== '' && !row.textContent.toLocaleLowerCase().includes(q)); });

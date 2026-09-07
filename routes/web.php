@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryController;
+use App\Http\Controllers\Admin\Finance\SfBeneficiaryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -48,6 +49,13 @@ Route::middleware('auth')->group(function () {
     Route::put('finance/registration/wl-beneficiary/{beneficiary}', [WlBeneficiaryController::class, 'update'])->name('finance.registration.wl-beneficiaries.update');
     Route::patch('finance/registration/wl-beneficiary/{beneficiary}/status', [WlBeneficiaryController::class, 'toggleStatus'])->name('finance.registration.wl-beneficiaries.status');
     Route::delete('finance/registration/wl-beneficiary/{beneficiary}', [WlBeneficiaryController::class, 'destroy'])->name('finance.registration.wl-beneficiaries.destroy');
+    Route::get('finance/registration/sf-beneficiaries', [SfBeneficiaryController::class, 'index'])->name('finance.registration.sf-beneficiaries.index');
+    Route::get('finance/registration/sf-beneficiary', [SfBeneficiaryController::class, 'create'])->name('finance.registration.sf-beneficiaries.create');
+    Route::post('finance/registration/sf-beneficiary', [SfBeneficiaryController::class, 'store'])->name('finance.registration.sf-beneficiaries.store');
+    Route::get('finance/registration/sf-beneficiary/{beneficiary}/edit', [SfBeneficiaryController::class, 'edit'])->name('finance.registration.sf-beneficiaries.edit');
+    Route::put('finance/registration/sf-beneficiary/{beneficiary}', [SfBeneficiaryController::class, 'update'])->name('finance.registration.sf-beneficiaries.update');
+    Route::patch('finance/registration/sf-beneficiary/{beneficiary}/status', [SfBeneficiaryController::class, 'toggleStatus'])->name('finance.registration.sf-beneficiaries.status');
+    Route::delete('finance/registration/sf-beneficiary/{beneficiary}', [SfBeneficiaryController::class, 'destroy'])->name('finance.registration.sf-beneficiaries.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
