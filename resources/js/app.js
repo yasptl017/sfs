@@ -189,3 +189,12 @@ if (wlBeneficiaryForm?.hasAttribute('data-wl-copy-mode')) {
     editToggle.addEventListener('change', setWlCopiedFieldState);
     wlBeneficiaryForm.addEventListener('submit', () => editableFields.forEach((field) => field.disabled = false));
 }
+const wlBeneficiarySearch = document.querySelector('[data-wl-beneficiary-search]');
+
+wlBeneficiarySearch?.addEventListener('input', () => {
+    const query = wlBeneficiarySearch.value.trim().toLocaleLowerCase();
+
+    document.querySelectorAll('[data-wl-beneficiary-row]').forEach((row) => {
+        row.hidden = query !== '' && !row.textContent.toLocaleLowerCase().includes(query);
+    });
+});
