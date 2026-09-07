@@ -44,6 +44,11 @@ class User extends Authenticatable
         return $this->role === 'division';
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
     public function isRange(): bool
     {
         return $this->role === 'range';

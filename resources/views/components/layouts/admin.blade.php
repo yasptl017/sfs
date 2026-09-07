@@ -28,6 +28,13 @@
                     <span>Dashboard</span>
                 </a>
 
+                @if(auth()->user()->isAdmin())
+                    <a class="nav-link {{ request()->routeIs('admin.divisions.*') ? 'active' : '' }}" href="{{ route('admin.divisions.index') }}" title="Divisions">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M8 10h.01M16 10h.01"/></svg>
+                        <span>Divisions</span>
+                    </a>
+                @endif
+
                 @if(auth()->user()->isDivision())
                     <a class="nav-link {{ request()->routeIs('ranges.*') ? 'active' : '' }}" href="{{ route('ranges.index') }}" title="Ranges">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 6h12l-1 4 1 4H4"/><path d="M8 19h12"/></svg>

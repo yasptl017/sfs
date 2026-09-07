@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         User::query()->updateOrCreate([
             'username' => 'admin',
         ], [
-            'name' => 'Forest Division Admin',
+            'name' => 'Forest System Administrator',
             'email' => 'admin@sfs.local',
-            'role' => 'division',
+            'role' => 'admin',
             'password' => 'admin',
         ]);
     }

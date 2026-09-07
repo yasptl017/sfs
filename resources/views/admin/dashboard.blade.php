@@ -5,11 +5,25 @@
             <p class="mt-2 text-2xl font-semibold text-slate-950">{{ $user->name }}</p>
             <p class="mt-1 text-sm capitalize text-emerald-700">{{ $user->role }} account</p>
         </div>
-        <div class="stat-card">
-            <p class="text-sm font-medium text-slate-500">Ranges under division</p>
-            <p class="mt-2 text-3xl font-semibold text-slate-950">{{ $rangeCount }}</p>
-            <p class="mt-1 text-sm text-slate-500">Active range login accounts</p>
-        </div>
+        @if($user->isDivision())
+            <div class="stat-card">
+                <p class="text-sm font-medium text-slate-500">Ranges under division</p>
+                <p class="mt-2 text-3xl font-semibold text-slate-950">{{ $rangeCount }}</p>
+                <p class="mt-1 text-sm text-slate-500">Active range login accounts</p>
+            </div>
+        @elseif($user->isAdmin())
+            <div class="stat-card">
+                <p class="text-sm font-medium text-slate-500">Access level</p>
+                <p class="mt-2 text-2xl font-semibold text-slate-950">System Admin</p>
+                <p class="mt-1 text-sm text-slate-500">Division account management</p>
+            </div>
+        @else
+            <div class="stat-card">
+                <p class="text-sm font-medium text-slate-500">Access level</p>
+                <p class="mt-2 text-2xl font-semibold text-slate-950">Range User</p>
+                <p class="mt-1 text-sm text-slate-500">Range finance and registration tools</p>
+            </div>
+        @endif
         <div class="stat-card">
             <p class="text-sm font-medium text-slate-500">System divisions</p>
             <p class="mt-2 text-3xl font-semibold text-slate-950">{{ $divisionCount }}</p>
@@ -21,15 +35,20 @@
         <div class="rounded-lg border border-emerald-100 bg-white shadow-sm">
             <div class="flex items-center justify-between border-b border-emerald-100 px-5 py-4">
                 <div>
-                    <h2 class="font-semibold text-slate-950">Recent range accounts</h2>
-                    <p class="text-sm text-slate-500">Range logins created by division users</p>
+                    <h2 class="font-semibold text-slate-950">{{ $user->isAdmin() ? 'Division administration' : 'Recent range accounts' }}</h2>
+                    <p class="text-sm text-slate-500">{{ $user->isAdmin() ? 'Create and manage division login accounts.' : 'Range logins created by your division.' }}</p>
                 </div>
-                @if($user->isDivision())
+                @if($user->isAdmin())
+                    <a class="secondary-button" href="{{ route('admin.divisions.index') }}">Manage divisions</a>
+                @elseif($user->isDivision())
                     <a class="secondary-button" href="{{ route('ranges.index') }}">Manage</a>
                 @endif
             </div>
-            <div class="overflow-x-auto">
-                <table class="data-table">
+            @if($user->isAdmin())
+                <div class="p-5 text-sm text-slate-600">Each division manages its own ranges. The administrator manages division accounts only.</div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="data-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -50,13 +69,20 @@
                             </tr>
                         @endforelse
                     </tbody>
-                </table>
-            </div>
+                    </table>
+                </div>
+            @endif
         </div>
 
         <div class="rounded-lg border border-emerald-100 bg-white p-5 shadow-sm">
             <h2 class="font-semibold text-slate-950">Role permissions</h2>
             <div class="mt-4 space-y-3 text-sm">
+                @if($user->isAdmin())
+                    <div class="rounded-lg bg-emerald-50 p-3">
+                        <p class="font-semibold text-emerald-900">Administrator</p>
+                        <p class="mt-1 text-emerald-800">Can create, update, and remove division login accounts only.</p>
+                    </div>
+                @endif
                 <div class="rounded-lg bg-emerald-50 p-3">
                     <p class="font-semibold text-emerald-900">Division</p>
                     <p class="mt-1 text-emerald-800">Can create range login accounts and reset its own password.</p>

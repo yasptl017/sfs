@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
@@ -20,6 +21,10 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('admin/divisions', [DivisionController::class, 'index'])->name('admin.divisions.index');
+    Route::post('admin/divisions', [DivisionController::class, 'store'])->name('admin.divisions.store');
+    Route::put('admin/divisions/{division}', [DivisionController::class, 'update'])->name('admin.divisions.update');
+    Route::delete('admin/divisions/{division}', [DivisionController::class, 'destroy'])->name('admin.divisions.destroy');
     Route::get('ranges', [RangeController::class, 'index'])->name('ranges.index');
     Route::post('ranges', [RangeController::class, 'store'])->name('ranges.store');
     Route::get('finance/registration/parties', [PartyRegistrationController::class, 'index'])->name('finance.registration.parties.index');

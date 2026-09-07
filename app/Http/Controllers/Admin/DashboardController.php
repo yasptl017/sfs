@@ -12,19 +12,12 @@ class DashboardController extends Controller
     public function __invoke(Request $request): View
     {
         $user = $request->user();
-        $divisionId = $user->isDivision() ? $user->id : $user->division_id;
-
         return view('admin.dashboard', [
-            'rangeCount' => $user->isDivision()
-                ? $user->ranges()->count()
-                : 1,
+            'rangeCount' => $user->isDivision() ? $user->ranges()->count() : null,
             'divisionCount' => User::query()->where('role', 'division')->count(),
-            'recentRanges' => User::query()
-                ->where('role', 'range')
-                ->when($divisionId, fn ($query) => $query->where('division_id', $divisionId))
-                ->latest()
-                ->limit(5)
-                ->get(),
+            'recentRanges' => $user->isDivision()
+                ? $user->ranges()->latest()->limit(5)->get()
+                : collect(),
             'user' => $user,
         ]);
     }

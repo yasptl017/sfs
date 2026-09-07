@@ -41,7 +41,7 @@
                 <div class="rounded-lg border border-emerald-100 bg-white p-6 shadow-sm">
                     <div class="mb-6">
                         <h2 class="text-xl font-semibold text-slate-950">Sign in</h2>
-                        <p class="mt-1 text-sm text-slate-500">Use your division or range login credentials.</p>
+                        <p class="mt-1 text-sm text-slate-500">Use your administrator, division, or range login credentials.</p>
                     </div>
 
                     <form class="space-y-4" method="POST" action="{{ route('login.store') }}">
@@ -67,7 +67,7 @@
                     </form>
 
                     <p class="mt-5 rounded-lg bg-stone-50 px-3 py-2 text-sm text-slate-600">
-                        Default division login: <span class="font-semibold">admin</span> / <span class="font-semibold">admin</span>
+                        Default administrator login: <span class="font-semibold">admin</span> / <span class="font-semibold">admin</span>
                     </p>
                 </div>
             </div>
