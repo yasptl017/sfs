@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin\Finance;
 
 use App\Http\Controllers\Controller;
 use App\Models\PartyRegistration;
+use App\Models\RangeLocation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class PartyRegistrationController extends Controller
 {
@@ -30,6 +32,7 @@ class PartyRegistrationController extends Controller
 
         return view('admin.finance.registration.party', [
             'banks' => $this->banks(),
+            'rounds' => $this->rounds($request),
             'nextSerial' => $this->nextSerial($request),
             'party' => null,
         ]);
@@ -39,7 +42,7 @@ class PartyRegistrationController extends Controller
     {
         abort_unless($request->user()->isRange(), 403);
 
-        $validated = $this->validated($request);
+        $validated = $this->withAttachments($request, $this->validated($request));
         $validated['range_id'] = $request->user()->id;
         $validated['serial_number'] = $this->nextSerial($request);
 
@@ -58,6 +61,7 @@ class PartyRegistrationController extends Controller
 
         return view('admin.finance.registration.party', [
             'banks' => $this->banks(),
+            'rounds' => $this->rounds($request),
             'nextSerial' => $party->serial_number,
             'party' => $party,
         ]);
@@ -67,7 +71,7 @@ class PartyRegistrationController extends Controller
     {
         $this->authorizeRangeParty($request, $party);
 
-        $party->update($this->validated($request));
+        $party->update($this->withAttachments($request, $this->validated($request), $party));
 
         return response()->json([
             'message' => 'Party details updated successfully.',
@@ -90,6 +94,7 @@ class PartyRegistrationController extends Controller
     {
         $this->authorizeRangeParty($request, $party);
 
+        Storage::disk('public')->delete(array_filter([$party->approval_attachment, $party->contact_attachment]));
         $party->delete();
 
         return back()->with('status', 'Party deleted successfully.');
@@ -132,7 +137,7 @@ class PartyRegistrationController extends Controller
     {
         $validated = $request->validate([
             'party_code' => ['required', 'string', 'max:255'],
-            'round' => ['required', 'string', 'max:255'],
+            'round' => ['required', Rule::in($this->rounds($request))],
             'approved_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'small_description' => ['nullable', 'string', 'max:255'],
             'party_name' => ['required', 'string', 'max:255'],
@@ -149,15 +154,49 @@ class PartyRegistrationController extends Controller
             'deposit_deduction' => ['nullable', 'numeric', 'min:0'],
             'tds' => ['nullable', 'numeric', 'min:0'],
             'party_approval_no' => ['nullable', 'string', 'max:255'],
+            'approval_attachment' => ['nullable', 'file', 'max:20480'],
             'party_aadhaar_no' => ['nullable', 'string', 'max:255'],
             'party_mobile_no' => ['nullable', 'string', 'max:255'],
             'party_email' => ['nullable', 'email', 'max:255'],
+            'contact_attachment' => ['nullable', 'file', 'max:20480'],
             'link_of_doc' => ['nullable', 'url', 'max:255'],
             'party_address' => ['nullable', 'string'],
             'party_status' => ['required', Rule::in(['Active', 'Deactive'])],
         ]);
 
         return collect($validated)->map(fn ($value) => $value === '' ? null : $value)->all();
+    }
+
+    /** @return array<int, string> */
+    private function rounds(Request $request): array
+    {
+        return RangeLocation::query()
+            ->where('range_id', $request->user()->id)
+            ->orderBy('round')
+            ->pluck('round')
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /** @param array<string, mixed> $validated
+     *  @return array<string, mixed>
+     */
+    private function withAttachments(Request $request, array $validated, ?PartyRegistration $party = null): array
+    {
+        foreach (['approval_attachment', 'contact_attachment'] as $field) {
+            if (!$request->hasFile($field)) {
+                unset($validated[$field]);
+                continue;
+            }
+
+            if ($party?->{$field}) {
+                Storage::disk('public')->delete($party->{$field});
+            }
+            $validated[$field] = $request->file($field)->store('party-attachments', 'public');
+        }
+
+        return $validated;
     }
 
     /**
@@ -230,3 +269,4 @@ class PartyRegistrationController extends Controller
         ];
     }
 }
+

@@ -5,7 +5,7 @@
 @endphp
 
 <x-layouts.admin title="{{ $isEdit ? 'Edit Party' : 'Party Registration' }} | Forest Inventory" heading="{{ $isEdit ? 'Edit Party' : 'Party Registration' }}" subheading="Registration Entry for range finance parties">
-    <form id="partyRegistrationForm" class="space-y-5" method="POST" action="{{ $formAction }}" data-party-registration-form data-copy-url="{{ url('finance/registration/party/copy') }}" data-redirect-url="{{ route('finance.registration.parties.index') }}">
+    <form id="partyRegistrationForm" class="space-y-5" method="POST" action="{{ $formAction }}" enctype="multipart/form-data" data-party-registration-form data-copy-url="{{ url('finance/registration/party/copy') }}" data-redirect-url="{{ route('finance.registration.parties.index') }}">
         @csrf
         @if($isEdit)
             @method('PUT')
@@ -55,9 +55,11 @@
                     <label class="form-label" for="round">Round</label>
                     <select id="round" class="form-select" name="round" required data-party-field>
                         <option value="" @selected(blank($field('round'))) disabled>Choose...</option>
-                        <option @selected($field('round') === 'All')>All</option>
-                        <option @selected($field('round') === 'Rounds-')>Rounds-</option>
+                        @foreach($rounds as $round)
+                            <option value="{{ $round }}" @selected($field('round') === $round)>{{ $round }}</option>
+                        @endforeach
                     </select>
+                    @if($rounds === [])<p class="form-error">Your division has not configured any rounds for this range yet.</p>@endif
                 </div>
                 <div>
                     <label class="form-label" for="approved_percent">Approved %</label>
@@ -153,6 +155,13 @@
                     <input id="party_approval_no" class="form-input" name="party_approval_no" value="{{ $field('party_approval_no') }}" data-party-field>
                 </div>
                 <div>
+                    <label class="form-label" for="approval_attachment">Approval file</label>
+                    <input id="approval_attachment" class="form-input" name="approval_attachment" type="file" data-party-field>
+                    <p class="mt-1 text-xs text-slate-500">Any file type, up to 20 MB.</p>
+                    @if($party?->approval_attachment)<a class="mt-1 inline-block text-xs font-semibold text-emerald-700" href="{{ Storage::disk('public')->url($party->approval_attachment) }}" target="_blank">View current file</a>@endif
+                    @error('approval_attachment')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+                <div>
                     <label class="form-label" for="party_aadhaar_no">Party Aadhaar No.</label>
                     <input id="party_aadhaar_no" class="form-input" name="party_aadhaar_no" value="{{ $field('party_aadhaar_no') }}" data-party-field>
                 </div>
@@ -163,6 +172,13 @@
                 <div>
                     <label class="form-label" for="party_email">Party Email</label>
                     <input id="party_email" class="form-input" name="party_email" value="{{ $field('party_email') }}" type="email" data-party-field>
+                </div>
+                <div>
+                    <label class="form-label" for="contact_attachment">Contact file</label>
+                    <input id="contact_attachment" class="form-input" name="contact_attachment" type="file" data-party-field>
+                    <p class="mt-1 text-xs text-slate-500">Any file type, up to 20 MB.</p>
+                    @if($party?->contact_attachment)<a class="mt-1 inline-block text-xs font-semibold text-emerald-700" href="{{ Storage::disk('public')->url($party->contact_attachment) }}" target="_blank">View current file</a>@endif
+                    @error('contact_attachment')<p class="form-error">{{ $message }}</p>@enderror
                 </div>
                 <div class="md:col-span-2">
                     <label class="form-label" for="link_of_doc">Link of Doc</label>

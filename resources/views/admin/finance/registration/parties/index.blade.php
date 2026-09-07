@@ -1,89 +1,15 @@
-<x-layouts.admin title="Party Details | Forest Inventory" heading="Party Details" subheading="Registered finance parties for this range">
+<x-layouts.admin title="Party Details | Forest Inventory" heading="Party Details" subheading="All registration fields for this range">
     <div class="space-y-5">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <h2 class="text-base font-semibold text-slate-950">Registered parties</h2>
-                <p class="mt-1 text-sm text-slate-500">Review party registration details and manage active status.</p>
-            </div>
+            <div><h2 class="text-base font-semibold text-slate-950">Registered parties</h2><p class="mt-1 text-sm text-slate-500">Scroll horizontally to review every saved field.</p></div><div class="w-full sm:w-80"><label class="sr-only" for="partyTableSearch">Search parties</label><input id="partyTableSearch" class="form-input min-h-9 py-1.5" type="search" placeholder="Search any party detail..." data-party-table-search></div>
             <a class="primary-button w-full sm:w-auto" href="{{ route('finance.registration.party') }}">Add Party</a>
         </div>
-
-        <div class="rounded-lg border border-emerald-100 bg-white shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="data-table min-w-[72rem]">
-                    <thead>
-                        <tr>
-                            <th>Sr. No.</th>
-                            <th>Party Code</th>
-                            <th>Party Name</th>
-                            <th>Round</th>
-                            <th>Bank</th>
-                            <th>Mobile</th>
-                            <th>Status</th>
-                            <th class="text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($parties as $party)
-                            <tr>
-                                <td class="font-semibold text-slate-950">{{ $party->serial_number }}</td>
-                                <td>{{ $party->party_code }}</td>
-                                <td>
-                                    <div class="font-semibold text-slate-900">{{ $party->party_name }}</div>
-                                    @if($party->small_description)
-                                        <div class="mt-1 max-w-xs truncate text-xs text-slate-500">{{ $party->small_description }}</div>
-                                    @endif
-                                </td>
-                                <td>{{ $party->round }}</td>
-                                <td>
-                                    <div>{{ $party->bank_name }}</div>
-                                    @if($party->account_no)
-                                        <div class="mt-1 text-xs text-slate-500">A/C {{ $party->account_no }}</div>
-                                    @endif
-                                </td>
-                                <td>{{ $party->party_mobile_no ?? '-' }}</td>
-                                <td>
-                                    <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-bold {{ $party->party_status === 'Active' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' }}">
-                                        {{ $party->party_status }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="flex flex-wrap justify-end gap-2">
-                                        <a class="secondary-button min-h-9 px-3 py-1.5 text-xs" href="{{ route('finance.registration.party.edit', $party) }}">Edit</a>
-
-                                        <form method="POST" action="{{ route('finance.registration.party.status', $party) }}">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button class="secondary-button min-h-9 px-3 py-1.5 text-xs" type="submit">
-                                                {{ $party->party_status === 'Active' ? 'Deactivate' : 'Activate' }}
-                                            </button>
-                                        </form>
-
-                                        <form method="POST" action="{{ route('finance.registration.party.destroy', $party) }}" onsubmit="return confirm('Delete this party registration?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="secondary-button min-h-9 border-red-200 bg-red-50 px-3 py-1.5 text-xs text-red-700 hover:border-red-300 hover:bg-white" type="submit">Delete</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center text-slate-500">
-                                    No party registrations available.
-                                    <a class="font-semibold text-emerald-700 hover:text-emerald-800" href="{{ route('finance.registration.party') }}">Create the first party.</a>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            @if($parties->hasPages())
-                <div class="border-t border-emerald-100 px-5 py-4">
-                    {{ $parties->links() }}
-                </div>
-            @endif
-        </div>
+        <div class="rounded-lg border border-emerald-100 bg-white shadow-sm"><div class="overflow-x-auto"><table class="data-table compact-data-table min-w-[160rem]"><thead><tr><th>Sr. No.</th><th>Party Code</th><th>Party Name</th><th>Round</th><th>Approved %</th><th>Description</th><th>PAN</th><th>GST</th><th>Bank</th><th>Account No.</th><th>IFSC</th><th>Branch</th><th>SGST %</th><th>CGST %</th><th>IGST %</th><th>Labour Cess %</th><th>Deposit Deduction %</th><th>TDS %</th><th>Approval No.</th><th>Approval File</th><th>Aadhaar No.</th><th>Mobile</th><th>Email</th><th>Contact File</th><th>Document Link</th><th>Address</th><th>Status</th><th>Created</th><th class="text-right">Actions</th></tr></thead><tbody>
+            @forelse($parties as $party)
+                <tr data-party-table-row><td class="font-semibold text-slate-950">{{ $party->serial_number }}</td><td>{{ $party->party_code }}</td><td>{{ $party->party_name }}</td><td>{{ $party->round }}</td><td>{{ $party->approved_percent ?? '-' }}</td><td class="max-w-xs"><span class="block truncate" title="{{ $party->small_description }}">{{ $party->small_description ?? '-' }}</span></td><td>{{ $party->pan_card_no ?? '-' }}</td><td>{{ $party->gst_no ?? '-' }}</td><td>{{ $party->bank_name }}</td><td>{{ $party->account_no ?? '-' }}</td><td>{{ $party->ifsc ?? '-' }}</td><td>{{ $party->branch ?? '-' }}</td><td>{{ $party->deduction_sgst ?? '-' }}</td><td>{{ $party->deduction_cgst ?? '-' }}</td><td>{{ $party->deduction_igst ?? '-' }}</td><td>{{ $party->deduction_labour_cess ?? '-' }}</td><td>{{ $party->deposit_deduction ?? '-' }}</td><td>{{ $party->tds ?? '-' }}</td><td>{{ $party->party_approval_no ?? '-' }}</td><td>@if($party->approval_attachment)<a class="font-semibold text-emerald-700 hover:text-emerald-800" href="{{ Storage::disk('public')->url($party->approval_attachment) }}" target="_blank">View file</a>@else - @endif</td><td>{{ $party->party_aadhaar_no ?? '-' }}</td><td>{{ $party->party_mobile_no ?? '-' }}</td><td>{{ $party->party_email ?? '-' }}</td><td>@if($party->contact_attachment)<a class="font-semibold text-emerald-700 hover:text-emerald-800" href="{{ Storage::disk('public')->url($party->contact_attachment) }}" target="_blank">View file</a>@else - @endif</td><td>@if($party->link_of_doc)<a class="font-semibold text-emerald-700 hover:text-emerald-800" href="{{ $party->link_of_doc }}" target="_blank">Open link</a>@else - @endif</td><td class="max-w-xs"><span class="block truncate" title="{{ $party->party_address }}">{{ $party->party_address ?? '-' }}</span></td><td><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-bold {{ $party->party_status === 'Active' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' }}">{{ $party->party_status }}</span></td><td>{{ $party->created_at->format('d M Y') }}</td><td><div class="flex flex-nowrap justify-end gap-1 whitespace-nowrap"><a class="secondary-button min-h-7 px-1.5 py-0.5 text-[10px]" href="{{ route('finance.registration.party.edit', $party) }}">Edit</a><form method="POST" action="{{ route('finance.registration.party.status', $party) }}">@csrf @method('PATCH')<button class="secondary-button min-h-7 px-1.5 py-0.5 text-[10px]" type="submit">{{ $party->party_status === 'Active' ? 'Deactivate' : 'Activate' }}</button></form><form method="POST" action="{{ route('finance.registration.party.destroy', $party) }}" onsubmit="return confirm('Delete this party registration?');">@csrf @method('DELETE')<button class="secondary-button min-h-7 border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] text-red-700 hover:border-red-300 hover:bg-white" type="submit">Delete</button></form></div></td></tr>
+            @empty
+                <tr><td colspan="29" class="text-center text-slate-500">No party registrations available. <a class="font-semibold text-emerald-700 hover:text-emerald-800" href="{{ route('finance.registration.party') }}">Create the first party.</a></td></tr>
+            @endforelse
+        </tbody></table></div>@if($parties->hasPages())<div class="border-t border-emerald-100 px-5 py-4">{{ $parties->links() }}</div>@endif</div>
     </div>
 </x-layouts.admin>

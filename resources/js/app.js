@@ -165,3 +165,13 @@ if (partyForm) {
         }
     });
 }
+
+const partyTableSearch = document.querySelector('[data-party-table-search]');
+
+partyTableSearch?.addEventListener('input', () => {
+    const query = partyTableSearch.value.trim().toLocaleLowerCase();
+
+    document.querySelectorAll('[data-party-table-row]').forEach((row) => {
+        row.hidden = query !== '' && !row.textContent.toLocaleLowerCase().includes(query);
+    });
+});

@@ -40,6 +40,10 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 6h12l-1 4 1 4H4"/><path d="M8 19h12"/></svg>
                         <span>Ranges</span>
                     </a>
+                    <a class="nav-link {{ request()->routeIs('range-locations.*') ? 'active' : '' }}" href="{{ route('range-locations.index') }}" title="Range Locations">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.4 7-12a7 7 0 1 0-14 0c0 6.6 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                        <span>Range Locations</span>
+                    </a>
                 @endif
 
                 @if(auth()->user()->isRange())
