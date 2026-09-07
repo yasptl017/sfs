@@ -75,7 +75,7 @@
                         <div class="nav-submenu">
                             <a class="{{ request()->routeIs('finance.registration.parties.*') ? 'active' : '' }}" href="{{ route('finance.registration.parties.index') }}" title="Party Details">Party Details</a>
                             <a class="{{ request()->routeIs('finance.registration.party') ? 'active' : '' }}" href="{{ route('finance.registration.party') }}" title="Party Registration">Party Registration</a>
-                            <a href="#" title="WL Bene. Registration">WL Bene. Registration</a>
+                            <a class="{{ request()->routeIs('finance.registration.wl-beneficiaries.*') ? 'active' : '' }}" href="{{ route('finance.registration.wl-beneficiaries.index') }}" title="WL Bene. Registration">WL Bene. Registration</a>
                             <a href="#" title="SF Bene. Registration">SF Bene. Registration</a>
                         </div>
                     </details>

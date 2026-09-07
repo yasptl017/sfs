@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
+use App\Http\Controllers\Admin\Finance\WlBeneficiaryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -40,6 +41,13 @@ Route::middleware('auth')->group(function () {
     Route::put('finance/registration/party/{party}', [PartyRegistrationController::class, 'update'])->name('finance.registration.party.update');
     Route::patch('finance/registration/party/{party}/status', [PartyRegistrationController::class, 'toggleStatus'])->name('finance.registration.party.status');
     Route::delete('finance/registration/party/{party}', [PartyRegistrationController::class, 'destroy'])->name('finance.registration.party.destroy');
+    Route::get('finance/registration/wl-beneficiaries', [WlBeneficiaryController::class, 'index'])->name('finance.registration.wl-beneficiaries.index');
+    Route::get('finance/registration/wl-beneficiary', [WlBeneficiaryController::class, 'create'])->name('finance.registration.wl-beneficiaries.create');
+    Route::post('finance/registration/wl-beneficiary', [WlBeneficiaryController::class, 'store'])->name('finance.registration.wl-beneficiaries.store');
+    Route::get('finance/registration/wl-beneficiary/{beneficiary}/edit', [WlBeneficiaryController::class, 'edit'])->name('finance.registration.wl-beneficiaries.edit');
+    Route::put('finance/registration/wl-beneficiary/{beneficiary}', [WlBeneficiaryController::class, 'update'])->name('finance.registration.wl-beneficiaries.update');
+    Route::patch('finance/registration/wl-beneficiary/{beneficiary}/status', [WlBeneficiaryController::class, 'toggleStatus'])->name('finance.registration.wl-beneficiaries.status');
+    Route::delete('finance/registration/wl-beneficiary/{beneficiary}', [WlBeneficiaryController::class, 'destroy'])->name('finance.registration.wl-beneficiaries.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

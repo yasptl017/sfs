@@ -175,3 +175,17 @@ partyTableSearch?.addEventListener('input', () => {
         row.hidden = query !== '' && !row.textContent.toLocaleLowerCase().includes(query);
     });
 });
+const wlBeneficiaryForm = document.querySelector('[data-wl-beneficiary-form]');
+
+if (wlBeneficiaryForm?.hasAttribute('data-wl-copy-mode')) {
+    const editToggle = wlBeneficiaryForm.querySelector('[data-wl-edit-copied-entry]');
+    const editableFields = [...wlBeneficiaryForm.querySelectorAll('input:not([type="hidden"]):not([type="file"]):not([readonly]), select, textarea')];
+
+    const setWlCopiedFieldState = () => {
+        editableFields.forEach((field) => field.disabled = !editToggle.checked);
+    };
+
+    setWlCopiedFieldState();
+    editToggle.addEventListener('change', setWlCopiedFieldState);
+    wlBeneficiaryForm.addEventListener('submit', () => editableFields.forEach((field) => field.disabled = false));
+}
