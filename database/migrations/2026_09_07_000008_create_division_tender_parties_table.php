@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration{public function up():void{Schema::create('division_tender_parties',function(Blueprint $t){$t->id();$t->foreignId('division_id')->constrained('users')->cascadeOnDelete();$t->unsignedInteger('serial_number');$t->json('data');$t->json('attachments')->nullable();$t->string('party_status')->default('Active');$t->timestamps();$t->unique(['division_id','serial_number']);});}public function down():void{Schema::dropIfExists('division_tender_parties');}};

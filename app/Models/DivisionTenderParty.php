@@ -1,0 +1,2 @@
+<?php
+namespace App\Models;use Illuminate\Database\Eloquent\Model;class DivisionTenderParty extends Model{protected $fillable=['division_id','serial_number','data','attachments','party_status'];protected function casts():array{return ['data'=>'array','attachments'=>'array'];}}

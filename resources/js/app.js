@@ -199,3 +199,5 @@ wlBeneficiarySearch?.addEventListener('input', () => {
     });
 });
 const sfSearch = document.querySelector('[data-sf-search]'); sfSearch?.addEventListener('input', () => { const q = sfSearch.value.toLocaleLowerCase(); document.querySelectorAll('[data-sf-row]').forEach((row) => row.hidden = q !== '' && !row.textContent.toLocaleLowerCase().includes(q)); });
+
+const dps=document.querySelector('[data-division-party-search]');dps?.addEventListener('input',()=>{const q=dps.value.toLowerCase();document.querySelectorAll('[data-division-party-row]').forEach(r=>r.hidden=q!==''&&!r.textContent.toLowerCase().includes(q));});

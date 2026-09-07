@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryController;
+use App\Http\Controllers\Admin\Finance\DivisionTenderPartyController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -24,6 +25,12 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('division/parties', [DivisionTenderPartyController::class, 'index'])->name('division.parties.index');
+    Route::get('division/parties/create', [DivisionTenderPartyController::class, 'create'])->name('division.parties.create');
+    Route::post('division/parties', [DivisionTenderPartyController::class, 'store'])->name('division.parties.store');
+    Route::get('division/parties/{party}/edit', [DivisionTenderPartyController::class, 'edit'])->name('division.parties.edit');
+    Route::put('division/parties/{party}', [DivisionTenderPartyController::class, 'update'])->name('division.parties.update');
+    Route::delete('division/parties/{party}', [DivisionTenderPartyController::class, 'destroy'])->name('division.parties.destroy');
     Route::get('admin/divisions', [DivisionController::class, 'index'])->name('admin.divisions.index');
     Route::post('admin/divisions', [DivisionController::class, 'store'])->name('admin.divisions.store');
     Route::put('admin/divisions/{division}', [DivisionController::class, 'update'])->name('admin.divisions.update');
