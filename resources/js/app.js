@@ -773,3 +773,231 @@ initVoucherForm(document.querySelector('[data-d-wager-arrears-form]'), {
     deductionSelector: '[data-deduction-input]',
     buildItemRow: () => null,
 });
+
+initEntrySearch('[data-sf-bene-entry-search]', '[data-sf-bene-entry-row]');
+
+(function initSfBeneficiaryEntryForm() {
+    const form = document.querySelector('[data-sf-bene-entry-form]');
+    if (!form) return;
+
+    const alert = document.getElementById('sfBeneficiaryEntryFormAlert');
+    const copyInput = document.getElementById('copy_entry_sr_no');
+    const copyButton = form.querySelector('[data-copy-entry]');
+    const editToggle = form.querySelector('[data-edit-copied-entry]');
+    const fields = [...form.querySelectorAll('[data-entry-field]')];
+    const serialField = document.getElementById('entry_sr_no');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    let copiedMode = false;
+
+    let budgetCodes = {};
+    let beatsByRound = {};
+    let beneficiariesByRoundBeat = {};
+    let beneficiaryDetails = {};
+    try { budgetCodes = JSON.parse(form.dataset.budgetCodes || '{}'); } catch (e) { budgetCodes = {}; }
+    try { beatsByRound = JSON.parse(form.dataset.beatsByRound || '{}'); } catch (e) { beatsByRound = {}; }
+    try { beneficiariesByRoundBeat = JSON.parse(form.dataset.beneficiariesByRoundBeat || '{}'); } catch (e) { beneficiariesByRoundBeat = {}; }
+    try { beneficiaryDetails = JSON.parse(form.dataset.beneficiaryDetails || '{}'); } catch (e) { beneficiaryDetails = {}; }
+
+    const budgetCodeSelect = form.querySelector('[data-budget-code-select]');
+    const schemeField = form.querySelector('[data-scheme-field]');
+    const modelField = form.querySelector('[data-model-field]');
+    const schemeYearField = form.querySelector('[data-scheme-year-field]');
+    const roundSelect = form.querySelector('[data-round-select]');
+    const beatSelect = form.querySelector('[data-beat-select]');
+    const beneCodeSelect = form.querySelector('[data-bene-code-select]');
+
+    const fieldKey = (field) => {
+        const match = field.name.match(/^data\[(.+)\]$/);
+        return match ? match[1] : field.name;
+    };
+
+    const showAlert = (message, type = 'success') => {
+        alert.textContent = message;
+        alert.className = type === 'success'
+            ? 'rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800'
+            : 'rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800';
+    };
+
+    const setValue = (field, value) => {
+        if (field.type === 'radio') {
+            field.checked = field.value === value;
+            return;
+        }
+
+        field.value = value ?? '';
+    };
+
+    const applyBudgetCode = () => {
+        const details = budgetCodes[budgetCodeSelect?.value];
+        if (schemeField) schemeField.value = details?.scheme ?? '';
+        if (modelField) modelField.value = details?.model ?? '';
+        if (schemeYearField) schemeYearField.value = details?.scheme_year ?? '';
+    };
+
+    const refreshBeatOptions = (selectedBeat = '') => {
+        if (!roundSelect || !beatSelect) return;
+
+        const beats = [...(beatsByRound[roundSelect.value] || [])];
+        if (selectedBeat && !beats.includes(selectedBeat)) beats.push(selectedBeat);
+
+        beatSelect.innerHTML = '<option value="" disabled>Choose...</option>'
+            + beats.map((beat) => `<option ${beat === selectedBeat ? 'selected' : ''}>${beat}</option>`).join('');
+    };
+
+    const refreshBeneCodeOptions = (selectedCode = '') => {
+        if (!roundSelect || !beatSelect || !beneCodeSelect) return;
+
+        const key = `${roundSelect.value}|${beatSelect.value}`;
+        const codes = [...(beneficiariesByRoundBeat[key] || [])];
+        if (selectedCode && !codes.includes(selectedCode)) codes.push(selectedCode);
+
+        beneCodeSelect.innerHTML = '<option value="" disabled>Choose...</option>'
+            + codes.map((code) => `<option ${code === selectedCode ? 'selected' : ''}>${code}</option>`).join('');
+    };
+
+    const applyBeneficiaryDetails = () => {
+        const details = beneficiaryDetails[beneCodeSelect?.value] || {};
+        form.querySelectorAll('[data-bene-field]').forEach((field) => {
+            field.value = details[field.dataset.beneField] ?? '';
+        });
+    };
+
+    budgetCodeSelect?.addEventListener('change', applyBudgetCode);
+    roundSelect?.addEventListener('change', () => { refreshBeatOptions(); refreshBeneCodeOptions(); });
+    beatSelect?.addEventListener('change', () => refreshBeneCodeOptions());
+    beneCodeSelect?.addEventListener('change', applyBeneficiaryDetails);
+
+    refreshBeatOptions(beatSelect?.value);
+    refreshBeneCodeOptions(beneCodeSelect?.value);
+
+    const num = (value) => parseFloat(value) || 0;
+
+    const recalculate = () => {
+        const totalPlantsField = document.getElementById('total_no_of_plants');
+        const survivedField = form.querySelector('[data-plants-survived]');
+        const survivalPercentField = form.querySelector('[data-survival-percent]');
+        const ratePerPlantField = form.querySelector('[data-rate-per-plant]');
+        const totalAmountField = form.querySelector('[data-total-amount]');
+
+        const totalPlants = num(totalPlantsField?.value);
+        const survived = num(survivedField?.value);
+        const survivalPercent = totalPlants > 0 ? (survived / totalPlants) * 100 : 0;
+        if (survivalPercentField) survivalPercentField.value = survivalPercent.toFixed(2);
+
+        const amount = survived * num(ratePerPlantField?.value);
+        if (totalAmountField) totalAmountField.value = amount.toFixed(2);
+    };
+
+    form.addEventListener('input', (event) => {
+        if (event.target.matches('#total_no_of_plants, [data-plants-survived], [data-rate-per-plant]')) {
+            recalculate();
+        }
+    });
+
+    const setCopiedFieldState = () => {
+        if (!copiedMode) {
+            fields.forEach((field) => field.disabled = false);
+            return;
+        }
+
+        fields.forEach((field) => {
+            field.disabled = field !== serialField && !editToggle.checked;
+        });
+    };
+
+    const clearForm = (nextSerial = serialField.value) => {
+        fields.forEach((field) => {
+            field.disabled = false;
+            field.value = '';
+        });
+
+        serialField.value = nextSerial;
+        copiedMode = false;
+        if (editToggle) editToggle.checked = false;
+        refreshBeatOptions();
+        refreshBeneCodeOptions();
+        recalculate();
+    };
+
+    editToggle?.addEventListener('change', setCopiedFieldState);
+
+    copyButton?.addEventListener('click', async () => {
+        const copyId = copyInput.value.trim();
+
+        if (!copyId) {
+            showAlert('Enter Sr. No. before copying entry.', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${form.dataset.copyUrl}/${encodeURIComponent(copyId)}`, {
+                headers: { Accept: 'application/json' },
+            });
+
+            if (!response.ok) {
+                showAlert('No entry found in database for this Sr. No.', 'error');
+                return;
+            }
+
+            const { entry } = await response.json();
+
+            fields.forEach((field) => {
+                if (field === beatSelect || field === beneCodeSelect) return;
+                setValue(field, entry[fieldKey(field)]);
+            });
+
+            refreshBeatOptions(entry.beat);
+            refreshBeneCodeOptions(entry.sf_bene_code);
+            recalculate();
+
+            copiedMode = true;
+            setCopiedFieldState();
+            showAlert('Copied entry loaded from database. Turn on Edit copied entry to modify fields.');
+        } catch (error) {
+            showAlert('Copy failed. Please try again.', 'error');
+        }
+    });
+
+    form.addEventListener('reset', (event) => {
+        event.preventDefault();
+        clearForm();
+        alert.className = 'hidden rounded-lg border px-4 py-3 text-sm font-semibold';
+        alert.textContent = '';
+    });
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        fields.forEach((field) => field.disabled = false);
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: new FormData(form),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                const message = result.message || Object.values(result.errors || {})[0]?.[0] || 'Please check the form and try again.';
+                showAlert(message, 'error');
+                return;
+            }
+
+            if (result.redirect_url) {
+                window.location.href = result.redirect_url;
+                return;
+            }
+
+            clearForm(result.next_serial);
+            showAlert(`Success: Notification - ${result.message}`);
+        } catch (error) {
+            showAlert('Submit failed. Please try again.', 'error');
+        }
+    });
+
+    recalculate();
+})();

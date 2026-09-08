@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Finance\TenderEntryController;
 use App\Http\Controllers\Admin\Finance\FreeEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerArrearsEntryController;
+use App\Http\Controllers\Admin\Finance\SfBeneficiaryEntryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -108,6 +109,14 @@ Route::middleware('auth')->group(function () {
     Route::get('finance/d-wager-arrears-entry/{dWagerArrearsEntry}/edit', [DWagerArrearsEntryController::class, 'edit'])->name('finance.d-wager-arrears-entries.edit');
     Route::put('finance/d-wager-arrears-entry/{dWagerArrearsEntry}', [DWagerArrearsEntryController::class, 'update'])->name('finance.d-wager-arrears-entries.update');
     Route::delete('finance/d-wager-arrears-entry/{dWagerArrearsEntry}', [DWagerArrearsEntryController::class, 'destroy'])->name('finance.d-wager-arrears-entries.destroy');
+
+    Route::get('finance/sf-beneficiary-entries', [SfBeneficiaryEntryController::class, 'index'])->name('finance.sf-beneficiary-entries.index');
+    Route::get('finance/sf-beneficiary-entry', [SfBeneficiaryEntryController::class, 'create'])->name('finance.sf-beneficiary-entries.create');
+    Route::post('finance/sf-beneficiary-entry', [SfBeneficiaryEntryController::class, 'store'])->name('finance.sf-beneficiary-entries.store');
+    Route::get('finance/sf-beneficiary-entry/copy/{serialNumber}', [SfBeneficiaryEntryController::class, 'copy'])->name('finance.sf-beneficiary-entries.copy');
+    Route::get('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}/edit', [SfBeneficiaryEntryController::class, 'edit'])->name('finance.sf-beneficiary-entries.edit');
+    Route::put('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}', [SfBeneficiaryEntryController::class, 'update'])->name('finance.sf-beneficiary-entries.update');
+    Route::delete('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}', [SfBeneficiaryEntryController::class, 'destroy'])->name('finance.sf-beneficiary-entries.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
