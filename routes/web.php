@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Finance\DivisionTenderPartyController;
 use App\Http\Controllers\Admin\Finance\TenderEntryController;
 use App\Http\Controllers\Admin\Finance\FreeEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
+use App\Http\Controllers\Admin\Finance\DWagerArrearsEntryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -99,6 +100,14 @@ Route::middleware('auth')->group(function () {
     Route::get('finance/d-wager-salary-entry/{dWagerSalaryEntry}/edit', [DWagerSalaryEntryController::class, 'edit'])->name('finance.d-wager-salary-entries.edit');
     Route::put('finance/d-wager-salary-entry/{dWagerSalaryEntry}', [DWagerSalaryEntryController::class, 'update'])->name('finance.d-wager-salary-entries.update');
     Route::delete('finance/d-wager-salary-entry/{dWagerSalaryEntry}', [DWagerSalaryEntryController::class, 'destroy'])->name('finance.d-wager-salary-entries.destroy');
+
+    Route::get('finance/d-wager-arrears-entries', [DWagerArrearsEntryController::class, 'index'])->name('finance.d-wager-arrears-entries.index');
+    Route::get('finance/d-wager-arrears-entry', [DWagerArrearsEntryController::class, 'create'])->name('finance.d-wager-arrears-entries.create');
+    Route::post('finance/d-wager-arrears-entry', [DWagerArrearsEntryController::class, 'store'])->name('finance.d-wager-arrears-entries.store');
+    Route::get('finance/d-wager-arrears-entry/copy/{serialNumber}', [DWagerArrearsEntryController::class, 'copy'])->name('finance.d-wager-arrears-entries.copy');
+    Route::get('finance/d-wager-arrears-entry/{dWagerArrearsEntry}/edit', [DWagerArrearsEntryController::class, 'edit'])->name('finance.d-wager-arrears-entries.edit');
+    Route::put('finance/d-wager-arrears-entry/{dWagerArrearsEntry}', [DWagerArrearsEntryController::class, 'update'])->name('finance.d-wager-arrears-entries.update');
+    Route::delete('finance/d-wager-arrears-entry/{dWagerArrearsEntry}', [DWagerArrearsEntryController::class, 'destroy'])->name('finance.d-wager-arrears-entries.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

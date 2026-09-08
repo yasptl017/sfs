@@ -763,3 +763,13 @@ initVoucherForm(document.querySelector('[data-d-wager-salary-form]'), {
     deductionSelector: '[data-deduction-input]',
     buildItemRow: () => null,
 });
+
+initEntrySearch('[data-d-wager-arrears-search]', '[data-d-wager-arrears-row]');
+
+initVoucherForm(document.querySelector('[data-d-wager-arrears-form]'), {
+    alertId: 'dWagerArrearsFormAlert',
+    serialFieldId: 'entry_sr_no',
+    copyInputId: 'copy_entry_sr_no',
+    deductionSelector: '[data-deduction-input]',
+    buildItemRow: () => null,
+});
