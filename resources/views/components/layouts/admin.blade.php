@@ -33,6 +33,10 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M8 10h.01M16 10h.01"/></svg>
                         <span>Divisions</span>
                     </a>
+                    <a class="nav-link {{ request()->routeIs('admin.budget-codes.*') ? 'active' : '' }}" href="{{ route('admin.budget-codes.index') }}" title="Budget Codes">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg>
+                        <span>Budget Codes</span>
+                    </a>
                 @endif
 
                 @if(auth()->user()->isDivision())

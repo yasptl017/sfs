@@ -202,6 +202,8 @@ const sfSearch = document.querySelector('[data-sf-search]'); sfSearch?.addEventL
 
 const dps=document.querySelector('[data-division-party-search]');dps?.addEventListener('input',()=>{const q=dps.value.toLowerCase();document.querySelectorAll('[data-division-party-row]').forEach(r=>r.hidden=q!==''&&!r.textContent.toLowerCase().includes(q));});
 
+const budgetCodeSearch=document.querySelector('[data-budget-code-search]');budgetCodeSearch?.addEventListener('input',()=>{const q=budgetCodeSearch.value.toLowerCase();document.querySelectorAll('[data-budget-code-row]').forEach(r=>r.hidden=q!==''&&!r.textContent.toLowerCase().includes(q));});
+
 const divisionPartyForm = document.querySelector('[data-division-party-form]');
 
 if (divisionPartyForm) {

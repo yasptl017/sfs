@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BudgetCodeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
@@ -37,6 +38,12 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/divisions', [DivisionController::class, 'store'])->name('admin.divisions.store');
     Route::put('admin/divisions/{division}', [DivisionController::class, 'update'])->name('admin.divisions.update');
     Route::delete('admin/divisions/{division}', [DivisionController::class, 'destroy'])->name('admin.divisions.destroy');
+    Route::get('admin/budget-codes', [BudgetCodeController::class, 'index'])->name('admin.budget-codes.index');
+    Route::get('admin/budget-codes/create', [BudgetCodeController::class, 'create'])->name('admin.budget-codes.create');
+    Route::post('admin/budget-codes', [BudgetCodeController::class, 'store'])->name('admin.budget-codes.store');
+    Route::get('admin/budget-codes/{budgetCode}/edit', [BudgetCodeController::class, 'edit'])->name('admin.budget-codes.edit');
+    Route::put('admin/budget-codes/{budgetCode}', [BudgetCodeController::class, 'update'])->name('admin.budget-codes.update');
+    Route::delete('admin/budget-codes/{budgetCode}', [BudgetCodeController::class, 'destroy'])->name('admin.budget-codes.destroy');
     Route::get('ranges', [RangeController::class, 'index'])->name('ranges.index');
     Route::post('ranges', [RangeController::class, 'store'])->name('ranges.store');
     Route::get('range-locations', [RangeLocationController::class, 'index'])->name('range-locations.index');
