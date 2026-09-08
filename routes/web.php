@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Finance\FreeEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerArrearsEntryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryEntryController;
+use App\Http\Controllers\Admin\Finance\WlBeneficiaryEntryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -117,6 +118,14 @@ Route::middleware('auth')->group(function () {
     Route::get('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}/edit', [SfBeneficiaryEntryController::class, 'edit'])->name('finance.sf-beneficiary-entries.edit');
     Route::put('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}', [SfBeneficiaryEntryController::class, 'update'])->name('finance.sf-beneficiary-entries.update');
     Route::delete('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}', [SfBeneficiaryEntryController::class, 'destroy'])->name('finance.sf-beneficiary-entries.destroy');
+
+    Route::get('finance/wl-beneficiary-entries', [WlBeneficiaryEntryController::class, 'index'])->name('finance.wl-beneficiary-entries.index');
+    Route::get('finance/wl-beneficiary-entry', [WlBeneficiaryEntryController::class, 'create'])->name('finance.wl-beneficiary-entries.create');
+    Route::post('finance/wl-beneficiary-entry', [WlBeneficiaryEntryController::class, 'store'])->name('finance.wl-beneficiary-entries.store');
+    Route::get('finance/wl-beneficiary-entry/copy/{serialNumber}', [WlBeneficiaryEntryController::class, 'copy'])->name('finance.wl-beneficiary-entries.copy');
+    Route::get('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}/edit', [WlBeneficiaryEntryController::class, 'edit'])->name('finance.wl-beneficiary-entries.edit');
+    Route::put('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}', [WlBeneficiaryEntryController::class, 'update'])->name('finance.wl-beneficiary-entries.update');
+    Route::delete('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}', [WlBeneficiaryEntryController::class, 'destroy'])->name('finance.wl-beneficiary-entries.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

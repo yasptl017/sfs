@@ -774,13 +774,11 @@ initVoucherForm(document.querySelector('[data-d-wager-arrears-form]'), {
     buildItemRow: () => null,
 });
 
-initEntrySearch('[data-sf-bene-entry-search]', '[data-sf-bene-entry-row]');
-
-(function initSfBeneficiaryEntryForm() {
-    const form = document.querySelector('[data-sf-bene-entry-form]');
+function initBeneficiaryEntryForm(form, options) {
     if (!form) return;
 
-    const alert = document.getElementById('sfBeneficiaryEntryFormAlert');
+    const { alertId, beneCodeKey, recalculate: customRecalculate } = options;
+    const alert = document.getElementById(alertId);
     const copyInput = document.getElementById('copy_entry_sr_no');
     const copyButton = form.querySelector('[data-copy-entry]');
     const editToggle = form.querySelector('[data-edit-copied-entry]');
@@ -870,29 +868,15 @@ initEntrySearch('[data-sf-bene-entry-search]', '[data-sf-bene-entry-row]');
     refreshBeatOptions(beatSelect?.value);
     refreshBeneCodeOptions(beneCodeSelect?.value);
 
-    const num = (value) => parseFloat(value) || 0;
+    const recalculate = customRecalculate ? () => customRecalculate(form) : () => {};
 
-    const recalculate = () => {
-        const totalPlantsField = document.getElementById('total_no_of_plants');
-        const survivedField = form.querySelector('[data-plants-survived]');
-        const survivalPercentField = form.querySelector('[data-survival-percent]');
-        const ratePerPlantField = form.querySelector('[data-rate-per-plant]');
-        const totalAmountField = form.querySelector('[data-total-amount]');
-
-        const totalPlants = num(totalPlantsField?.value);
-        const survived = num(survivedField?.value);
-        const survivalPercent = totalPlants > 0 ? (survived / totalPlants) * 100 : 0;
-        if (survivalPercentField) survivalPercentField.value = survivalPercent.toFixed(2);
-
-        const amount = survived * num(ratePerPlantField?.value);
-        if (totalAmountField) totalAmountField.value = amount.toFixed(2);
-    };
-
-    form.addEventListener('input', (event) => {
-        if (event.target.matches('#total_no_of_plants, [data-plants-survived], [data-rate-per-plant]')) {
-            recalculate();
-        }
-    });
+    if (customRecalculate) {
+        form.addEventListener('input', (event) => {
+            if (event.target.matches('#total_no_of_plants, [data-plants-survived], [data-rate-per-plant]')) {
+                recalculate();
+            }
+        });
+    }
 
     const setCopiedFieldState = () => {
         if (!copiedMode) {
@@ -947,7 +931,7 @@ initEntrySearch('[data-sf-bene-entry-search]', '[data-sf-bene-entry-row]');
             });
 
             refreshBeatOptions(entry.beat);
-            refreshBeneCodeOptions(entry.sf_bene_code);
+            refreshBeneCodeOptions(entry[beneCodeKey]);
             recalculate();
 
             copiedMode = true;
@@ -1000,4 +984,34 @@ initEntrySearch('[data-sf-bene-entry-search]', '[data-sf-bene-entry-row]');
     });
 
     recalculate();
-})();
+}
+
+initEntrySearch('[data-sf-bene-entry-search]', '[data-sf-bene-entry-row]');
+
+initBeneficiaryEntryForm(document.querySelector('[data-sf-bene-entry-form]'), {
+    alertId: 'sfBeneficiaryEntryFormAlert',
+    beneCodeKey: 'sf_bene_code',
+    recalculate: (form) => {
+        const num = (value) => parseFloat(value) || 0;
+        const totalPlantsField = document.getElementById('total_no_of_plants');
+        const survivedField = form.querySelector('[data-plants-survived]');
+        const survivalPercentField = form.querySelector('[data-survival-percent]');
+        const ratePerPlantField = form.querySelector('[data-rate-per-plant]');
+        const totalAmountField = form.querySelector('[data-total-amount]');
+
+        const totalPlants = num(totalPlantsField?.value);
+        const survived = num(survivedField?.value);
+        const survivalPercent = totalPlants > 0 ? (survived / totalPlants) * 100 : 0;
+        if (survivalPercentField) survivalPercentField.value = survivalPercent.toFixed(2);
+
+        const amount = survived * num(ratePerPlantField?.value);
+        if (totalAmountField) totalAmountField.value = amount.toFixed(2);
+    },
+});
+
+initEntrySearch('[data-wl-bene-entry-search]', '[data-wl-bene-entry-row]');
+
+initBeneficiaryEntryForm(document.querySelector('[data-wl-bene-entry-form]'), {
+    alertId: 'wlBeneficiaryEntryFormAlert',
+    beneCodeKey: 'wl_bene_code',
+});

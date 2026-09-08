@@ -83,7 +83,7 @@
                             <a class="{{ request()->routeIs('finance.free-entries.*') ? 'active' : '' }}" href="{{ route('finance.free-entries.index') }}" title="Free Entry">Free Entry</a>
                             <a class="{{ request()->routeIs('finance.d-wager-salary-entries.*') ? 'active' : '' }}" href="{{ route('finance.d-wager-salary-entries.index') }}" title="D. Wagers Salary">D. Wagers Salary</a>
                             <a class="{{ request()->routeIs('finance.d-wager-arrears-entries.*') ? 'active' : '' }}" href="{{ route('finance.d-wager-arrears-entries.index') }}" title="D. Wagers Arrears">D. Wagers Arrears</a>
-                            <a href="#" title="WL Beneficiary Entry">WL Beneficiary Entry</a>
+                            <a class="{{ request()->routeIs('finance.wl-beneficiary-entries.*') ? 'active' : '' }}" href="{{ route('finance.wl-beneficiary-entries.index') }}" title="WL Beneficiary Entry">WL Beneficiary Entry</a>
                             <a class="{{ request()->routeIs('finance.sf-beneficiary-entries.*') ? 'active' : '' }}" href="{{ route('finance.sf-beneficiary-entries.index') }}" title="SF Beneficiary Entry">SF Beneficiary Entry</a>
                             <a href="#" title="B.T. Bill Entry">B.T. Bill Entry</a>
                         </div>
