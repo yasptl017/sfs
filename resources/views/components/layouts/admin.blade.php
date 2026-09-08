@@ -79,7 +79,7 @@
                             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                         </summary>
                         <div class="nav-submenu">
-                            <a href="#" title="Tender Entry">Tender Entry</a>
+                            <a class="{{ request()->routeIs('finance.tender-entries.*') ? 'active' : '' }}" href="{{ route('finance.tender-entries.index') }}" title="Tender Entry">Tender Entry</a>
                             <a href="#" title="Free Entry">Free Entry</a>
                             <a href="#" title="D. Wagers Salary">D. Wagers Salary</a>
                             <a href="#" title="D. Wagers Arrears">D. Wagers Arrears</a>

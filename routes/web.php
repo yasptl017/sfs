@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\DivisionTenderPartyController;
+use App\Http\Controllers\Admin\Finance\TenderEntryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -72,6 +73,14 @@ Route::middleware('auth')->group(function () {
     Route::put('finance/registration/sf-beneficiary/{beneficiary}', [SfBeneficiaryController::class, 'update'])->name('finance.registration.sf-beneficiaries.update');
     Route::patch('finance/registration/sf-beneficiary/{beneficiary}/status', [SfBeneficiaryController::class, 'toggleStatus'])->name('finance.registration.sf-beneficiaries.status');
     Route::delete('finance/registration/sf-beneficiary/{beneficiary}', [SfBeneficiaryController::class, 'destroy'])->name('finance.registration.sf-beneficiaries.destroy');
+
+    Route::get('finance/tender-entries', [TenderEntryController::class, 'index'])->name('finance.tender-entries.index');
+    Route::get('finance/tender-entry', [TenderEntryController::class, 'create'])->name('finance.tender-entries.create');
+    Route::post('finance/tender-entry', [TenderEntryController::class, 'store'])->name('finance.tender-entries.store');
+    Route::get('finance/tender-entry/copy/{serialNumber}', [TenderEntryController::class, 'copy'])->name('finance.tender-entries.copy');
+    Route::get('finance/tender-entry/{tenderEntry}/edit', [TenderEntryController::class, 'edit'])->name('finance.tender-entries.edit');
+    Route::put('finance/tender-entry/{tenderEntry}', [TenderEntryController::class, 'update'])->name('finance.tender-entries.update');
+    Route::delete('finance/tender-entry/{tenderEntry}', [TenderEntryController::class, 'destroy'])->name('finance.tender-entries.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

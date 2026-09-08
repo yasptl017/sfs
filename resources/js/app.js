@@ -406,3 +406,301 @@ if (divisionPartyForm) {
         }
     });
 }
+
+const tenderEntrySearch = document.querySelector('[data-tender-entry-search]');
+tenderEntrySearch?.addEventListener('input', () => {
+    const query = tenderEntrySearch.value.toLowerCase();
+    document.querySelectorAll('[data-tender-entry-row]').forEach((row) => {
+        row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query);
+    });
+});
+
+const tenderEntryForm = document.querySelector('[data-tender-entry-form]');
+
+if (tenderEntryForm) {
+    const alert = document.getElementById('tenderEntryFormAlert');
+    const copyInput = document.getElementById('copy_entry_sr_no');
+    const copyButton = tenderEntryForm.querySelector('[data-copy-entry]');
+    const editToggle = tenderEntryForm.querySelector('[data-edit-copied-entry]');
+    const fields = [...tenderEntryForm.querySelectorAll('[data-entry-field]')];
+    const serialField = document.getElementById('entry_sr_no');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    let copiedMode = false;
+
+    let budgetCodes = {};
+    let beatsByRound = {};
+    let placesByBeat = {};
+    try { budgetCodes = JSON.parse(tenderEntryForm.dataset.budgetCodes || '{}'); } catch (e) { budgetCodes = {}; }
+    try { beatsByRound = JSON.parse(tenderEntryForm.dataset.beatsByRound || '{}'); } catch (e) { beatsByRound = {}; }
+    try { placesByBeat = JSON.parse(tenderEntryForm.dataset.placesByBeat || '{}'); } catch (e) { placesByBeat = {}; }
+
+    const budgetCodeSelect = tenderEntryForm.querySelector('[data-budget-code-select]');
+    const schemeField = tenderEntryForm.querySelector('[data-scheme-field]');
+    const modelField = tenderEntryForm.querySelector('[data-model-field]');
+    const schemeYearField = tenderEntryForm.querySelector('[data-scheme-year-field]');
+    const roundSelect = tenderEntryForm.querySelector('[data-round-select]');
+    const beatSelect = tenderEntryForm.querySelector('[data-beat-select]');
+    const placeSelect = tenderEntryForm.querySelector('[data-place-select]');
+
+    const fieldKey = (field) => {
+        const match = field.name.match(/^data\[(.+)\]$/);
+        return match ? match[1] : field.name;
+    };
+
+    const showAlert = (message, type = 'success') => {
+        alert.textContent = message;
+        alert.className = type === 'success'
+            ? 'rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800'
+            : 'rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800';
+    };
+
+    const setValue = (field, value) => {
+        if (field.type === 'radio') {
+            field.checked = field.value === value;
+            return;
+        }
+
+        field.value = value ?? '';
+    };
+
+    const applyBudgetCode = () => {
+        const details = budgetCodes[budgetCodeSelect?.value];
+        if (schemeField) schemeField.value = details?.scheme ?? '';
+        if (modelField) modelField.value = details?.model ?? '';
+        if (schemeYearField) schemeYearField.value = details?.scheme_year ?? '';
+    };
+
+    const refreshBeatOptions = (selectedBeat = '') => {
+        if (!roundSelect || !beatSelect) return;
+
+        const beats = [...(beatsByRound[roundSelect.value] || [])];
+        if (selectedBeat && !beats.includes(selectedBeat)) beats.push(selectedBeat);
+
+        beatSelect.innerHTML = '<option value="" disabled>Choose...</option>'
+            + beats.map((beat) => `<option ${beat === selectedBeat ? 'selected' : ''}>${beat}</option>`).join('');
+    };
+
+    const refreshPlaceOptions = (selectedPlace = '') => {
+        if (!beatSelect || !placeSelect) return;
+
+        const places = [...(placesByBeat[beatSelect.value] || [])];
+        if (selectedPlace && !places.includes(selectedPlace)) places.push(selectedPlace);
+
+        placeSelect.innerHTML = '<option value="" disabled>Choose...</option>'
+            + places.map((place) => `<option ${place === selectedPlace ? 'selected' : ''}>${place}</option>`).join('');
+    };
+
+    budgetCodeSelect?.addEventListener('change', applyBudgetCode);
+    roundSelect?.addEventListener('change', () => { refreshBeatOptions(); refreshPlaceOptions(); });
+    beatSelect?.addEventListener('change', () => refreshPlaceOptions());
+
+    refreshBeatOptions(beatSelect?.value);
+    refreshPlaceOptions(placeSelect?.value);
+
+    const num = (value) => parseFloat(value) || 0;
+
+    const recalculateTotals = () => {
+        const itemRows = [...tenderEntryForm.querySelectorAll('[data-item-row]')];
+        let subTotal = 0;
+
+        itemRows.forEach((row) => {
+            const qty = num(row.querySelector('[data-item-qty]')?.value);
+            const rate = num(row.querySelector('[data-item-rate]')?.value);
+            const amount = qty * rate;
+            const amountField = row.querySelector('[data-item-amount]');
+            if (amountField) amountField.value = amount.toFixed(2);
+            subTotal += amount;
+        });
+
+        const subTotalField = tenderEntryForm.querySelector('[data-sub-total]');
+        if (subTotalField) subTotalField.value = subTotal.toFixed(2);
+
+        const approvedPercent = num(tenderEntryForm.querySelector('[data-approved-percent]')?.value);
+        const approvedAmount = subTotal * (approvedPercent / 100);
+        const approvedAmountField = tenderEntryForm.querySelector('[data-approved-amount]');
+        if (approvedAmountField) approvedAmountField.value = approvedAmount.toFixed(2);
+
+        const additions = [...tenderEntryForm.querySelectorAll('[data-total-input]')]
+            .reduce((sum, field) => sum + num(field.value), 0);
+        const totalAmount = approvedAmount + additions;
+        const totalAmountField = tenderEntryForm.querySelector('[data-total-amount]');
+        if (totalAmountField) totalAmountField.value = totalAmount.toFixed(2);
+
+        const deductionFields = [...tenderEntryForm.querySelectorAll('[id^="deduction_"], #deposit_deduction_amount, #tds, #labour_cess')];
+        const totalDeduction = deductionFields.reduce((sum, field) => sum + num(field.value), 0);
+        const totalDeductionField = tenderEntryForm.querySelector('[data-total-deduction]');
+        if (totalDeductionField) totalDeductionField.value = totalDeduction.toFixed(2);
+
+        const netAmountField = tenderEntryForm.querySelector('[data-net-amount]');
+        if (netAmountField) netAmountField.value = (totalAmount - totalDeduction).toFixed(2);
+    };
+
+    tenderEntryForm.addEventListener('input', (event) => {
+        if (event.target.matches('[data-item-qty], [data-item-rate], [data-approved-percent], [data-total-input], [id^="deduction_"], #deposit_deduction_amount, #tds, #labour_cess')) {
+            recalculateTotals();
+        }
+    });
+
+    let itemIndex = tenderEntryForm.querySelectorAll('[data-item-row]').length;
+
+    const buildItemRow = (index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'border-b border-emerald-100 p-5 last:border-b-0';
+        wrapper.setAttribute('data-item-row', '');
+        wrapper.setAttribute('data-item-index', String(index));
+        wrapper.innerHTML = `
+            <div class="mb-3 flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-slate-950" data-item-title>${index + 1}. Work item</h3>
+                <button class="secondary-button min-h-7 border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] text-red-700" type="button" data-remove-item>Remove</button>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div><label class="form-label">SOR Code</label><input class="form-input" name="data[items][${index}][sor_code]" data-item-field></div>
+                <div class="md:col-span-2 xl:col-span-3"><label class="form-label">Work Description</label><input class="form-input" name="data[items][${index}][work_description]" data-item-field></div>
+                <div><label class="form-label">Work Order No.</label><input class="form-input" name="data[items][${index}][work_order_no]" data-item-field></div>
+                <div><label class="form-label">Work Order Date</label><input class="form-input" name="data[items][${index}][work_order_date]" type="date" data-item-field></div>
+                <div><label class="form-label">Work Start Date</label><input class="form-input" name="data[items][${index}][work_start_date]" type="date" data-item-field></div>
+                <div><label class="form-label">Work End Date</label><input class="form-input" name="data[items][${index}][work_end_date]" type="date" data-item-field></div>
+                <div><label class="form-label">No. of Unit</label><input class="form-input" name="data[items][${index}][no_of_unit]" value="0.00000" type="number" min="0" step="any" data-item-field data-item-qty></div>
+                <div><label class="form-label">Unit</label><input class="form-input" name="data[items][${index}][unit]" data-item-field></div>
+                <div><label class="form-label">SOR Rate</label><input class="form-input" name="data[items][${index}][sor_rate]" type="number" min="0" step="any" data-item-field data-item-rate></div>
+                <div><label class="form-label">Amount</label><input class="form-input bg-stone-50" name="data[items][${index}][amount]" readonly data-item-field data-item-amount></div>
+            </div>
+            <p class="mt-2 text-xs text-slate-500" data-item-remaining-limit>Remaining Limit = -</p>
+        `;
+
+        return wrapper;
+    };
+
+    const renumberItems = () => {
+        [...tenderEntryForm.querySelectorAll('[data-item-row]')].forEach((row, index) => {
+            row.setAttribute('data-item-index', String(index));
+            const title = row.querySelector('[data-item-title]');
+            if (title) title.textContent = `${index + 1}. Work item`;
+            row.querySelectorAll('[name]').forEach((field) => {
+                field.name = field.name.replace(/data\[items\]\[\d+\]/, `data[items][${index}]`);
+            });
+        });
+    };
+
+    tenderEntryForm.querySelector('[data-add-item]')?.addEventListener('click', () => {
+        const rowsContainer = tenderEntryForm.querySelector('[data-item-rows]');
+        rowsContainer?.appendChild(buildItemRow(itemIndex));
+        itemIndex += 1;
+        renumberItems();
+    });
+
+    tenderEntryForm.addEventListener('click', (event) => {
+        if (event.target.matches('[data-remove-item]')) {
+            event.target.closest('[data-item-row]')?.remove();
+            renumberItems();
+            recalculateTotals();
+        }
+    });
+
+    const setCopiedFieldState = () => {
+        if (!copiedMode) {
+            fields.forEach((field) => field.disabled = false);
+            return;
+        }
+
+        fields.forEach((field) => {
+            field.disabled = field !== serialField && !editToggle.checked;
+        });
+    };
+
+    const clearForm = (nextSerial = serialField.value) => {
+        fields.forEach((field) => {
+            field.disabled = false;
+            field.value = '';
+        });
+
+        serialField.value = nextSerial;
+        copiedMode = false;
+        if (editToggle) editToggle.checked = false;
+        refreshBeatOptions();
+        refreshPlaceOptions();
+        recalculateTotals();
+    };
+
+    editToggle?.addEventListener('change', setCopiedFieldState);
+
+    copyButton?.addEventListener('click', async () => {
+        const copyId = copyInput.value.trim();
+
+        if (!copyId) {
+            showAlert('Enter Sr. No. before copying entry.', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${tenderEntryForm.dataset.copyUrl}/${encodeURIComponent(copyId)}`, {
+                headers: { Accept: 'application/json' },
+            });
+
+            if (!response.ok) {
+                showAlert('No entry found in database for this Sr. No.', 'error');
+                return;
+            }
+
+            const { entry } = await response.json();
+
+            fields.forEach((field) => {
+                if (field === beatSelect || field === placeSelect) return;
+                setValue(field, entry[fieldKey(field)]);
+            });
+
+            refreshBeatOptions(entry.beat);
+            refreshPlaceOptions(entry.place);
+            recalculateTotals();
+
+            copiedMode = true;
+            setCopiedFieldState();
+            showAlert('Copied entry loaded from database. Turn on Edit copied entry to modify fields.');
+        } catch (error) {
+            showAlert('Copy failed. Please try again.', 'error');
+        }
+    });
+
+    tenderEntryForm.addEventListener('reset', (event) => {
+        event.preventDefault();
+        clearForm();
+        alert.className = 'hidden rounded-lg border px-4 py-3 text-sm font-semibold';
+        alert.textContent = '';
+    });
+
+    tenderEntryForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        fields.forEach((field) => field.disabled = false);
+
+        try {
+            const response = await fetch(tenderEntryForm.action, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: new FormData(tenderEntryForm),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                const message = result.message || Object.values(result.errors || {})[0]?.[0] || 'Please check the form and try again.';
+                showAlert(message, 'error');
+                return;
+            }
+
+            if (result.redirect_url) {
+                window.location.href = result.redirect_url;
+                return;
+            }
+
+            clearForm(result.next_serial);
+            showAlert(`Success: Notification - ${result.message}`);
+        } catch (error) {
+            showAlert('Submit failed. Please try again.', 'error');
+        }
+    });
+
+    recalculateTotals();
+}
