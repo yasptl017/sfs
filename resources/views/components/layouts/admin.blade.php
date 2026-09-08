@@ -80,8 +80,8 @@
                         </summary>
                         <div class="nav-submenu">
                             <a class="{{ request()->routeIs('finance.tender-entries.*') ? 'active' : '' }}" href="{{ route('finance.tender-entries.index') }}" title="Tender Entry">Tender Entry</a>
-                            <a href="#" title="Free Entry">Free Entry</a>
-                            <a href="#" title="D. Wagers Salary">D. Wagers Salary</a>
+                            <a class="{{ request()->routeIs('finance.free-entries.*') ? 'active' : '' }}" href="{{ route('finance.free-entries.index') }}" title="Free Entry">Free Entry</a>
+                            <a class="{{ request()->routeIs('finance.d-wager-salary-entries.*') ? 'active' : '' }}" href="{{ route('finance.d-wager-salary-entries.index') }}" title="D. Wagers Salary">D. Wagers Salary</a>
                             <a href="#" title="D. Wagers Arrears">D. Wagers Arrears</a>
                             <a href="#" title="WL Beneficiary Entry">WL Beneficiary Entry</a>
                             <a href="#" title="SF Beneficiary Entry">SF Beneficiary Entry</a>

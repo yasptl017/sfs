@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\Finance\WlBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\DivisionTenderPartyController;
 use App\Http\Controllers\Admin\Finance\TenderEntryController;
+use App\Http\Controllers\Admin\Finance\FreeEntryController;
+use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -81,6 +83,22 @@ Route::middleware('auth')->group(function () {
     Route::get('finance/tender-entry/{tenderEntry}/edit', [TenderEntryController::class, 'edit'])->name('finance.tender-entries.edit');
     Route::put('finance/tender-entry/{tenderEntry}', [TenderEntryController::class, 'update'])->name('finance.tender-entries.update');
     Route::delete('finance/tender-entry/{tenderEntry}', [TenderEntryController::class, 'destroy'])->name('finance.tender-entries.destroy');
+
+    Route::get('finance/free-entries', [FreeEntryController::class, 'index'])->name('finance.free-entries.index');
+    Route::get('finance/free-entry', [FreeEntryController::class, 'create'])->name('finance.free-entries.create');
+    Route::post('finance/free-entry', [FreeEntryController::class, 'store'])->name('finance.free-entries.store');
+    Route::get('finance/free-entry/copy/{serialNumber}', [FreeEntryController::class, 'copy'])->name('finance.free-entries.copy');
+    Route::get('finance/free-entry/{freeEntry}/edit', [FreeEntryController::class, 'edit'])->name('finance.free-entries.edit');
+    Route::put('finance/free-entry/{freeEntry}', [FreeEntryController::class, 'update'])->name('finance.free-entries.update');
+    Route::delete('finance/free-entry/{freeEntry}', [FreeEntryController::class, 'destroy'])->name('finance.free-entries.destroy');
+
+    Route::get('finance/d-wager-salary-entries', [DWagerSalaryEntryController::class, 'index'])->name('finance.d-wager-salary-entries.index');
+    Route::get('finance/d-wager-salary-entry', [DWagerSalaryEntryController::class, 'create'])->name('finance.d-wager-salary-entries.create');
+    Route::post('finance/d-wager-salary-entry', [DWagerSalaryEntryController::class, 'store'])->name('finance.d-wager-salary-entries.store');
+    Route::get('finance/d-wager-salary-entry/copy/{serialNumber}', [DWagerSalaryEntryController::class, 'copy'])->name('finance.d-wager-salary-entries.copy');
+    Route::get('finance/d-wager-salary-entry/{dWagerSalaryEntry}/edit', [DWagerSalaryEntryController::class, 'edit'])->name('finance.d-wager-salary-entries.edit');
+    Route::put('finance/d-wager-salary-entry/{dWagerSalaryEntry}', [DWagerSalaryEntryController::class, 'update'])->name('finance.d-wager-salary-entries.update');
+    Route::delete('finance/d-wager-salary-entry/{dWagerSalaryEntry}', [DWagerSalaryEntryController::class, 'destroy'])->name('finance.d-wager-salary-entries.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

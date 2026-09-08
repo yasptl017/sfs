@@ -407,40 +407,43 @@ if (divisionPartyForm) {
     });
 }
 
-const tenderEntrySearch = document.querySelector('[data-tender-entry-search]');
-tenderEntrySearch?.addEventListener('input', () => {
-    const query = tenderEntrySearch.value.toLowerCase();
-    document.querySelectorAll('[data-tender-entry-row]').forEach((row) => {
-        row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query);
+function initEntrySearch(searchSelector, rowSelector) {
+    const search = document.querySelector(searchSelector);
+    search?.addEventListener('input', () => {
+        const query = search.value.toLowerCase();
+        document.querySelectorAll(rowSelector).forEach((row) => {
+            row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query);
+        });
     });
-});
+}
 
-const tenderEntryForm = document.querySelector('[data-tender-entry-form]');
+function initVoucherForm(form, options) {
+    if (!form) return;
 
-if (tenderEntryForm) {
-    const alert = document.getElementById('tenderEntryFormAlert');
-    const copyInput = document.getElementById('copy_entry_sr_no');
-    const copyButton = tenderEntryForm.querySelector('[data-copy-entry]');
-    const editToggle = tenderEntryForm.querySelector('[data-edit-copied-entry]');
-    const fields = [...tenderEntryForm.querySelectorAll('[data-entry-field]')];
-    const serialField = document.getElementById('entry_sr_no');
+    const { alertId, serialFieldId, copyInputId, buildItemRow, deductionSelector } = options;
+    const alert = document.getElementById(alertId);
+    const copyInput = document.getElementById(copyInputId);
+    const copyButton = form.querySelector('[data-copy-entry]');
+    const editToggle = form.querySelector('[data-edit-copied-entry]');
+    const fields = [...form.querySelectorAll('[data-entry-field]')];
+    const serialField = document.getElementById(serialFieldId);
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     let copiedMode = false;
 
     let budgetCodes = {};
     let beatsByRound = {};
     let placesByBeat = {};
-    try { budgetCodes = JSON.parse(tenderEntryForm.dataset.budgetCodes || '{}'); } catch (e) { budgetCodes = {}; }
-    try { beatsByRound = JSON.parse(tenderEntryForm.dataset.beatsByRound || '{}'); } catch (e) { beatsByRound = {}; }
-    try { placesByBeat = JSON.parse(tenderEntryForm.dataset.placesByBeat || '{}'); } catch (e) { placesByBeat = {}; }
+    try { budgetCodes = JSON.parse(form.dataset.budgetCodes || '{}'); } catch (e) { budgetCodes = {}; }
+    try { beatsByRound = JSON.parse(form.dataset.beatsByRound || '{}'); } catch (e) { beatsByRound = {}; }
+    try { placesByBeat = JSON.parse(form.dataset.placesByBeat || '{}'); } catch (e) { placesByBeat = {}; }
 
-    const budgetCodeSelect = tenderEntryForm.querySelector('[data-budget-code-select]');
-    const schemeField = tenderEntryForm.querySelector('[data-scheme-field]');
-    const modelField = tenderEntryForm.querySelector('[data-model-field]');
-    const schemeYearField = tenderEntryForm.querySelector('[data-scheme-year-field]');
-    const roundSelect = tenderEntryForm.querySelector('[data-round-select]');
-    const beatSelect = tenderEntryForm.querySelector('[data-beat-select]');
-    const placeSelect = tenderEntryForm.querySelector('[data-place-select]');
+    const budgetCodeSelect = form.querySelector('[data-budget-code-select]');
+    const schemeField = form.querySelector('[data-scheme-field]');
+    const modelField = form.querySelector('[data-model-field]');
+    const schemeYearField = form.querySelector('[data-scheme-year-field]');
+    const roundSelect = form.querySelector('[data-round-select]');
+    const beatSelect = form.querySelector('[data-beat-select]');
+    const placeSelect = form.querySelector('[data-place-select]');
 
     const fieldKey = (field) => {
         const match = field.name.match(/^data\[(.+)\]$/);
@@ -500,7 +503,7 @@ if (tenderEntryForm) {
     const num = (value) => parseFloat(value) || 0;
 
     const recalculateTotals = () => {
-        const itemRows = [...tenderEntryForm.querySelectorAll('[data-item-row]')];
+        const itemRows = [...form.querySelectorAll('[data-item-row]')];
         let subTotal = 0;
 
         itemRows.forEach((row) => {
@@ -512,67 +515,40 @@ if (tenderEntryForm) {
             subTotal += amount;
         });
 
-        const subTotalField = tenderEntryForm.querySelector('[data-sub-total]');
+        const subTotalField = form.querySelector('[data-sub-total]');
         if (subTotalField) subTotalField.value = subTotal.toFixed(2);
 
-        const approvedPercent = num(tenderEntryForm.querySelector('[data-approved-percent]')?.value);
+        const approvedPercentField = form.querySelector('[data-approved-percent]');
+        const approvedPercent = approvedPercentField ? num(approvedPercentField.value) : 100;
         const approvedAmount = subTotal * (approvedPercent / 100);
-        const approvedAmountField = tenderEntryForm.querySelector('[data-approved-amount]');
+        const approvedAmountField = form.querySelector('[data-approved-amount]');
         if (approvedAmountField) approvedAmountField.value = approvedAmount.toFixed(2);
 
-        const additions = [...tenderEntryForm.querySelectorAll('[data-total-input]')]
+        const additions = [...form.querySelectorAll('[data-total-input]')]
             .reduce((sum, field) => sum + num(field.value), 0);
         const totalAmount = approvedAmount + additions;
-        const totalAmountField = tenderEntryForm.querySelector('[data-total-amount]');
+        const totalAmountField = form.querySelector('[data-total-amount]');
         if (totalAmountField) totalAmountField.value = totalAmount.toFixed(2);
 
-        const deductionFields = [...tenderEntryForm.querySelectorAll('[id^="deduction_"], #deposit_deduction_amount, #tds, #labour_cess')];
+        const deductionFields = [...form.querySelectorAll(deductionSelector)];
         const totalDeduction = deductionFields.reduce((sum, field) => sum + num(field.value), 0);
-        const totalDeductionField = tenderEntryForm.querySelector('[data-total-deduction]');
+        const totalDeductionField = form.querySelector('[data-total-deduction]');
         if (totalDeductionField) totalDeductionField.value = totalDeduction.toFixed(2);
 
-        const netAmountField = tenderEntryForm.querySelector('[data-net-amount]');
+        const netAmountField = form.querySelector('[data-net-amount]');
         if (netAmountField) netAmountField.value = (totalAmount - totalDeduction).toFixed(2);
     };
 
-    tenderEntryForm.addEventListener('input', (event) => {
-        if (event.target.matches('[data-item-qty], [data-item-rate], [data-approved-percent], [data-total-input], [id^="deduction_"], #deposit_deduction_amount, #tds, #labour_cess')) {
+    form.addEventListener('input', (event) => {
+        if (event.target.matches('[data-item-qty], [data-item-rate], [data-approved-percent], [data-total-input]') || event.target.matches(deductionSelector)) {
             recalculateTotals();
         }
     });
 
-    let itemIndex = tenderEntryForm.querySelectorAll('[data-item-row]').length;
-
-    const buildItemRow = (index) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'border-b border-emerald-100 p-5 last:border-b-0';
-        wrapper.setAttribute('data-item-row', '');
-        wrapper.setAttribute('data-item-index', String(index));
-        wrapper.innerHTML = `
-            <div class="mb-3 flex items-center justify-between">
-                <h3 class="text-sm font-semibold text-slate-950" data-item-title>${index + 1}. Work item</h3>
-                <button class="secondary-button min-h-7 border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] text-red-700" type="button" data-remove-item>Remove</button>
-            </div>
-            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                <div><label class="form-label">SOR Code</label><input class="form-input" name="data[items][${index}][sor_code]" data-item-field></div>
-                <div class="md:col-span-2 xl:col-span-3"><label class="form-label">Work Description</label><input class="form-input" name="data[items][${index}][work_description]" data-item-field></div>
-                <div><label class="form-label">Work Order No.</label><input class="form-input" name="data[items][${index}][work_order_no]" data-item-field></div>
-                <div><label class="form-label">Work Order Date</label><input class="form-input" name="data[items][${index}][work_order_date]" type="date" data-item-field></div>
-                <div><label class="form-label">Work Start Date</label><input class="form-input" name="data[items][${index}][work_start_date]" type="date" data-item-field></div>
-                <div><label class="form-label">Work End Date</label><input class="form-input" name="data[items][${index}][work_end_date]" type="date" data-item-field></div>
-                <div><label class="form-label">No. of Unit</label><input class="form-input" name="data[items][${index}][no_of_unit]" value="0.00000" type="number" min="0" step="any" data-item-field data-item-qty></div>
-                <div><label class="form-label">Unit</label><input class="form-input" name="data[items][${index}][unit]" data-item-field></div>
-                <div><label class="form-label">SOR Rate</label><input class="form-input" name="data[items][${index}][sor_rate]" type="number" min="0" step="any" data-item-field data-item-rate></div>
-                <div><label class="form-label">Amount</label><input class="form-input bg-stone-50" name="data[items][${index}][amount]" readonly data-item-field data-item-amount></div>
-            </div>
-            <p class="mt-2 text-xs text-slate-500" data-item-remaining-limit>Remaining Limit = -</p>
-        `;
-
-        return wrapper;
-    };
+    let itemIndex = form.querySelectorAll('[data-item-row]').length;
 
     const renumberItems = () => {
-        [...tenderEntryForm.querySelectorAll('[data-item-row]')].forEach((row, index) => {
+        [...form.querySelectorAll('[data-item-row]')].forEach((row, index) => {
             row.setAttribute('data-item-index', String(index));
             const title = row.querySelector('[data-item-title]');
             if (title) title.textContent = `${index + 1}. Work item`;
@@ -582,19 +558,27 @@ if (tenderEntryForm) {
         });
     };
 
-    tenderEntryForm.querySelector('[data-add-item]')?.addEventListener('click', () => {
-        const rowsContainer = tenderEntryForm.querySelector('[data-item-rows]');
+    form.querySelector('[data-add-item]')?.addEventListener('click', () => {
+        const rowsContainer = form.querySelector('[data-item-rows]');
         rowsContainer?.appendChild(buildItemRow(itemIndex));
         itemIndex += 1;
         renumberItems();
     });
 
-    tenderEntryForm.addEventListener('click', (event) => {
+    form.addEventListener('click', (event) => {
         if (event.target.matches('[data-remove-item]')) {
             event.target.closest('[data-item-row]')?.remove();
             renumberItems();
             recalculateTotals();
         }
+    });
+
+    const salaryToggle = form.querySelector('[data-toggle-salary-deductions]');
+    salaryToggle?.addEventListener('change', () => {
+        form.querySelectorAll('[data-salary-deduction]').forEach((el) => {
+            el.hidden = !salaryToggle.checked;
+        });
+        recalculateTotals();
     });
 
     const setCopiedFieldState = () => {
@@ -633,7 +617,7 @@ if (tenderEntryForm) {
         }
 
         try {
-            const response = await fetch(`${tenderEntryForm.dataset.copyUrl}/${encodeURIComponent(copyId)}`, {
+            const response = await fetch(`${form.dataset.copyUrl}/${encodeURIComponent(copyId)}`, {
                 headers: { Accept: 'application/json' },
             });
 
@@ -661,25 +645,25 @@ if (tenderEntryForm) {
         }
     });
 
-    tenderEntryForm.addEventListener('reset', (event) => {
+    form.addEventListener('reset', (event) => {
         event.preventDefault();
         clearForm();
         alert.className = 'hidden rounded-lg border px-4 py-3 text-sm font-semibold';
         alert.textContent = '';
     });
 
-    tenderEntryForm.addEventListener('submit', async (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
         fields.forEach((field) => field.disabled = false);
 
         try {
-            const response = await fetch(tenderEntryForm.action, {
+            const response = await fetch(form.action, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'X-CSRF-TOKEN': csrfToken,
                 },
-                body: new FormData(tenderEntryForm),
+                body: new FormData(form),
             });
 
             const result = await response.json();
@@ -704,3 +688,78 @@ if (tenderEntryForm) {
 
     recalculateTotals();
 }
+
+initEntrySearch('[data-tender-entry-search]', '[data-tender-entry-row]');
+
+initVoucherForm(document.querySelector('[data-tender-entry-form]'), {
+    alertId: 'tenderEntryFormAlert',
+    serialFieldId: 'entry_sr_no',
+    copyInputId: 'copy_entry_sr_no',
+    deductionSelector: '[id^="deduction_"], #deposit_deduction_amount, #tds, #labour_cess',
+    buildItemRow: (index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'border-b border-emerald-100 p-5 last:border-b-0';
+        wrapper.setAttribute('data-item-row', '');
+        wrapper.setAttribute('data-item-index', String(index));
+        wrapper.innerHTML = `
+            <div class="mb-3 flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-slate-950" data-item-title>${index + 1}. Work item</h3>
+                <button class="secondary-button min-h-7 border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] text-red-700" type="button" data-remove-item>Remove</button>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div><label class="form-label">SOR Code</label><input class="form-input" name="data[items][${index}][sor_code]" data-item-field></div>
+                <div class="md:col-span-2 xl:col-span-3"><label class="form-label">Work Description</label><input class="form-input" name="data[items][${index}][work_description]" data-item-field></div>
+                <div><label class="form-label">Work Order No.</label><input class="form-input" name="data[items][${index}][work_order_no]" data-item-field></div>
+                <div><label class="form-label">Work Order Date</label><input class="form-input" name="data[items][${index}][work_order_date]" type="date" data-item-field></div>
+                <div><label class="form-label">Work Start Date</label><input class="form-input" name="data[items][${index}][work_start_date]" type="date" data-item-field></div>
+                <div><label class="form-label">Work End Date</label><input class="form-input" name="data[items][${index}][work_end_date]" type="date" data-item-field></div>
+                <div><label class="form-label">No. of Unit</label><input class="form-input" name="data[items][${index}][no_of_unit]" value="0.00000" type="number" min="0" step="any" data-item-field data-item-qty></div>
+                <div><label class="form-label">Unit</label><input class="form-input" name="data[items][${index}][unit]" data-item-field></div>
+                <div><label class="form-label">SOR Rate</label><input class="form-input" name="data[items][${index}][sor_rate]" type="number" min="0" step="any" data-item-field data-item-rate></div>
+                <div><label class="form-label">Amount</label><input class="form-input bg-stone-50" name="data[items][${index}][amount]" readonly data-item-field data-item-amount></div>
+            </div>
+            <p class="mt-2 text-xs text-slate-500" data-item-remaining-limit>Remaining Limit = -</p>
+        `;
+
+        return wrapper;
+    },
+});
+
+initEntrySearch('[data-free-entry-search]', '[data-free-entry-row]');
+
+initVoucherForm(document.querySelector('[data-free-entry-form]'), {
+    alertId: 'freeEntryFormAlert',
+    serialFieldId: 'entry_sr_no',
+    copyInputId: 'copy_entry_sr_no',
+    deductionSelector: '[id^="deduction_"], #tds, #labour_cess',
+    buildItemRow: (index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'border-b border-emerald-100 p-5 last:border-b-0';
+        wrapper.setAttribute('data-item-row', '');
+        wrapper.setAttribute('data-item-index', String(index));
+        wrapper.innerHTML = `
+            <div class="mb-3 flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-slate-950" data-item-title>${index + 1}. Work item</h3>
+                <button class="secondary-button min-h-7 border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] text-red-700" type="button" data-remove-item>Remove</button>
+            </div>
+            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div class="md:col-span-2 xl:col-span-2"><label class="form-label">Work Description</label><input class="form-input" name="data[items][${index}][work_description]" data-item-field></div>
+                <div><label class="form-label">No. of Unit</label><input class="form-input" name="data[items][${index}][no_of_unit]" value="0.00000" type="number" min="0" step="any" data-item-field data-item-qty></div>
+                <div><label class="form-label">Rate</label><input class="form-input" name="data[items][${index}][rate]" value="0.00000" type="number" min="0" step="any" data-item-field data-item-rate></div>
+                <div><label class="form-label">Amount</label><input class="form-input bg-stone-50" name="data[items][${index}][amount]" readonly data-item-field data-item-amount></div>
+            </div>
+        `;
+
+        return wrapper;
+    },
+});
+
+initEntrySearch('[data-d-wager-salary-search]', '[data-d-wager-salary-row]');
+
+initVoucherForm(document.querySelector('[data-d-wager-salary-form]'), {
+    alertId: 'dWagerSalaryFormAlert',
+    serialFieldId: 'entry_sr_no',
+    copyInputId: 'copy_entry_sr_no',
+    deductionSelector: '[data-deduction-input]',
+    buildItemRow: () => null,
+});
