@@ -1,11 +1,8 @@
 <x-layouts.admin title="Budget Codes | Forest Inventory" heading="Budget Code Management" subheading="All configured budget codes">
     <div class="space-y-5">
-        <div class="flex flex-col gap-3 sm:flex-row sm:justify-between">
-            <div><h2 class="font-semibold">Budget codes</h2></div>
-            <div class="flex gap-2">
-                <input class="form-input min-h-9 py-1.5" placeholder="Search any budget code detail..." data-budget-code-search>
-                <a class="primary-button whitespace-nowrap" href="{{ route('admin.budget-codes.create') }}">Add Budget Code</a>
-            </div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <input class="form-input min-h-9 py-1.5 sm:max-w-sm" placeholder="Search any budget code detail..." data-budget-code-search>
+            <a class="primary-button whitespace-nowrap sm:ml-auto" href="{{ route('admin.budget-codes.create') }}">Add Budget Code</a>
         </div>
         <div class="overflow-x-auto rounded-lg border border-emerald-100 bg-white">
             <table class="data-table compact-data-table min-w-[100rem]">

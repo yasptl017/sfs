@@ -1,8 +1,8 @@
 <x-layouts.admin title="Party Details | Forest Inventory" heading="Party Details" subheading="All registration fields for this range">
     <div class="space-y-5">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div><h2 class="text-base font-semibold text-slate-950">Registered parties</h2><p class="mt-1 text-sm text-slate-500">Scroll horizontally to review every saved field.</p></div><div class="w-full sm:w-80"><label class="sr-only" for="partyTableSearch">Search parties</label><input id="partyTableSearch" class="form-input min-h-9 py-1.5" type="search" placeholder="Search any party detail..." data-party-table-search></div>
-            <a class="primary-button w-full sm:w-auto" href="{{ route('finance.registration.party') }}">Add Party</a>
+            <input class="form-input min-h-9 py-1.5 sm:max-w-sm" type="search" placeholder="Search any party detail..." data-party-table-search>
+            <a class="primary-button whitespace-nowrap sm:ml-auto" href="{{ route('finance.registration.party') }}">Add Party</a>
         </div>
         <div class="rounded-lg border border-emerald-100 bg-white shadow-sm"><div class="overflow-x-auto"><table class="data-table compact-data-table min-w-[160rem]"><thead><tr><th>Sr. No.</th><th>Party Code</th><th>Party Name</th><th>Round</th><th>Approved %</th><th>Description</th><th>PAN</th><th>GST</th><th>Bank</th><th>Account No.</th><th>IFSC</th><th>Branch</th><th>SGST %</th><th>CGST %</th><th>IGST %</th><th>Labour Cess %</th><th>Deposit Deduction %</th><th>TDS %</th><th>Approval No.</th><th>Approval File</th><th>Aadhaar No.</th><th>Mobile</th><th>Email</th><th>Contact File</th><th>Document Link</th><th>Address</th><th>Status</th><th>Created</th><th class="text-right">Actions</th></tr></thead><tbody>
             @forelse($parties as $party)
