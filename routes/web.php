@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Finance\SfBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\DivisionTenderPartyController;
 use App\Http\Controllers\Admin\Finance\CashAccountController;
 use App\Http\Controllers\Admin\Finance\AllotmentFromCircleController;
+use App\Http\Controllers\Admin\Finance\AllotmentToRangeController;
 use App\Http\Controllers\Admin\Finance\TenderEntryController;
 use App\Http\Controllers\Admin\Finance\FreeEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
@@ -51,6 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::get('division/allotment-from-circle/{allotmentFromCircle}/edit', [AllotmentFromCircleController::class, 'edit'])->name('division.allotments-from-circle.edit');
     Route::put('division/allotment-from-circle/{allotmentFromCircle}', [AllotmentFromCircleController::class, 'update'])->name('division.allotments-from-circle.update');
     Route::delete('division/allotment-from-circle/{allotmentFromCircle}', [AllotmentFromCircleController::class, 'destroy'])->name('division.allotments-from-circle.destroy');
+    Route::get('division/allotment-to-range', [AllotmentToRangeController::class, 'create'])->name('division.allotments-to-range.create');
+    Route::post('division/allotment-to-range', [AllotmentToRangeController::class, 'store'])->name('division.allotments-to-range.store');
+    Route::get('division/allotment-to-range/budget-details/{budgetCode}', [AllotmentToRangeController::class, 'budgetDetails'])->name('division.allotments-to-range.budget-details');
     Route::get('admin/divisions', [DivisionController::class, 'index'])->name('admin.divisions.index');
     Route::post('admin/divisions', [DivisionController::class, 'store'])->name('admin.divisions.store');
     Route::put('admin/divisions/{division}', [DivisionController::class, 'update'])->name('admin.divisions.update');

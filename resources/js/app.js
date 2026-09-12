@@ -237,6 +237,61 @@ if (allotmentFromCircleForm) {
 const allotmentFromCircleSearch = document.querySelector('[data-allotment-from-circle-search]');
 allotmentFromCircleSearch?.addEventListener('input', () => { const query = allotmentFromCircleSearch.value.toLowerCase(); document.querySelectorAll('[data-allotment-from-circle-row]').forEach((row) => row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query)); });
 
+const allotmentToRangeForm = document.querySelector('[data-allotment-to-range-form]');
+
+if (allotmentToRangeForm) {
+    const codeSelect = allotmentToRangeForm.querySelector('[data-range-budget-code]');
+    const rows = allotmentToRangeForm.querySelector('[data-range-allocation-rows]');
+    const value = (selector, input) => { const field = allotmentToRangeForm.querySelector(selector); if (field) field.value = input ?? ''; };
+    const number = (input) => Number(input || 0);
+    const money = (input) => number(input).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    let budget = null;
+
+    const refreshRow = (row) => {
+        const existingTarget = number(row.dataset.existingTarget);
+        const existingAllotment = number(row.dataset.existingAllotment);
+        const target = number(row.querySelector('[data-row-target]').value);
+        const allotment = number(row.querySelector('[data-row-allotment]').value);
+        row.querySelector('[data-new-target]').value = money(existingTarget + target);
+        row.querySelector('[data-new-allotment]').value = money(existingAllotment + allotment);
+    };
+
+    const setTargetFromAllotment = (row) => {
+        const rate = number(budget?.rate);
+        row.querySelector('[data-row-target]').value = rate > 0 ? (number(row.querySelector('[data-row-allotment]').value) / rate).toFixed(2) : '0';
+    };
+
+    const renderRows = (rangeData) => {
+        rows.innerHTML = rangeData.map((range, index) => `<tr data-allocation-row data-existing-target="${range.existing_target}" data-existing-allotment="${range.existing_allotment}">
+            <td>${range.name}<input type="hidden" name="allocations[${index}][range_id]" value="${range.id}"></td><td>${money(range.existing_target)}</td><td>${money(range.existing_allotment)}</td><td>${money(range.expenditure)}</td><td>${money(range.vouchers_entered)}</td><td>${money(range.remaining_allotment)}</td>
+            <td><input class="form-input min-w-28" name="allocations[${index}][target]" type="number" step="0.01" value="0" data-row-target></td><td><input class="form-input min-w-28" name="allocations[${index}][allotment]" type="number" step="0.01" value="0" data-row-allotment></td><td><input class="form-input min-w-28 bg-slate-50" readonly data-new-target></td><td><input class="form-input min-w-28 bg-slate-50" readonly data-new-allotment></td></tr>`).join('');
+        rows.querySelectorAll('[data-allocation-row]').forEach((row) => {
+            const target = row.querySelector('[data-row-target]'); const allotment = row.querySelector('[data-row-allotment]');
+            [target, allotment].forEach((input) => input.addEventListener('input', () => refreshRow(row)));
+            refreshRow(row);
+        });
+    };
+
+    codeSelect?.addEventListener('change', async () => {
+        rows.innerHTML = '<tr><td colspan="10" class="text-center">Loading budget details...</td></tr>';
+        try {
+            const response = await fetch(`${allotmentToRangeForm.dataset.detailsUrl}/${codeSelect.value}`, { headers: { Accept: 'application/json' } });
+            if (!response.ok) throw new Error();
+            const data = await response.json(); budget = data.budget;
+            value('[data-budget-rate]', budget.rate); value('[data-budget-target]', budget.target); value('[data-budget-allotment]', money(budget.allotment_from_circle)); value('[data-budget-adjusted]', money(budget.adjusted_allotment)); value('[data-budget-pending-target]', budget.pending_target); value('[data-budget-scheme]', budget.scheme); value('[data-budget-model]', budget.model);
+            renderRows(data.ranges);
+        } catch (error) { budget = null; rows.innerHTML = '<tr><td colspan="10" class="text-center text-red-700">No Allotment from Circle is available for this budget code.</td></tr>'; }
+    });
+
+    allotmentToRangeForm.querySelector('[data-distribute-percent]')?.addEventListener('click', () => {
+        const percent = number(allotmentToRangeForm.querySelector('[data-distribution-percent]').value);
+        const allocationRows = [...rows.querySelectorAll('[data-allocation-row]')];
+        if (!budget || !allocationRows.length || percent <= 0) return;
+        const amountEach = ((number(budget.adjusted_allotment) * percent / 100) / allocationRows.length).toFixed(2);
+        allocationRows.forEach((row) => { row.querySelector('[data-row-allotment]').value = amountEach; setTargetFromAllotment(row); refreshRow(row); });
+    });
+}
+
 const divisionPartyForm = document.querySelector('[data-division-party-form]');
 
 if (divisionPartyForm) {
