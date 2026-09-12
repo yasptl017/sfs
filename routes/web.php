@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\DivisionTenderPartyController;
+use App\Http\Controllers\Admin\Finance\CashAccountController;
 use App\Http\Controllers\Admin\Finance\TenderEntryController;
 use App\Http\Controllers\Admin\Finance\FreeEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
@@ -40,6 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::put('division/parties/{party}', [DivisionTenderPartyController::class, 'update'])->name('division.parties.update');
     Route::patch('division/parties/{party}/status', [DivisionTenderPartyController::class, 'toggleStatus'])->name('division.parties.status');
     Route::delete('division/parties/{party}', [DivisionTenderPartyController::class, 'destroy'])->name('division.parties.destroy');
+    Route::get('division/cash-accounts', [CashAccountController::class, 'index'])->name('division.cash-accounts.index');
+    Route::get('division/cash-account', [CashAccountController::class, 'create'])->name('division.cash-accounts.create');
+    Route::post('division/cash-account', [CashAccountController::class, 'store'])->name('division.cash-accounts.store');
     Route::get('admin/divisions', [DivisionController::class, 'index'])->name('admin.divisions.index');
     Route::post('admin/divisions', [DivisionController::class, 'store'])->name('admin.divisions.store');
     Route::put('admin/divisions/{division}', [DivisionController::class, 'update'])->name('admin.divisions.update');
