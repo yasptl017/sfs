@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up(): void { Schema::create('allotment_adjustments',function(Blueprint $t){$t->id();$t->foreignId('division_id')->constrained('users')->cascadeOnDelete();$t->foreignId('from_budget_code_id')->constrained('budget_codes')->restrictOnDelete();$t->foreignId('to_budget_code_id')->constrained('budget_codes')->restrictOnDelete();$t->decimal('amount',15,2);$t->text('remark')->nullable();$t->json('data');$t->timestamps();}); } public function down(): void { Schema::dropIfExists('allotment_adjustments'); } };

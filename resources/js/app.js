@@ -292,6 +292,42 @@ if (allotmentToRangeForm) {
     });
 }
 
+const adjustmentSearch = document.querySelector('[data-adjustment-search]');
+adjustmentSearch?.addEventListener('input', () => { const q = adjustmentSearch.value.toLowerCase(); document.querySelectorAll('[data-adjustment-row]').forEach((row) => row.hidden = q !== '' && !row.textContent.toLowerCase().includes(q)); });
+
+const adjustmentForm = document.querySelector('[data-adjustment-form]');
+if (adjustmentForm) {
+    const amount = adjustmentForm.querySelector('[data-adjustment-amount]');
+    const codes = [...adjustmentForm.querySelectorAll('[data-adjustment-code]')];
+    const details = {};
+    const money = (value) => Number(value || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const display = (side) => {
+        const data = details[side] || {};
+        ['scheme', 'class', 'model', 'allotment_from_circle', 'adjusted_allotment', 'pending_allotment'].forEach((key) => {
+            const field = adjustmentForm.querySelector(`[data-adjustment-detail="${side}-${key}"]`);
+            if (field) field.value = ['allotment_from_circle', 'adjusted_allotment', 'pending_allotment'].includes(key) ? money(data[key]) : (data[key] ?? '');
+        });
+        const newPending = Number(data.pending_allotment || 0) + (side === 'to' ? Number(amount.value || 0) : -Number(amount.value || 0));
+        const newField = adjustmentForm.querySelector(`[data-adjustment-detail="${side}-new_pending"]`);
+        if (newField) newField.value = money(newPending);
+    };
+    const load = async (select) => {
+        if (!select.value) return;
+        const side = select.dataset.adjustmentCode;
+        try {
+            const query = adjustmentForm.dataset.exclude ? `?exclude=${adjustmentForm.dataset.exclude}` : '';
+            const response = await fetch(`${adjustmentForm.dataset.detailsUrl}/${select.value}${query}`, { headers: { Accept: 'application/json' } });
+            if (!response.ok) throw new Error();
+            details[side] = await response.json(); display(side);
+        } catch (error) { details[side] = {}; display(side); }
+    };
+    codes.forEach((select) => { select.addEventListener('change', () => load(select)); if (select.value) load(select); });
+    amount.addEventListener('input', () => { display('from'); display('to'); });
+}
+
+const lcEntrySearch = document.querySelector('[data-lc-entry-search]');
+lcEntrySearch?.addEventListener('input', () => { const q = lcEntrySearch.value.toLowerCase(); document.querySelectorAll('[data-lc-entry-row]').forEach((row) => row.hidden = q !== '' && !row.textContent.toLowerCase().includes(q)); });
+
 const divisionPartyForm = document.querySelector('[data-division-party-form]');
 
 if (divisionPartyForm) {
