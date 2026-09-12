@@ -204,6 +204,39 @@ const dps=document.querySelector('[data-division-party-search]');dps?.addEventLi
 
 const budgetCodeSearch=document.querySelector('[data-budget-code-search]');budgetCodeSearch?.addEventListener('input',()=>{const q=budgetCodeSearch.value.toLowerCase();document.querySelectorAll('[data-budget-code-row]').forEach(r=>r.hidden=q!==''&&!r.textContent.toLowerCase().includes(q));});
 
+const allotmentFromCircleForm = document.querySelector('[data-allotment-from-circle-form]');
+
+if (allotmentFromCircleForm) {
+    let budgetCodeDetails = {};
+    try { budgetCodeDetails = JSON.parse(allotmentFromCircleForm.dataset.budgetCodeDetails || '{}'); } catch (error) { budgetCodeDetails = {}; }
+
+    const budgetCodeSelect = allotmentFromCircleForm.querySelector('[data-allotment-budget-code]');
+    const rateField = allotmentFromCircleForm.querySelector('#rate');
+    const targetField = allotmentFromCircleForm.querySelector('#target');
+    const allotmentField = allotmentFromCircleForm.querySelector('#allotment');
+    let allotmentWasChangedManually = Boolean(allotmentField?.value);
+
+    const showBudgetDetails = () => {
+        const details = budgetCodeDetails[budgetCodeSelect?.value] || {};
+        allotmentFromCircleForm.querySelectorAll('[data-budget-detail]').forEach((field) => field.value = details[field.dataset.budgetDetail] ?? '');
+    };
+
+    const setDefaultAllotment = () => {
+        if (allotmentWasChangedManually || !rateField?.value || !targetField?.value) return;
+
+        allotmentField.value = (Number(rateField.value) * Number(targetField.value)).toFixed(2);
+    };
+
+    budgetCodeSelect?.addEventListener('change', showBudgetDetails);
+    rateField?.addEventListener('input', setDefaultAllotment);
+    targetField?.addEventListener('input', setDefaultAllotment);
+    allotmentField?.addEventListener('input', () => allotmentWasChangedManually = true);
+    setDefaultAllotment();
+}
+
+const allotmentFromCircleSearch = document.querySelector('[data-allotment-from-circle-search]');
+allotmentFromCircleSearch?.addEventListener('input', () => { const query = allotmentFromCircleSearch.value.toLowerCase(); document.querySelectorAll('[data-allotment-from-circle-row]').forEach((row) => row.hidden = query !== '' && !row.textContent.toLowerCase().includes(query)); });
+
 const divisionPartyForm = document.querySelector('[data-division-party-form]');
 
 if (divisionPartyForm) {
