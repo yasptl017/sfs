@@ -108,6 +108,7 @@ class VoucherPrintController extends Controller
 
         $serialNumbers = $this->parseSerialNumbers($serialNumbersInput);
         $vouchers = $this->compileVouchers($request->user(), $entryType, $serialNumbers, $withWorkOrder, $fitToPage);
+        $profile = $request->user()->getOrCreateOfficeProfile();
 
         return view('admin.finance.voucher-print.print', [
             'entryType' => $entryType,
@@ -115,6 +116,7 @@ class VoucherPrintController extends Controller
             'withWorkOrder' => $withWorkOrder,
             'fitToPage' => $fitToPage,
             'rangeUser' => $request->user(),
+            'profile' => $profile,
         ]);
     }
 

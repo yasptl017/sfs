@@ -18,6 +18,7 @@ class DashboardController extends Controller
             'recentRanges' => $user->isDivision()
                 ? $user->ranges()->latest()->limit(5)->get()
                 : collect(),
+            'profile' => $user->getOrCreateOfficeProfile(),
             'user' => $user,
         ]);
     }

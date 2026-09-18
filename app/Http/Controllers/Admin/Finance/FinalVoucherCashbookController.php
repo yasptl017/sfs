@@ -208,7 +208,8 @@ class FinalVoucherCashbookController extends Controller
     private function compileReportData(string $month, string $paymentMode, string $reportType, ?int $rangeId): array
     {
         $divisionUser = auth()->user();
-        $divisionName = $divisionUser ? ($divisionUser->name . ' Forest Division') : 'Himatnagar Forest Division';
+        $profile = $divisionUser?->getOrCreateOfficeProfile();
+        $divisionName = $profile ? $profile->display_name : 'Himatnagar Forest Division';
 
         $rangeModel = $rangeId ? User::find($rangeId) : null;
         $rangeName = $rangeModel ? $rangeModel->name : 'All Ranges';
@@ -223,6 +224,9 @@ class FinalVoucherCashbookController extends Controller
             'cashbook' => 'DIVISION CASH BOOK (કેશબૂક રજીસ્ટર)',
             'cashbook_credit' => 'CASH BOOK - CREDIT PART (આવક/જમા ભાગ)',
             'cashbook_debit' => 'CASH BOOK - DEBIT PART (ખર્ચ/ઉધાર ભાગ)',
+            'cashbook_title' => 'CASH BOOK TITLE PAGE (કેશબૂક મુખપૃષ્ઠ)',
+            'cashbook_sticker' => 'CASH BOOK STICKER A5 (કેશબૂક સ્ટીકર)',
+            'cashbook_certificate' => 'CASH BOOK CERTIFICATE (કેશબૂક પ્રમાણપત્ર)',
             'range_form_35' => "FORM NO. 35 FOR RANGE: {$rangeName}",
             'range_cashbook' => "RANGE CASH BOOK (રેન્જ કેશબૂક): {$rangeName}",
         ];
@@ -235,6 +239,12 @@ class FinalVoucherCashbookController extends Controller
 
         return [
             'division_name' => $divisionName,
+            'division_name_gujarati' => $profile?->display_name_gujarati ?? 'સામાજિક વનીકરણ વિભાગ',
+            'officer_name' => $profile?->display_officer_name ?? '',
+            'officer_designation' => $profile?->display_designation ?? 'Deputy Conservator of Forests',
+            'officer_designation_gujarati' => $profile?->display_designation_gujarati ?? 'નાયબ વન સંરક્ષક',
+            'logo_url' => $profile?->logo_url ?? asset('images/gujarat-forest-logo.svg'),
+            'address' => $profile?->formatted_address ?? '',
             'range_name' => $rangeName,
             'month' => $month,
             'payment_mode' => $paymentMode,

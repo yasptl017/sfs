@@ -85,13 +85,22 @@
         <!-- Printable Document Sheet -->
         <div class="printable-card bg-white rounded-xl border border-slate-300 p-6 sm:p-8 shadow-sm print:border-none print:shadow-none print:p-0 print:rounded-none">
             
-            <!-- Official Department Header -->
-            <div class="border-b-2 border-slate-900 pb-3 mb-4 text-center space-y-0.5">
-                <h1 class="text-base sm:text-lg font-black text-slate-950 uppercase tracking-wide">GUJARAT STATE FOREST DEPARTMENT</h1>
-                <h2 class="text-xs sm:text-sm font-bold text-slate-800">{{ $data['division_name'] }}</h2>
-                <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider pt-0.5">
-                    {{ $data['report_title'] }}
-                </h3>
+            <!-- Official Header -->
+            <div class="border-b-2 border-slate-900 pb-3 mb-4 space-y-1 text-center">
+                <div class="flex items-center justify-between gap-3">
+                    <img src="{{ $data['logo_url'] ?? asset('images/gujarat-forest-logo.svg') }}" alt="Logo" class="h-12 w-12 object-contain shrink-0">
+                    <div class="text-center flex-1 space-y-0.5">
+                        <h1 class="text-xs sm:text-sm font-black text-slate-950 uppercase tracking-widest">GUJARAT STATE FOREST DEPARTMENT</h1>
+                        <h2 class="text-sm sm:text-base font-black text-slate-900">{{ $data['division_name'] }}</h2>
+                        <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider">
+                            {{ $data['report_title'] }}
+                        </h3>
+                        @if(!empty($data['address']))
+                            <p class="text-[10px] text-slate-600 font-medium">{{ $data['address'] }}</p>
+                        @endif
+                    </div>
+                    <div class="w-12 shrink-0 hidden sm:block"></div>
+                </div>
                 <div class="flex flex-wrap justify-between items-center text-[11px] text-slate-700 pt-2 border-t border-slate-300 mt-2 font-semibold gap-2">
                     <span><strong>Month:</strong> {{ $month }}</span>
                     <span><strong>Payment Mode:</strong> <span class="text-blue-900 font-bold">{{ $paymentMode }}</span></span>
@@ -100,8 +109,50 @@
                 </div>
             </div>
 
-            <!-- Report Format 1: CASH BOOK (Combined, Credit, Debit, Range Cashbook) -->
-            @if(in_array($reportType, ['cashbook', 'cashbook_credit', 'cashbook_debit', 'range_cashbook']))
+            <!-- Report Format 1: CASH BOOK TITLE PAGE -->
+            @if($reportType === 'cashbook_title')
+                <div class="text-center py-20 space-y-6 border-4 border-double border-slate-900 p-12 my-8">
+                    <h1 class="text-3xl sm:text-4xl font-black uppercase text-slate-950 tracking-wider">Computerised Cashbook</h1>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Month: {{ $month }} - {{ date('Y') }}</h2>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-700">Year: {{ date('Y') }}-{{ date('y', strtotime('+1 year')) }}</h3>
+                    <div class="pt-4">
+                        <span class="inline-block border-2 border-slate-900 px-6 py-2 text-base font-mono font-black">D-36</span>
+                    </div>
+                    <div class="pt-16 text-base sm:text-lg font-bold text-slate-900 space-y-1">
+                        <div>Office of The Deputy Conservator of Forest</div>
+                        <div class="text-emerald-950 font-black">{{ $data['division_name'] }}</div>
+                    </div>
+                </div>
+
+            <!-- Report Format 2: CASH BOOK STICKER A5 -->
+            @elseif($reportType === 'cashbook_sticker')
+                <div class="border-4 border-slate-900 p-8 text-center space-y-4 max-w-md mx-auto my-12 rounded-lg bg-slate-50 shadow-none">
+                    <h1 class="text-2xl font-black uppercase text-slate-950 tracking-wide">Computerised Cashbook</h1>
+                    <div class="text-base font-bold text-slate-800">Month: {{ $month }} - {{ date('Y') }}</div>
+                    <div class="text-base font-bold text-slate-800">Year: {{ date('Y') }}-{{ date('y', strtotime('+1 year')) }}</div>
+                    <div class="border-t-2 border-slate-900 pt-4 text-sm font-bold text-emerald-950 space-y-0.5">
+                        <div>Office of The Deputy Conservator of Forest</div>
+                        <div class="font-extrabold">{{ $data['division_name'] }}</div>
+                    </div>
+                </div>
+
+            <!-- Report Format 3: CASH BOOK CERTIFICATE -->
+            @elseif($reportType === 'cashbook_certificate')
+                <div class="p-8 text-left space-y-8 max-w-xl mx-auto my-12 border-2 border-slate-800 rounded-lg">
+                    <h1 class="text-2xl font-black text-center border-b-2 border-slate-900 pb-3 text-slate-950">પ્રમાણ પત્ર</h1>
+                    <p class="text-base leading-relaxed font-semibold text-slate-900 text-justify">
+                        આથી પ્રમાણપત્ર આપવામાં આવે છે કે સદરહુ રજીસ્ટરમાં પેજ નંબર ૧ થી {{ count($data['entries']) > 0 ? count($data['entries']) : 1 }} સુધી માહે: <strong>{{ $month }} - {{ date('Y') }}</strong> ના વિભાગીય કચેરીના ખર્ચની કેશબૂક તરીકે સહી સિક્કા દાગી એપ્રૂવ કરવામાં આવેલ છે.
+                    </p>
+                    <div class="pt-20 flex justify-end">
+                        <div class="text-center font-bold text-xs border-t-2 border-slate-900 pt-2 w-64 space-y-0.5">
+                            <div>Deputy Conservator of Forest</div>
+                            <div class="text-slate-700 font-semibold">{{ $data['division_name'] }}</div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Report Format 4: CASH BOOK (Combined, Credit, Debit, Range Cashbook) -->
+            @elseif(in_array($reportType, ['cashbook', 'cashbook_credit', 'cashbook_debit', 'range_cashbook']))
                 
                 <!-- Cash Book Balance Summary Cards -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 text-xs">
@@ -162,7 +213,7 @@
                     </tfoot>
                 </table>
 
-            <!-- Report Format 2: FORM NO. 35 & SORTED VOUCHERS -->
+            <!-- Report Format 5: FORM NO. 35 & SORTED VOUCHERS -->
             @else
                 <table class="w-full text-xs border border-slate-400 border-collapse mb-4">
                     <thead>
@@ -205,27 +256,32 @@
                 </table>
             @endif
 
-            <!-- Official Signatures (Compact & Break-Inside Avoid) -->
-            <div class="signatures-block grid grid-cols-3 gap-6 pt-6 text-center text-xs font-bold text-slate-900">
-                <div class="px-2">
-                    <div class="border-t-2 border-slate-800 pt-1.5">
-                        <div>તૈયાર કરનાર (Senior Clerk / Accountant)</div>
-                        <div class="text-[11px] font-semibold text-slate-700">{{ $data['division_name'] }}</div>
+            @if(!in_array($reportType, ['cashbook_title', 'cashbook_sticker', 'cashbook_certificate']))
+                <!-- Official Signatures (Compact & Break-Inside Avoid) -->
+                <div class="signatures-block grid grid-cols-3 gap-6 pt-6 text-center text-xs font-bold text-slate-900">
+                    <div class="px-2">
+                        <div class="border-t-2 border-slate-800 pt-1.5">
+                            <div>તૈયાર કરનાર (Senior Clerk / Accountant)</div>
+                            <div class="text-[11px] font-semibold text-slate-700">{{ $data['division_name'] }}</div>
+                        </div>
+                    </div>
+                    <div class="px-2">
+                        <div class="border-t-2 border-slate-800 pt-1.5">
+                            <div>ચકાસણી કરનાર (Account Officer)</div>
+                            <div class="text-[11px] font-semibold text-slate-700">{{ $data['division_name'] }}</div>
+                        </div>
+                    </div>
+                    <div class="px-2">
+                        <div class="border-t-2 border-slate-800 pt-1.5">
+                            @if(!empty($data['officer_name']))
+                                <div class="font-bold text-slate-950">{{ $data['officer_name'] }}</div>
+                            @endif
+                            <div>નાયબ વન સંરક્ષક (Deputy Conservator of Forests)</div>
+                            <div class="text-[11px] font-semibold text-slate-700">{{ $data['division_name'] }}</div>
+                        </div>
                     </div>
                 </div>
-                <div class="px-2">
-                    <div class="border-t-2 border-slate-800 pt-1.5">
-                        <div>ચકાસણી કરનાર (Account Officer)</div>
-                        <div class="text-[11px] font-semibold text-slate-700">{{ $data['division_name'] }}</div>
-                    </div>
-                </div>
-                <div class="px-2">
-                    <div class="border-t-2 border-slate-800 pt-1.5">
-                        <div>નાયબ વન સંરક્ષક (Deputy Conservator of Forests)</div>
-                        <div class="text-[11px] font-semibold text-slate-700">{{ $data['division_name'] }}</div>
-                    </div>
-                </div>
-            </div>
+            @endif
 
         </div>
     </div>

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Finance\ChangeBillOrderNoController;
 use App\Http\Controllers\Admin\Finance\GstChallanController;
 use App\Http\Controllers\Admin\Finance\FinalVoucherCashbookController;
 use App\Http\Controllers\Admin\Finance\MonthlyReportController;
+use App\Http\Controllers\Admin\Finance\SummaryReportController;
 use App\Http\Controllers\Admin\Finance\ProcessBillController;
 use App\Http\Controllers\Admin\Finance\TreasuryDetailController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\Admin\Finance\DWagerArrearsEntryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryEntryController;
 use App\Http\Controllers\Admin\Finance\VoucherPrintController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryEntryController;
+use App\Http\Controllers\Admin\OfficeProfileController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
 use App\Http\Controllers\Admin\RangeLocationController;
@@ -109,6 +111,10 @@ Route::middleware('auth')->group(function () {
     Route::get('division/monthly-reports/schemes', [MonthlyReportController::class, 'schemes'])->name('division.monthly-reports.schemes');
     Route::post('division/monthly-reports/preview', [MonthlyReportController::class, 'preview'])->name('division.monthly-reports.preview');
     Route::get('division/monthly-reports/print', [MonthlyReportController::class, 'print'])->name('division.monthly-reports.print');
+
+    Route::get('division/summary-reports', [SummaryReportController::class, 'index'])->name('division.summary-reports.index');
+    Route::post('division/summary-reports/preview', [SummaryReportController::class, 'preview'])->name('division.summary-reports.preview');
+    Route::get('division/summary-reports/print', [SummaryReportController::class, 'print'])->name('division.summary-reports.print');
 
     Route::get('division/final-voucher-cashbook', [FinalVoucherCashbookController::class, 'index'])->name('division.final-voucher-cashbook.index');
     Route::post('division/final-voucher-cashbook/assign', [FinalVoucherCashbookController::class, 'assignVouchers'])->name('division.final-voucher-cashbook.assign');
@@ -221,6 +227,10 @@ Route::middleware('auth')->group(function () {
     Route::get('finance/vavetar-register/locations', [VavetarRegisterController::class, 'locations'])->name('finance.vavetar-register.locations');
     Route::post('finance/vavetar-register/preview', [VavetarRegisterController::class, 'preview'])->name('finance.vavetar-register.preview');
     Route::get('finance/vavetar-register/print', [VavetarRegisterController::class, 'print'])->name('finance.vavetar-register.print');
+
+    Route::get('office-profile', [OfficeProfileController::class, 'edit'])->name('office-profile.edit');
+    Route::put('office-profile', [OfficeProfileController::class, 'update'])->name('office-profile.update');
+    Route::delete('office-profile/logo', [OfficeProfileController::class, 'removeLogo'])->name('office-profile.logo.destroy');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

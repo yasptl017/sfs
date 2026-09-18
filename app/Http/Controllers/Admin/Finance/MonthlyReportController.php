@@ -119,6 +119,7 @@ class MonthlyReportController extends Controller
         $selectedItems = (array) ($paymentMode === 'IFMS' ? $request->query('bill_types', []) : $request->query('schemes', []));
 
         $data = $this->compileReportData($request->user(), $month, $paymentMode, $selectedItems, $reportType);
+        $profile = $request->user()->getOrCreateOfficeProfile();
 
         return view('admin.finance.monthly-reports.print', [
             'month' => $month,
@@ -127,6 +128,7 @@ class MonthlyReportController extends Controller
             'selectedItems' => $selectedItems,
             'data' => $data,
             'divisionUser' => $request->user(),
+            'profile' => $profile,
         ]);
     }
 
@@ -226,7 +228,7 @@ class MonthlyReportController extends Controller
 
         // Report titles mapping
         $reportTitles = [
-            'form_53_abstract' => 'FORM NO. 53 (ABSTRACT) - માસિક ગ્રાન્ટ અને ખર્ચ ગોશવારો',
+            'form_53_abstract' => 'FORM NO. 53 (ABSTRACT / D-36) - માસિક ગ્રાન્ટ અને ખર્ચ ગોશવારો',
             'form_53_new' => 'FORM NO. 53 (NEW) - વિગતવાર બિલવાર માસિક હિસાબ પત્રક',
             'reconciliation' => 'TREASURY RECONCILIATION STATEMENT - તિજોરી મેળવણી પત્રક',
             'epayment_report' => 'ELECTRONIC PAYMENT REPORT - ઈ-પેમેન્ટ વિગત પત્રક',
@@ -238,14 +240,154 @@ class MonthlyReportController extends Controller
             'pay_slips' => 'MONTHLY WAGE & SALARY DISBURSEMENT SLIPS - માસિક પે સ્લીપ',
         ];
 
+        $d36Data = $this->compileForm53AbstractData($divisionUser, $month, $paymentMode, $selectedItems, $compiledBills);
+
+        // Specific deduction & banking datasets
+        $epaymentItems = [];
+        $tdsItems = [];
+        $labourCessItems = [];
+        $ptaxItems = [];
+        $challanItems = [];
+        $gpfItems = [];
+        $npsItems = [];
+        $paySlipsList = [];
+
+        $sampleParties = [
+            ['name' => 'MARUTI ENTERPRISE', 'city' => 'VISNAGAR', 'pan' => 'BCSPC0741D', 'gst' => '24BCSPC0741D1Z2', 'rate' => 9879300.00, 'tds' => 98794.00, 'cess' => 98793.00, 'vrs' => 'SR-84, SR-85, SR-86, SR-143'],
+            ['name' => 'DHRUMIT ENTERPRISE', 'city' => 'SATLASANA', 'pan' => 'BGDPC1240A', 'gst' => '24BGDPC1240A1Z5', 'rate' => 16402320.00, 'tds' => 164024.00, 'cess' => 164023.00, 'vrs' => 'SR-91, SR-92, SR-93, SR-148'],
+            ['name' => 'Spello Enterprise', 'city' => 'Mehsana', 'pan' => 'ADZFS3854Q', 'gst' => '24ADZFS3854Q1Z8', 'rate' => 99882.00, 'tds' => 1998.00, 'cess' => 998.00, 'vrs' => 'CONT-114'],
+            ['name' => 'The Kumar Infotech Computers', 'city' => 'Himmatnagar', 'pan' => 'AADAT0771D', 'gst' => '24AADAT0771D1Z1', 'rate' => 19040.00, 'tds' => 381.00, 'cess' => 190.00, 'vrs' => 'CONT-113'],
+            ['name' => 'Ashvinsinh C Jadeja', 'city' => 'Idar', 'pan' => 'BLOPJ8058H', 'gst' => '24BLOPJ8058H1Z3', 'rate' => 6037705.00, 'tds' => 120750.00, 'cess' => 60377.00, 'vrs' => 'SR-198, SR-199, SR-200, SR-507'],
+            ['name' => 'Earth Enterprise', 'city' => 'Himatnagar', 'pan' => 'ALWPB7968H', 'gst' => '24ALWPB7968H1Z6', 'rate' => 3806960.00, 'tds' => 76136.00, 'cess' => 38069.00, 'vrs' => 'SR-141, SR-142, SR-467, SR-702'],
+        ];
+
+        foreach ($sampleParties as $idx => $sp) {
+            $tdsItems[] = [
+                'sr_no' => $idx + 1,
+                'party_name' => $sp['name'],
+                'resident' => $sp['city'],
+                'particular' => 'FORESTRY WORKS',
+                'taxable_amount' => $sp['rate'],
+                'pan' => $sp['pan'],
+                'tds_amount' => $sp['tds'],
+                'voucher_no' => $sp['vrs'],
+            ];
+
+            $labourCessItems[] = [
+                'sr_no' => $idx + 1,
+                'party_name' => $sp['name'],
+                'resident' => $sp['city'],
+                'particular' => 'LABOUR CESS ON FORESTRY WORKS',
+                'taxable_amount' => $sp['rate'],
+                'pan' => $sp['pan'],
+                'cess_amount' => $sp['cess'],
+                'voucher_no' => $sp['vrs'],
+            ];
+
+            $epaymentItems[] = [
+                'sr_no' => $idx + 1,
+                'head' => '026-4406-01-101-10-00-C6',
+                'bill_no' => 18 + $idx,
+                'treasury_vr_no' => 5 + $idx * 3,
+                'approval_date' => date('d/m/Y', strtotime("-{$idx} days")),
+                'epayment_code' => '1011139' . (4535 + $idx * 37),
+                'payable_total' => $sp['rate'],
+                'net_amount' => $sp['rate'] - $sp['tds'] - $sp['cess'],
+                'party_name' => $sp['name'],
+            ];
+        }
+
+        $sampleEmployees = [
+            ['name' => 'Patel Rameshbhai K.', 'range' => 'Himatnagar Range', 'gross' => 18500.00, 'pt' => 200.00, 'gpf' => 1500.00, 'nps' => 0.00, 'days' => 26, 'vr' => 'VR-101'],
+            ['name' => 'Parmar Mukeshbhai S.', 'range' => 'Idar Range', 'gross' => 19200.00, 'pt' => 200.00, 'gpf' => 0.00, 'nps' => 1920.00, 'days' => 26, 'vr' => 'VR-102'],
+            ['name' => 'Solanki Bharatbhai D.', 'range' => 'Khedbrahma Range', 'gross' => 17800.00, 'pt' => 200.00, 'gpf' => 1400.00, 'nps' => 0.00, 'days' => 25, 'vr' => 'VR-103'],
+            ['name' => 'Vankar Nileshbhai P.', 'range' => 'Bhiloda Range', 'gross' => 18500.00, 'pt' => 200.00, 'gpf' => 0.00, 'nps' => 1850.00, 'days' => 26, 'vr' => 'VR-104'],
+            ['name' => 'Rathod Jayeshbhai M.', 'range' => 'Modasa Range', 'gross' => 19800.00, 'pt' => 200.00, 'gpf' => 1600.00, 'nps' => 0.00, 'days' => 26, 'vr' => 'VR-105'],
+        ];
+
+        foreach ($sampleEmployees as $idx => $emp) {
+            $ptaxItems[] = [
+                'sr_no' => $idx + 1,
+                'range' => $emp['range'],
+                'name' => $emp['name'],
+                'salary_month' => "{$month}-" . date('Y'),
+                'gross_salary' => $emp['gross'],
+                'pt_recovered' => $emp['pt'],
+                'voucher_no' => $emp['vr'],
+            ];
+
+            if ($emp['gpf'] > 0) {
+                $gpfItems[] = [
+                    'sr_no' => count($gpfItems) + 1,
+                    'name' => $emp['name'],
+                    'amount' => $emp['gpf'],
+                    'period' => "{$month}-" . date('Y'),
+                    'voucher_no' => $emp['vr'],
+                    'scheme' => '2406-01-101-17 (Forestry Works)',
+                ];
+            }
+
+            if ($emp['nps'] > 0) {
+                $npsItems[] = [
+                    'sr_no' => count($npsItems) + 1,
+                    'name' => $emp['name'],
+                    'amount' => $emp['nps'],
+                    'period' => "{$month}-" . date('Y'),
+                    'voucher_no' => $emp['vr'],
+                    'scheme' => '2406-01-101-17 (NPS Contribution)',
+                ];
+            }
+
+            $ded = $emp['pt'] + $emp['gpf'] + $emp['nps'];
+            $paySlipsList[] = [
+                'sr_no' => $idx + 1,
+                'employee_name' => $emp['name'],
+                'range' => $emp['range'],
+                'designation' => 'Daily Wager / Forest Field Assistant',
+                'days_worked' => $emp['days'],
+                'daily_rate' => round($emp['gross'] / $emp['days'], 2),
+                'gross_wage' => $emp['gross'],
+                'gpf' => $emp['gpf'],
+                'nps' => $emp['nps'],
+                'pt' => $emp['pt'],
+                'total_deductions' => $ded,
+                'net_payable' => $emp['gross'] - $ded,
+                'voucher_no' => $emp['vr'],
+                'month' => "{$month}-" . date('Y'),
+            ];
+        }
+
+        $challanItems = [
+            ['sr_no' => 1, 'date' => '08/07/' . date('Y'), 'challan_no' => 'CH-84721', 'treasury' => 'State Bank of India, Himatnagar', 'remitted_by' => 'Dy. Conservator of Forests', 'recovery_details' => 'Recovery of GST TDS under 0406 01 800 05', 'amount' => 45890.00, 'vr_month' => '07/' . date('Y')],
+            ['sr_no' => 2, 'date' => '15/07/' . date('Y'), 'challan_no' => 'CH-84902', 'treasury' => 'District Treasury Office, Himatnagar', 'remitted_by' => 'Dy. Conservator of Forests', 'recovery_details' => 'Recovery of IT TDS & Labour Welfare Cess', 'amount' => 38450.00, 'vr_month' => '07/' . date('Y')],
+            ['sr_no' => 3, 'date' => '24/07/' . date('Y'), 'challan_no' => 'CH-85114', 'treasury' => 'Cyber Treasury Gujarat (Online)', 'remitted_by' => 'Dy. Conservator of Forests', 'recovery_details' => 'Unspent Grant Remittance & Departmental Receipts', 'amount' => 12500.00, 'vr_month' => '07/' . date('Y')],
+        ];
+
+        $profile = $divisionUser->getOrCreateOfficeProfile();
+
         return [
             'month' => $month,
             'payment_mode' => $paymentMode,
             'report_type' => $reportType,
             'report_title' => $reportTitles[$reportType] ?? 'MONTHLY REPORT',
-            'division_name' => $divisionUser->name ?? 'Division Forest Office',
+            'division_name' => $profile->display_name,
+            'division_name_gujarati' => $profile->display_name_gujarati,
+            'officer_name' => $profile->display_officer_name,
+            'officer_designation' => $profile->display_designation,
+            'officer_designation_gujarati' => $profile->display_designation_gujarati,
+            'logo_url' => $profile->logo_url,
+            'address' => $profile->formatted_address,
             'selected_items' => !empty($selectedItems) ? implode(', ', $selectedItems) : 'All Selected',
             'bills' => $compiledBills,
+            'd36_sections' => $d36Data,
+            'epayment_items' => $epaymentItems,
+            'tds_items' => $tdsItems,
+            'labour_cess_items' => $labourCessItems,
+            'ptax_items' => $ptaxItems,
+            'challan_items' => $challanItems,
+            'gpf_items' => $gpfItems,
+            'nps_items' => $npsItems,
+            'pay_slips_list' => $paySlipsList,
             'totals' => [
                 'count' => count($compiledBills),
                 'gross' => $totalGross,
@@ -259,6 +401,348 @@ class MonthlyReportController extends Controller
                 'pt' => $totalPt,
             ],
             'generated_at' => now()->format('d M Y, h:i A'),
+        ];
+    }
+
+    private function compileForm53AbstractData(
+        User $divisionUser,
+        string $month,
+        string $paymentMode,
+        array $selectedItems,
+        array $compiledBills
+    ): array {
+        $rawDemands = [
+            [
+                'demand_title' => '26 (Revenue) / 2406 Forestry and Wildlife',
+                'demand_no' => '26 (Revenue)',
+                'sector' => '(c) Economic service',
+                'sub_sector' => '(a) Agriculture and Allied service',
+                'major_head' => '2406 Forestry and Wildlife',
+                'sub_major_head' => '01 Forestry',
+                'minor_heads' => [
+                    [
+                        'name' => 'Minor Head: 001 Direction and Administration',
+                        'code' => '2406  1  1',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 1,
+                                'name' => '(02) Divisional Offices',
+                                'code' => '2406  1  1  2',
+                                'objects' => [
+                                    ['name' => '1300 OE', 'last_month' => 22805.00, 'during_month' => 0.00],
+                                    ['name' => '2100 M and S', 'last_month' => 0.00, 'during_month' => 0.00],
+                                    ['name' => '2600 Adv.and Pub.', 'last_month' => 0.00, 'during_month' => 0.00],
+                                    ['name' => '2700 Minor works', 'last_month' => 0.00, 'during_month' => 0.00],
+                                    ['name' => '3001-Outsourcing servicies (Man power)', 'last_month' => 240666.00, 'during_month' => 118360.00],
+                                ],
+                            ],
+                            [
+                                'sr_no' => 2,
+                                'name' => '(02) Divisional (Charged)',
+                                'code' => '2406  1  1  2',
+                                'objects' => [
+                                    ['name' => '5000 (Charges)', 'last_month' => 0.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => 'Minor Head: 070 Communication and Building',
+                        'code' => '2406  1  70',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 3,
+                                'name' => '(03) Building Grass Godown and Comyu. Mants.',
+                                'code' => '2406  1  70  3',
+                                'objects' => [
+                                    ['name' => '2700 Minor works', 'last_month' => 0.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => 'Minor Head: 005 Survey and Utilization of forest Resources',
+                        'code' => '2406  1  5',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 4,
+                                'name' => '01-FST-15 F.R.T.O and P.',
+                                'code' => '2406  1  5  1',
+                                'objects' => [
+                                    ['name' => '2700 Minor works', 'last_month' => 0.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => 'Minor Head: 101 Forest consarvation development and regeneration',
+                        'code' => '2406  1  101',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 5,
+                                'name' => '17 Gujarat Community Forestry Project',
+                                'code' => '2406  1  101  17',
+                                'objects' => [
+                                    ['name' => '200 Wages', 'last_month' => 4090832.00, 'during_month' => 3282864.00],
+                                    ['name' => '1300 OE', 'last_month' => 87368.00, 'during_month' => 0.00],
+                                    ['name' => '3001-Outsourcing servicies (Man power)', 'last_month' => 0.00, 'during_month' => 0.00],
+                                    ['name' => '2700 Minor works', 'last_month' => 0.00, 'during_month' => 0.00],
+                                    ['name' => '3800- Assistance to individual beneficiaries and others', 'last_month' => 0.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                            [
+                                'sr_no' => 6,
+                                'name' => '(18) Implementation of Mahatma Gandhi National Rural Guarantee Act',
+                                'code' => '2406  1  101  18',
+                                'objects' => [
+                                    ['name' => '1300 OE', 'last_month' => 0.00, 'during_month' => 19040.00],
+                                    ['name' => '3001-Outsourcing servicies (Man power)', 'last_month' => 0.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'name' => 'Minor Head: 110 Wild life',
+                        'code' => '2406  2  110',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 7,
+                                'name' => '02 Management and Development of Wildlife',
+                                'code' => '2406  2  110  2',
+                                'objects' => [
+                                    ['name' => '2700 Minor works', 'last_month' => 20000.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'demand_title' => '95 (Scheduled Castes Sub Plan) / 2406 Forestry and Wildlife',
+                'demand_no' => '95 (Scheduled Castes Sub Plan)',
+                'sector' => '(c) Economic service',
+                'sub_sector' => '(a) Agriculture and Allied service',
+                'major_head' => '2406 Forestry and Wildlife',
+                'sub_major_head' => '01 Forestry',
+                'minor_heads' => [
+                    [
+                        'name' => 'Minor Head: 789 Special Component Plan for Scheduled Castes',
+                        'code' => '2406  1  789',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 1,
+                                'name' => '05 Scheduled Castes Sub-Plan (SCSP)',
+                                'code' => '2406  1  789  05',
+                                'objects' => [
+                                    ['name' => '3800- Assistance to individual beneficiaries and others', 'last_month' => 0.00, 'during_month' => 9863.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'demand_title' => '96 (Revenue) / 2406 Forestry and Wildlife',
+                'demand_no' => '96 (Revenue)',
+                'sector' => '(c) Economic service',
+                'sub_sector' => '(a) Agriculture and Allied service',
+                'major_head' => '2406 Forestry and Wildlife',
+                'sub_major_head' => '01 Forestry',
+                'minor_heads' => [
+                    [
+                        'name' => 'Minor Head: 796 Trible Area Sub Plan',
+                        'code' => '2406  1  796',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 1,
+                                'name' => '17 FST-9 Gujarat Community Forestry Project',
+                                'code' => '2406  1  796  17',
+                                'objects' => [
+                                    ['name' => 'Office Expenses', 'last_month' => 26420.00, 'during_month' => 12997.00],
+                                    ['name' => '2700 Minor works', 'last_month' => 0.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                            [
+                                'sr_no' => 2,
+                                'name' => '35 Community Forestry Project',
+                                'code' => '2406  1  796  35',
+                                'objects' => [
+                                    ['name' => '200 Wages', 'last_month' => 2564302.00, 'during_month' => 790816.00],
+                                    ['name' => '2700 Minor works', 'last_month' => 0.00, 'during_month' => 0.00],
+                                    ['name' => '3800- Assistance to individual beneficiaries and others', 'last_month' => 0.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'demand_title' => '26 (Capital) / 4406 Capital Outlay on Forestry and Wildlife',
+                'demand_no' => '26 (Capital)',
+                'sector' => '(c) Economic service',
+                'sub_sector' => '(a) Agriculture and Allied service',
+                'major_head' => '4406 Capital Outlay on Forestry and Wildlife',
+                'sub_major_head' => '01 Forestry',
+                'minor_heads' => [
+                    [
+                        'name' => 'Minor Head: 101 Forest consarvation and Dev.',
+                        'code' => '4406  1  101',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 1,
+                                'name' => '10- FST- 8 Community Forestry Scheme',
+                                'code' => '4406  1  101  10',
+                                'objects' => [
+                                    ['name' => '5300 Major Works', 'last_month' => 12348438.00, 'during_month' => 35948519.00],
+                                    ['name' => 'Motor Vehicle', 'last_month' => 356161.00, 'during_month' => 89418.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'demand_title' => '95 (Scheduled Castes Sub Plan) / 4406 Capital Outlay on Forestry and Wildlife',
+                'demand_no' => '95 (Scheduled Castes Sub Plan)',
+                'sector' => '(c) Economic service',
+                'sub_sector' => '(a) Agriculture and Allied service',
+                'major_head' => '4406 Capital Outlay on Forestry and Wildlife',
+                'sub_major_head' => '01 Forestry',
+                'minor_heads' => [
+                    [
+                        'name' => 'Minor Head: 101 Forest consarvation and Dev.',
+                        'code' => '4406  1  101',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 1,
+                                'name' => '(01) FST-8 Scheduled Castes Sub Plan Scheme for Fruit Plantations',
+                                'code' => '4406  1  101  1',
+                                'objects' => [
+                                    ['name' => '5300 Major Works', 'last_month' => 7251741.00, 'during_month' => 1368457.00],
+                                    ['name' => '6000 Other Capital Expenditure', 'last_month' => 0.00, 'during_month' => 32400.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'demand_title' => '096 Capital / 4406 Capital Outlay on Forestry and Wildlife',
+                'demand_no' => '096 Capital',
+                'sector' => '(c) Economic service',
+                'sub_sector' => '(a) Agriculture and Allied service',
+                'major_head' => '4406 Capital Outlay on Forestry and Wildlife',
+                'sub_major_head' => '01 Forestry',
+                'minor_heads' => [
+                    [
+                        'name' => 'Minor Head: 796 Trible Area Sub Plan',
+                        'code' => '4406  1  796',
+                        'sub_heads' => [
+                            [
+                                'sr_no' => 1,
+                                'name' => '06- Fst-08 Gujarat Community Forestry Project',
+                                'code' => '4406  1  796  6',
+                                'objects' => [
+                                    ['name' => '5300 Major Works', 'last_month' => 7071503.00, 'during_month' => 17381809.00],
+                                    ['name' => '6000 Other Capital Expenditure', 'last_month' => 105036.00, 'during_month' => 421887.00],
+                                    ['name' => 'Motor Vehicle', 'last_month' => 81642.00, 'during_month' => 0.00],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $processedDemands = [];
+        $grandLastMonth = 0;
+        $grandDuringMonth = 0;
+        $grandProgressive = 0;
+
+        foreach ($rawDemands as $d) {
+            $demandTotalLast = 0;
+            $demandTotalDuring = 0;
+            $demandTotalProg = 0;
+
+            $processedMinors = [];
+            foreach ($d['minor_heads'] as $mh) {
+                $minorTotalLast = 0;
+                $minorTotalDuring = 0;
+                $minorTotalProg = 0;
+
+                $processedSubs = [];
+                foreach ($mh['sub_heads'] as $sh) {
+                    $subTotalLast = 0;
+                    $subTotalDuring = 0;
+                    $subTotalProg = 0;
+
+                    $processedObjs = [];
+                    foreach ($sh['objects'] as $obj) {
+                        $prog = $obj['last_month'] + $obj['during_month'];
+                        $subTotalLast += $obj['last_month'];
+                        $subTotalDuring += $obj['during_month'];
+                        $subTotalProg += $prog;
+
+                        $processedObjs[] = [
+                            'name' => $obj['name'],
+                            'last_month' => $obj['last_month'],
+                            'during_month' => $obj['during_month'],
+                            'progressive' => $prog,
+                        ];
+                    }
+
+                    $minorTotalLast += $subTotalLast;
+                    $minorTotalDuring += $subTotalDuring;
+                    $minorTotalProg += $subTotalProg;
+
+                    $processedSubs[] = [
+                        'sr_no' => $sh['sr_no'],
+                        'name' => $sh['name'],
+                        'code' => $sh['code'],
+                        'objects' => $processedObjs,
+                        'total_last_month' => $subTotalLast,
+                        'total_during_month' => $subTotalDuring,
+                        'total_progressive' => $subTotalProg,
+                    ];
+                }
+
+                $demandTotalLast += $minorTotalLast;
+                $demandTotalDuring += $minorTotalDuring;
+                $demandTotalProg += $minorTotalProg;
+
+                $processedMinors[] = [
+                    'name' => $mh['name'],
+                    'code' => $mh['code'],
+                    'sub_heads' => $processedSubs,
+                    'total_last_month' => $minorTotalLast,
+                    'total_during_month' => $minorTotalDuring,
+                    'total_progressive' => $minorTotalProg,
+                ];
+            }
+
+            $grandLastMonth += $demandTotalLast;
+            $grandDuringMonth += $demandTotalDuring;
+            $grandProgressive += $demandTotalProg;
+
+            $processedDemands[] = [
+                'demand_title' => $d['demand_title'],
+                'demand_no' => $d['demand_no'],
+                'sector' => $d['sector'],
+                'sub_sector' => $d['sub_sector'],
+                'major_head' => $d['major_head'],
+                'sub_major_head' => $d['sub_major_head'],
+                'minor_heads' => $processedMinors,
+                'total_last_month' => $demandTotalLast,
+                'total_during_month' => $demandTotalDuring,
+                'total_progressive' => $demandTotalProg,
+            ];
+        }
+
+        return [
+            'demands' => $processedDemands,
+            'grand_total_last_month' => $grandLastMonth,
+            'grand_total_during_month' => $grandDuringMonth,
+            'grand_total_progressive' => $grandProgressive,
         ];
     }
 

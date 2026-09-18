@@ -84,13 +84,30 @@
 
         <!-- Printable Abstract Document -->
         <div class="abstract-sheet bg-white rounded-xl border border-slate-300 p-6 sm:p-8 shadow-sm print:border-none print:shadow-none print:p-0 print:rounded-none">
-            <!-- Header -->
-            <div class="border-b-2 border-slate-900 pb-3 mb-4 text-center space-y-0.5">
-                <h1 class="text-base sm:text-lg font-black text-slate-950 uppercase tracking-wide">GUJARAT FOREST DEPARTMENT</h1>
-                <h2 class="text-xs sm:text-sm font-bold text-slate-800">{{ $data['division_name'] }} - {{ $data['range_name'] }}</h2>
-                <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider pt-0.5">
-                    MONTHLY VOUCHER ABSTRACT (ગોશવારો / એબ્સ્ટ્રેક્ટ) - {{ strtoupper($month) }}
-                </h3>
+            <!-- Header with Dynamic Logo & Office Profile -->
+            <div class="border-b-2 border-slate-900 pb-3 mb-4">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="w-16 h-16 flex-shrink-0 flex items-center justify-center">
+                        <img src="{{ $profile->logo_url }}" alt="Logo" class="max-h-16 max-w-16 object-contain">
+                    </div>
+                    <div class="flex-1 text-center space-y-0.5">
+                        <h1 class="text-base sm:text-lg font-black text-slate-950 uppercase tracking-wide">GUJARAT FOREST DEPARTMENT</h1>
+                        <h2 class="text-xs sm:text-sm font-bold text-slate-800">{{ $profile->office_name ?: ($data['division_name'] . ' - ' . $data['range_name']) }}</h2>
+                        @if($profile->office_name_gujarati)
+                            <p class="text-xs font-bold text-emerald-950">{{ $profile->office_name_gujarati }}</p>
+                        @endif
+                        @if($profile->formatted_address)
+                            <p class="text-[10px] text-slate-600 leading-tight">{{ $profile->formatted_address }} @if($profile->phone)| Ph: {{ $profile->phone }}@endif @if($profile->email)| {{ $profile->email }}@endif</p>
+                        @endif
+                        <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider pt-0.5">
+                            MONTHLY VOUCHER ABSTRACT (ગોશવારો / એબ્સ્ટ્રેક્ટ) - {{ strtoupper($month) }}
+                        </h3>
+                    </div>
+                    <div class="w-16 text-right text-[10px] font-mono text-slate-500 flex-shrink-0">
+                        <div>ABSTRACT</div>
+                        <div class="font-bold text-slate-800">{{ strtoupper($month) }}</div>
+                    </div>
+                </div>
                 <div class="flex flex-wrap justify-between items-center text-[11px] text-slate-700 pt-2 border-t border-slate-300 mt-2 font-semibold gap-2">
                     <span><strong>Month:</strong> {{ $month }}</span>
                     <span><strong>Docket No:</strong> {{ $docketNo ?: 'All Dockets' }}</span>
@@ -206,8 +223,8 @@
                 </div>
                 <div class="px-2">
                     <div class="border-t-2 border-slate-800 pt-1.5">
-                        <div>મંજૂર કરનાર</div>
-                        <div class="text-[11px] font-semibold text-slate-700">(Range Forest Officer)</div>
+                        <div>{{ $profile->officer_name ?: 'મંજૂર કરનાર' }}</div>
+                        <div class="text-[11px] font-semibold text-slate-700">({{ $profile->officer_designation ?: 'Range Forest Officer' }})</div>
                     </div>
                 </div>
             </div>

@@ -95,6 +95,7 @@ class VavetarRegisterController extends Controller
         $reportType = (string) $request->query('report_type', 'date_wise');
 
         $data = $this->compileVavetarData($request->user(), $round, $beat, $place, $area, $reportType);
+        $profile = $request->user()->getOrCreateOfficeProfile();
 
         return view('admin.finance.vavetar-register.print', [
             'round' => $round,
@@ -104,6 +105,7 @@ class VavetarRegisterController extends Controller
             'reportType' => $reportType,
             'data' => $data,
             'rangeUser' => $request->user(),
+            'profile' => $profile,
         ]);
     }
 

@@ -89,6 +89,7 @@ class AbstractPrintController extends Controller
         $mode = $request->query('mode', 'detailed'); // 'detailed' = with Rate and Quantity, 'summary' = standard print
 
         $abstractData = $this->compileAbstractData($request->user(), $month, $docketNo, $mode);
+        $profile = $request->user()->getOrCreateOfficeProfile();
 
         return view('admin.finance.abstract-print.print', [
             'month' => $month,
@@ -96,6 +97,7 @@ class AbstractPrintController extends Controller
             'mode' => $mode,
             'data' => $abstractData,
             'rangeUser' => $request->user(),
+            'profile' => $profile,
         ]);
     }
 

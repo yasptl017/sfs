@@ -313,23 +313,29 @@
                                 </button>
                             </div>
 
-                            <div class="border-t border-slate-200 pt-2 space-y-2.5 text-center">
-                                <div>
-                                    <p class="text-xs font-bold text-slate-900">
-                                        Download Credit and Debit Part Separately
-                                    </p>
-                                    <p class="text-[11px] text-slate-500 font-medium leading-snug pt-0.5">
-                                        If maximum execution time exceeds, then download Credit Part and Debit Part separately.
-                                    </p>
-                                </div>
-
-                                <div class="space-y-2 pt-1">
-                                    <button type="button" class="btn-fv-blue" onclick="triggerReport('cashbook_credit')">
+                            <div class="border-t border-slate-200 pt-2 space-y-2 text-center">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" class="btn-fv-blue text-xs py-1.5" onclick="triggerReport('cashbook_credit')">
                                         Download Credit Part
                                     </button>
-                                    <button type="button" class="btn-fv-blue" onclick="triggerReport('cashbook_debit')">
+                                    <button type="button" class="btn-fv-blue text-xs py-1.5" onclick="triggerReport('cashbook_debit')">
                                         Download Debit Part
                                     </button>
+                                </div>
+
+                                <div class="border-t border-slate-200 pt-2 space-y-1.5">
+                                    <span class="text-[11px] font-bold text-slate-700 block uppercase">Cashbook Extras</span>
+                                    <div class="grid grid-cols-3 gap-1.5 text-[11px]">
+                                        <button type="button" class="btn-fv-cyan text-xs py-1 px-1" onclick="triggerReport('cashbook_title')">
+                                            Title A4
+                                        </button>
+                                        <button type="button" class="btn-fv-cyan text-xs py-1 px-1" onclick="triggerReport('cashbook_sticker')">
+                                            Sticker A5
+                                        </button>
+                                        <button type="button" class="btn-fv-cyan text-xs py-1 px-1" onclick="triggerReport('cashbook_certificate')">
+                                            Certificate
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

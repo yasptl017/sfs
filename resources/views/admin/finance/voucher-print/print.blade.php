@@ -95,11 +95,28 @@
         @forelse($vouchers as $index => $v)
             <div class="voucher-page bg-white rounded-xl border border-slate-300 p-6 sm:p-8 shadow-sm space-y-4 print:border-slate-800 print:shadow-none {{ $fitToPage ? 'fit-page' : '' }}">
                 
-                <!-- Header -->
-                <div class="border-b-2 border-slate-900 pb-3 text-center space-y-0.5">
-                    <h1 class="text-base sm:text-lg font-black text-slate-950 uppercase tracking-wide">GUJARAT FOREST DEPARTMENT</h1>
-                    <h2 class="text-xs sm:text-sm font-bold text-slate-800">{{ $v['division_name'] }} - {{ $v['range_name'] }}</h2>
-                    <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider pt-0.5">{{ $v['entry_type'] }} VOUCHER (FORM NO. 35)</h3>
+                <!-- Header with Dynamic Logo & Office Profile -->
+                <div class="border-b-2 border-slate-900 pb-3">
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="w-16 h-16 flex-shrink-0 flex items-center justify-center">
+                            <img src="{{ $profile->logo_url }}" alt="Logo" class="max-h-16 max-w-16 object-contain">
+                        </div>
+                        <div class="flex-1 text-center space-y-0.5">
+                            <h1 class="text-base sm:text-lg font-black text-slate-950 uppercase tracking-wide">GUJARAT FOREST DEPARTMENT</h1>
+                            <h2 class="text-xs sm:text-sm font-bold text-slate-800">{{ $profile->office_name ?: ($v['division_name'] . ' - ' . $v['range_name']) }}</h2>
+                            @if($profile->office_name_gujarati)
+                                <p class="text-xs font-bold text-emerald-950">{{ $profile->office_name_gujarati }}</p>
+                            @endif
+                            @if($profile->formatted_address)
+                                <p class="text-[10px] text-slate-600 leading-tight">{{ $profile->formatted_address }} @if($profile->phone)| Ph: {{ $profile->phone }}@endif @if($profile->email)| {{ $profile->email }}@endif</p>
+                            @endif
+                            <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider pt-0.5">{{ $v['entry_type'] }} VOUCHER (FORM NO. 35)</h3>
+                        </div>
+                        <div class="w-16 text-right text-[10px] font-mono text-slate-500 flex-shrink-0">
+                            <div>RNG-VCH</div>
+                            <div class="font-bold text-slate-800">#{{ str_pad((string)$v['serial_number'], 3, '0', STR_PAD_LEFT) }}</div>
+                        </div>
+                    </div>
                     <div class="flex flex-wrap justify-between items-center text-[11px] text-slate-700 pt-2 border-t border-slate-300 mt-2 font-semibold gap-2">
                         <span><strong>Voucher No:</strong> <span class="font-mono text-blue-900 font-bold">{{ $v['voucher_no'] }}</span> (Sr: {{ $v['serial_number'] }})</span>
                         <span><strong>Docket:</strong> {{ $v['docket_no'] }}</span>
@@ -195,7 +212,12 @@
                 <div class="signatures-block grid grid-cols-4 gap-2 pt-4 text-center text-xs font-bold text-slate-800 border-t border-slate-300">
                     <div class="px-1"><div class="border-t border-slate-400 pt-1">Beat Guard / Forester</div></div>
                     <div class="px-1"><div class="border-t border-slate-400 pt-1">Cashier / Clerk</div></div>
-                    <div class="px-1"><div class="border-t border-slate-400 pt-1">Range Forest Officer (RFO)</div></div>
+                    <div class="px-1">
+                        <div class="border-t border-slate-400 pt-1">
+                            <div>{{ $profile->officer_name ?: 'Range Forest Officer (RFO)' }}</div>
+                            <div class="text-[10px] font-medium text-slate-600">{{ $profile->officer_designation ?: 'Range Forest Officer' }}</div>
+                        </div>
+                    </div>
                     <div class="px-1"><div class="border-t border-slate-400 pt-1">Payee Signature</div></div>
                 </div>
             </div>

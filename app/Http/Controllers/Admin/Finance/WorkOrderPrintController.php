@@ -104,6 +104,7 @@ class WorkOrderPrintController extends Controller
         $docketNo = $printAllDockets ? '' : (string) $request->query('docket_no', '');
 
         $data = $this->compileWorkOrdersData($request->user(), $month, $docketNo, $attachmentMode, $extendDays, $printAllDockets);
+        $profile = $request->user()->getOrCreateOfficeProfile();
 
         return view('admin.finance.work-order-print.print', [
             'month' => $month,
@@ -113,6 +114,7 @@ class WorkOrderPrintController extends Controller
             'docketNo' => $docketNo,
             'data' => $data,
             'rangeUser' => $request->user(),
+            'profile' => $profile,
         ]);
     }
 

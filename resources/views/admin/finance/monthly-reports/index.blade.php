@@ -458,6 +458,119 @@
                 previewReportBadge.textContent = data.report_title;
                 previewTitle.textContent = `${data.report_title} (${data.month} - ${data.payment_mode})`;
 
+                if (data.report_type === 'form_53_abstract' && data.d36_sections && data.d36_sections.demands) {
+                    let d36Html = '';
+                    data.d36_sections.demands.forEach((demand) => {
+                        let rows = '';
+                        demand.minor_heads.forEach((minor) => {
+                            rows += `
+                                <tr class="bg-slate-50/80 font-bold text-slate-900 border-t border-b border-slate-300">
+                                    <td colspan="3" class="p-1.5 border border-slate-300 font-semibold text-emerald-950 pl-2">
+                                        ${minor.name}
+                                    </td>
+                                    <td colspan="3" class="p-1.5 border border-slate-300 bg-slate-50/50"></td>
+                                </tr>
+                            `;
+
+                            minor.sub_heads.forEach((sub) => {
+                                sub.objects.forEach((obj, oIdx) => {
+                                    rows += `
+                                        <tr class="border-b border-slate-200">
+                                            ${oIdx === 0 ? `
+                                                <td rowspan="${sub.objects.length}" class="p-1.5 border border-slate-300 text-center font-bold align-top whitespace-nowrap">${sub.sr_no}</td>
+                                                <td rowspan="${sub.objects.length}" class="p-1.5 border border-slate-300 font-semibold text-slate-900 align-top">${sub.name}</td>
+                                            ` : ''}
+                                            <td class="p-1.5 border border-slate-300 text-slate-800">${obj.name}</td>
+                                            <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">${formatMoney(obj.last_month)}</td>
+                                            <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">${formatMoney(obj.during_month)}</td>
+                                            <td class="p-1.5 border border-slate-300 text-right font-mono font-bold text-emerald-950 bg-emerald-50/30 whitespace-nowrap">${formatMoney(obj.progressive)}</td>
+                                        </tr>
+                                    `;
+                                });
+
+                                rows += `
+                                    <tr class="bg-slate-50/60 font-semibold text-slate-900 border-b border-slate-300 text-xs">
+                                        <td colspan="3" class="p-1.5 border border-slate-300 text-right pr-2">
+                                            <span class="font-bold">Total of Sub-Head: ${sub.name}</span>
+                                            <span class="block text-[11px] font-mono text-slate-600">${sub.code}</span>
+                                        </td>
+                                        <td class="p-1.5 border border-slate-300 text-right font-mono font-bold whitespace-nowrap">${formatMoney(sub.total_last_month)}</td>
+                                        <td class="p-1.5 border border-slate-300 text-right font-mono font-bold whitespace-nowrap">${formatMoney(sub.total_during_month)}</td>
+                                        <td class="p-1.5 border border-slate-300 text-right font-mono font-bold text-emerald-950 bg-emerald-50/40 whitespace-nowrap">${formatMoney(sub.total_progressive)}</td>
+                                    </tr>
+                                `;
+                            });
+
+                            rows += `
+                                <tr class="bg-slate-100 font-bold text-slate-950 border-b-2 border-slate-400 text-xs">
+                                    <td colspan="3" class="p-1.5 border border-slate-300 text-right pr-2">
+                                        <span>Total of ${minor.name}</span>
+                                        <span class="block text-[11px] font-mono text-slate-600">${minor.code}</span>
+                                    </td>
+                                    <td class="p-1.5 border border-slate-300 text-right font-mono font-bold whitespace-nowrap">${formatMoney(minor.total_last_month)}</td>
+                                    <td class="p-1.5 border border-slate-300 text-right font-mono font-bold whitespace-nowrap">${formatMoney(minor.total_during_month)}</td>
+                                    <td class="p-1.5 border border-slate-300 text-right font-mono font-black text-emerald-950 bg-emerald-50/60 whitespace-nowrap">${formatMoney(minor.total_progressive)}</td>
+                                </tr>
+                            `;
+                        });
+
+                        d36Html += `
+                            <div class="border border-slate-300 rounded-lg p-4 mb-6 bg-white shadow-sm">
+                                <div class="border-b-2 border-slate-900 pb-2.5 mb-3 text-center space-y-0.5">
+                                    <div class="flex justify-between items-center text-xs font-black text-slate-800">
+                                        <span class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded font-mono font-bold text-[11px]">D-36</span>
+                                        <span class="uppercase tracking-wide text-xs sm:text-sm font-extrabold text-slate-900">ABSTRACT: ${demand.demand_title}</span>
+                                        <span class="text-[11px] font-mono font-semibold">${data.month}-${new Date().getFullYear()}</span>
+                                    </div>
+                                    <h2 class="text-xs sm:text-sm font-bold text-slate-800 pt-0.5">
+                                        Statement showing the abstract of expenditure figures for the month ${data.month}-${new Date().getFullYear()}
+                                    </h2>
+                                    <h3 class="text-xs font-bold text-emerald-950">
+                                        Office of Dy. Conservator of Forests, ${data.division_name}
+                                    </h3>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-0.5 text-left text-[11px] text-slate-800 pt-2 border-t border-slate-300 mt-2 font-medium">
+                                        <div><strong>Demand No.:</strong> ${demand.demand_no}</div>
+                                        <div><strong>Major Head:</strong> ${demand.major_head}</div>
+                                        <div><strong>Sector:</strong> ${demand.sector}</div>
+                                        <div><strong>Sub Major Head:</strong> ${demand.sub_major_head}</div>
+                                        <div><strong>Sub Sector:</strong> ${demand.sub_sector}</div>
+                                        <div><strong>Payment Mode:</strong> ${data.payment_mode}</div>
+                                    </div>
+                                </div>
+
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-xs border border-slate-300 border-collapse mb-3">
+                                        <thead>
+                                            <tr class="bg-slate-100 text-slate-900 font-bold border-b border-slate-400">
+                                                <th class="p-1.5 border border-slate-300 text-center w-10 whitespace-nowrap">Sr. No.</th>
+                                                <th class="p-1.5 border border-slate-300 text-left w-64">Sub Head</th>
+                                                <th class="p-1.5 border border-slate-300 text-left">Object Head</th>
+                                                <th class="p-1.5 border border-slate-300 text-right w-28 whitespace-nowrap">Up to Last Month</th>
+                                                <th class="p-1.5 border border-slate-300 text-right w-28 whitespace-nowrap">During Month</th>
+                                                <th class="p-1.5 border border-slate-300 text-right w-28 whitespace-nowrap font-bold text-emerald-950 bg-emerald-50">Progressive Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${rows}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="bg-slate-200 font-bold text-slate-950 border-t-2 border-slate-900 text-xs">
+                                                <td colspan="3" class="p-1.5 border border-slate-300 text-right uppercase">Total of ${demand.demand_title}:</td>
+                                                <td class="p-1.5 border border-slate-300 text-right font-mono font-black whitespace-nowrap">${formatMoney(demand.total_last_month)}</td>
+                                                <td class="p-1.5 border border-slate-300 text-right font-mono font-black whitespace-nowrap">${formatMoney(demand.total_during_month)}</td>
+                                                <td class="p-1.5 border border-slate-300 text-right font-mono font-black text-emerald-950 bg-emerald-100/60 whitespace-nowrap">${formatMoney(demand.total_progressive)}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    previewSheetContainer.innerHTML = d36Html;
+                    return;
+                }
+
                 let tableRows = '';
                 data.bills.forEach((b, idx) => {
                     tableRows += `
