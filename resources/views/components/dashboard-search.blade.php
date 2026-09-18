@@ -238,6 +238,16 @@
                 'keywords' => 'work order print hukam nama sanstion order contractor work order',
             ],
             [
+                'title' => 'SOR Limit Report',
+                'title_gu' => 'એસ.ઓ.આર. લિમિટ રિપોર્ટ (SOR Limit Report)',
+                'category' => 'Range Reports',
+                'badge_color' => 'bg-emerald-100 text-emerald-800',
+                'icon' => 'calculator',
+                'url' => route('finance.sor-limit-report.index'),
+                'description' => 'Schedule of Rates (SOR) limit verification, rate compliance, ceiling limits, and expenditure monitoring',
+                'keywords' => 'sor limit report schedule of rates rate limit ceiling violation variance savings sor-01 pitting plantation',
+            ],
+            [
                 'title' => 'Vavetar Plantation Register',
                 'title_gu' => 'વાવેતર રજીસ્ટર (તારીખવાર અને કામવાર)',
                 'category' => 'Range Reports',

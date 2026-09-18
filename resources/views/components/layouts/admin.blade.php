@@ -102,7 +102,7 @@
                         </div>
                     </details>
 
-                    <details class="nav-group" {{ request()->routeIs('finance.voucher-print.*') || request()->routeIs('finance.abstract-print.*') || request()->routeIs('finance.work-order-print.*') || request()->routeIs('finance.vavetar-register.*') ? 'open' : '' }}>
+                    <details class="nav-group" {{ request()->routeIs('finance.voucher-print.*') || request()->routeIs('finance.abstract-print.*') || request()->routeIs('finance.work-order-print.*') || request()->routeIs('finance.sor-limit-report.*') || request()->routeIs('finance.vavetar-register.*') ? 'open' : '' }}>
                         <summary class="nav-link" title="Prints & Reports">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
                             <span>Prints & Reports</span>
@@ -112,7 +112,7 @@
                             <a class="{{ request()->routeIs('finance.voucher-print.*') ? 'active' : '' }}" href="{{ route('finance.voucher-print.index') }}" title="Voucher Print">Voucher Print</a>
                             <a class="{{ request()->routeIs('finance.abstract-print.*') ? 'active' : '' }}" href="{{ route('finance.abstract-print.index') }}" title="Abstract Print">Abstract Print</a>
                             <a class="{{ request()->routeIs('finance.work-order-print.*') ? 'active' : '' }}" href="{{ route('finance.work-order-print.index') }}" title="Work Order Print">Work Order Print</a>
-                            <a href="#" title="SOR Limit Report">SOR Limit Report</a>
+                            <a class="{{ request()->routeIs('finance.sor-limit-report.*') ? 'active' : '' }}" href="{{ route('finance.sor-limit-report.index') }}" title="SOR Limit Report">SOR Limit Report</a>
                             <a class="{{ request()->routeIs('finance.vavetar-register.*') ? 'active' : '' }}" href="{{ route('finance.vavetar-register.index') }}" title="Vavetar Register">Vavetar Register</a>
                         </div>
                     </details>

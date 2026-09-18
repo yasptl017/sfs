@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\Finance\VavetarRegisterController;
 use App\Http\Controllers\Admin\Finance\DWagerArrearsEntryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryEntryController;
 use App\Http\Controllers\Admin\Finance\VoucherPrintController;
+use App\Http\Controllers\Admin\Finance\SorLimitReportController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryEntryController;
 use App\Http\Controllers\Admin\OfficeProfileController;
 use App\Http\Controllers\Admin\PasswordController;
@@ -227,6 +228,12 @@ Route::middleware('auth')->group(function () {
     Route::get('finance/vavetar-register/locations', [VavetarRegisterController::class, 'locations'])->name('finance.vavetar-register.locations');
     Route::post('finance/vavetar-register/preview', [VavetarRegisterController::class, 'preview'])->name('finance.vavetar-register.preview');
     Route::get('finance/vavetar-register/print', [VavetarRegisterController::class, 'print'])->name('finance.vavetar-register.print');
+
+    Route::get('finance/sor-limit-report', [SorLimitReportController::class, 'index'])->name('finance.sor-limit-report.index');
+    Route::get('finance/sor-limit-report/filters', [SorLimitReportController::class, 'filters'])->name('finance.sor-limit-report.filters');
+    Route::post('finance/sor-limit-report/preview', [SorLimitReportController::class, 'preview'])->name('finance.sor-limit-report.preview');
+    Route::get('finance/sor-limit-report/print', [SorLimitReportController::class, 'print'])->name('finance.sor-limit-report.print');
+    Route::get('finance/sor-limit-report/export', [SorLimitReportController::class, 'export'])->name('finance.sor-limit-report.export');
 
     Route::get('office-profile', [OfficeProfileController::class, 'edit'])->name('office-profile.edit');
     Route::put('office-profile', [OfficeProfileController::class, 'update'])->name('office-profile.update');
