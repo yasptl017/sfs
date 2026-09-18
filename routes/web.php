@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\Finance\BillAdviceReportController;
 use App\Http\Controllers\Admin\Finance\DeleteAdviceController;
 use App\Http\Controllers\Admin\Finance\ChangeBillOrderNoController;
 use App\Http\Controllers\Admin\Finance\GstChallanController;
+use App\Http\Controllers\Admin\Finance\FinalVoucherCashbookController;
+use App\Http\Controllers\Admin\Finance\MonthlyReportController;
 use App\Http\Controllers\Admin\Finance\ProcessBillController;
 use App\Http\Controllers\Admin\Finance\TreasuryDetailController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
@@ -21,8 +23,12 @@ use App\Http\Controllers\Admin\Finance\LcEntryController;
 use App\Http\Controllers\Admin\Finance\TenderEntryController;
 use App\Http\Controllers\Admin\Finance\FreeEntryController;
 use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
+use App\Http\Controllers\Admin\Finance\AbstractPrintController;
+use App\Http\Controllers\Admin\Finance\WorkOrderPrintController;
+use App\Http\Controllers\Admin\Finance\VavetarRegisterController;
 use App\Http\Controllers\Admin\Finance\DWagerArrearsEntryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryEntryController;
+use App\Http\Controllers\Admin\Finance\VoucherPrintController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryEntryController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
@@ -98,6 +104,17 @@ Route::middleware('auth')->group(function () {
     Route::get('division/delete-advice/details', [DeleteAdviceController::class, 'details'])->name('division.delete-advice.details');
     Route::delete('division/delete-advice', [DeleteAdviceController::class, 'destroy'])->name('division.delete-advice.destroy');
     Route::delete('division/delete-advice/{billAdvice}', [DeleteAdviceController::class, 'destroyModel'])->name('division.delete-advice.destroy-model');
+
+    Route::get('division/monthly-reports', [MonthlyReportController::class, 'index'])->name('division.monthly-reports.index');
+    Route::get('division/monthly-reports/schemes', [MonthlyReportController::class, 'schemes'])->name('division.monthly-reports.schemes');
+    Route::post('division/monthly-reports/preview', [MonthlyReportController::class, 'preview'])->name('division.monthly-reports.preview');
+    Route::get('division/monthly-reports/print', [MonthlyReportController::class, 'print'])->name('division.monthly-reports.print');
+
+    Route::get('division/final-voucher-cashbook', [FinalVoucherCashbookController::class, 'index'])->name('division.final-voucher-cashbook.index');
+    Route::post('division/final-voucher-cashbook/assign', [FinalVoucherCashbookController::class, 'assignVouchers'])->name('division.final-voucher-cashbook.assign');
+    Route::post('division/final-voucher-cashbook/preview', [FinalVoucherCashbookController::class, 'preview'])->name('division.final-voucher-cashbook.preview');
+    Route::get('division/final-voucher-cashbook/print', [FinalVoucherCashbookController::class, 'print'])->name('division.final-voucher-cashbook.print');
+    Route::post('division/final-voucher-cashbook/merge-schemes', [FinalVoucherCashbookController::class, 'mergeSchemes'])->name('division.final-voucher-cashbook.merge-schemes');
     Route::get('admin/divisions', [DivisionController::class, 'index'])->name('admin.divisions.index');
     Route::post('admin/divisions', [DivisionController::class, 'store'])->name('admin.divisions.store');
     Route::put('admin/divisions/{division}', [DivisionController::class, 'update'])->name('admin.divisions.update');
@@ -184,6 +201,26 @@ Route::middleware('auth')->group(function () {
     Route::get('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}/edit', [WlBeneficiaryEntryController::class, 'edit'])->name('finance.wl-beneficiary-entries.edit');
     Route::put('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}', [WlBeneficiaryEntryController::class, 'update'])->name('finance.wl-beneficiary-entries.update');
     Route::delete('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}', [WlBeneficiaryEntryController::class, 'destroy'])->name('finance.wl-beneficiary-entries.destroy');
+
+    Route::get('finance/voucher-print', [VoucherPrintController::class, 'index'])->name('finance.voucher-print.index');
+    Route::get('finance/voucher-print/entries', [VoucherPrintController::class, 'entries'])->name('finance.voucher-print.entries');
+    Route::post('finance/voucher-print/preview', [VoucherPrintController::class, 'preview'])->name('finance.voucher-print.preview');
+    Route::get('finance/voucher-print/print', [VoucherPrintController::class, 'print'])->name('finance.voucher-print.print');
+
+    Route::get('finance/abstract-print', [AbstractPrintController::class, 'index'])->name('finance.abstract-print.index');
+    Route::get('finance/abstract-print/dockets', [AbstractPrintController::class, 'dockets'])->name('finance.abstract-print.dockets');
+    Route::post('finance/abstract-print/preview', [AbstractPrintController::class, 'preview'])->name('finance.abstract-print.preview');
+    Route::get('finance/abstract-print/print', [AbstractPrintController::class, 'print'])->name('finance.abstract-print.print');
+
+    Route::get('finance/work-order-print', [WorkOrderPrintController::class, 'index'])->name('finance.work-order-print.index');
+    Route::get('finance/work-order-print/dockets', [WorkOrderPrintController::class, 'dockets'])->name('finance.work-order-print.dockets');
+    Route::post('finance/work-order-print/preview', [WorkOrderPrintController::class, 'preview'])->name('finance.work-order-print.preview');
+    Route::get('finance/work-order-print/print', [WorkOrderPrintController::class, 'print'])->name('finance.work-order-print.print');
+
+    Route::get('finance/vavetar-register', [VavetarRegisterController::class, 'index'])->name('finance.vavetar-register.index');
+    Route::get('finance/vavetar-register/locations', [VavetarRegisterController::class, 'locations'])->name('finance.vavetar-register.locations');
+    Route::post('finance/vavetar-register/preview', [VavetarRegisterController::class, 'preview'])->name('finance.vavetar-register.preview');
+    Route::get('finance/vavetar-register/print', [VavetarRegisterController::class, 'print'])->name('finance.vavetar-register.print');
 
     Route::get('password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');

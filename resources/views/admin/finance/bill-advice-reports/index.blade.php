@@ -1,4 +1,176 @@
-<x-layouts.admin title="Bill &amp; Advice Reports | Forest Inventory" heading="Bill / Advice Reports" subheading="Division Finance System - Generate Bill &amp; Advice Reports">
+<x-layouts.admin title="Bill &amp; Advice Reports | Forest Inventory" heading="Bill / Advice Reports" subheading="Division Finance System - Generate &amp; Download Bill Reports">
+    <style>
+        .bill-report-card {
+            background: #ffffff !important;
+            border-radius: 1.25rem !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .bill-report-label {
+            color: #003884 !important;
+            font-weight: 800 !important;
+            font-size: 0.95rem !important;
+            text-align: center !important;
+            display: block !important;
+            margin-bottom: 0.35rem !important;
+        }
+        .bill-report-select-maroon {
+            border: 2px solid #5c0606 !important;
+            border-radius: 9999px !important;
+            color: #0f172a !important;
+            background-color: #ffffff !important;
+            padding: 0.5rem 1.25rem !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            width: 100% !important;
+            text-align: center !important;
+            text-align-last: center !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+            transition: all 0.15s ease-in-out !important;
+        }
+        .bill-report-select-maroon:focus {
+            outline: none !important;
+            border-color: #7f1d1d !important;
+            box-shadow: 0 0 0 3px rgba(92, 6, 6, 0.2) !important;
+        }
+        .bill-report-multiselect-blue {
+            border: 2px solid #0038ff !important;
+            border-radius: 0.875rem !important;
+            padding: 0.5rem !important;
+            background: #ffffff !important;
+            font-size: 0.825rem !important;
+            font-weight: 600 !important;
+            color: #1e293b !important;
+            width: 100% !important;
+            min-height: 7rem !important;
+            max-height: 9.5rem !important;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05) !important;
+        }
+        .bill-report-multiselect-blue option {
+            padding: 0.4rem 0.6rem !important;
+            border-radius: 0.375rem !important;
+            margin-bottom: 0.2rem !important;
+            white-space: normal !important;
+            line-height: 1.35 !important;
+        }
+        .bill-report-multiselect-blue option:checked {
+            background: #1877f2 linear-gradient(0deg, #1877f2 0%, #1877f2 100%) !important;
+            color: #ffffff !important;
+        }
+        .bill-report-pill-badge {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.35rem !important;
+            padding: 0.3rem 0.85rem !important;
+            border-radius: 9999px !important;
+            font-size: 0.8rem !important;
+            font-weight: 800 !important;
+            background-color: #ffffff !important;
+            color: #0038ff !important;
+            border: 1.5px solid #0038ff !important;
+            box-shadow: 0 1px 3px rgba(0, 56, 255, 0.1) !important;
+        }
+        .bill-report-cyan-box {
+            background-color: #dcf6fd !important;
+            border: 1.5px solid #80e5f7 !important;
+            border-radius: 0.875rem !important;
+            color: #083344 !important;
+            padding: 0.75rem 1rem !important;
+            font-size: 0.8rem !important;
+            line-height: 1.45 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        }
+        .btn-pill-blue {
+            background-color: #1877f2 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            font-size: 0.9rem !important;
+            padding: 0.65rem 1.5rem !important;
+            border-radius: 9999px !important;
+            transition: all 0.15s ease-in-out !important;
+            box-shadow: 0 4px 6px -1px rgba(24, 119, 242, 0.3), 0 2px 4px -2px rgba(24, 119, 242, 0.2) !important;
+            width: 100% !important;
+            max-width: 14rem !important;
+            text-align: center !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .btn-pill-blue:hover {
+            background-color: #0d65d9 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 10px -1px rgba(24, 119, 242, 0.4) !important;
+        }
+        .btn-pill-blue:active {
+            transform: scale(0.98) !important;
+        }
+        .btn-pill-cyan {
+            background-color: #00c2cb !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            font-size: 0.9rem !important;
+            padding: 0.65rem 1.5rem !important;
+            border-radius: 9999px !important;
+            transition: all 0.15s ease-in-out !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 194, 203, 0.3), 0 2px 4px -2px rgba(0, 194, 203, 0.2) !important;
+            width: 100% !important;
+            max-width: 14rem !important;
+            text-align: center !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .btn-pill-cyan:hover {
+            background-color: #00a9b1 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 10px -1px rgba(0, 194, 203, 0.4) !important;
+        }
+        .btn-pill-cyan:active {
+            transform: scale(0.98) !important;
+        }
+        @media print {
+            body, html {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            aside,
+            nav,
+            header,
+            .app-header,
+            .sidebar,
+            .nav-section-title,
+            .nav-group,
+            .nav-submenu,
+            #billAdviceReportModule > section:not(#reportViewerCard),
+            #reportAlertBox,
+            .no-print,
+            button,
+            .border-b.bg-emerald-50\/40 {
+                display: none !important;
+            }
+            #reportViewerCard {
+                border: none !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                width: 100% !important;
+            }
+            #printableSheet {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                display: block !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+        }
+    </style>
+
     <div class="space-y-6" id="billAdviceReportModule"
         data-details-url="{{ route('division.bill-advice-reports.details') }}"
         data-generate-url="{{ route('division.bill-advice-reports.generate') }}"
@@ -18,158 +190,134 @@
 
         <div id="reportAlertBox" class="hidden rounded-lg border px-4 py-3 text-sm font-semibold shadow-sm"></div>
 
-        <!-- Section 1: Generate Bill Reports Form (Themed matching Party Registration) -->
-        <section class="rounded-lg border border-emerald-100 bg-white shadow-sm overflow-hidden">
-            <div class="border-b border-emerald-100 px-5 py-4 flex flex-wrap items-center justify-between gap-3 bg-white">
-                <div>
-                    <h2 class="text-base font-semibold text-slate-950">Generate Bill Reports</h2>
-                    <p class="mt-1 text-sm text-slate-500">Select Bill Register No., Advice No., and applicable Tharav descriptions to generate official statements.</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-semibold text-slate-500">Module:</span>
-                    <span class="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
-                        <span class="h-2 w-2 rounded-full bg-emerald-600"></span>
-                        <span>Bill / Advice Reports</span>
-                    </span>
-                </div>
-            </div>
-
-            <form id="reportGenerationForm" method="POST" action="{{ route('division.bill-advice-reports.generate') }}" class="p-6 space-y-6">
-                @csrf
-                <input type="hidden" name="report_type" id="selectedReportTypeInput" value="bill_report">
-
-                <!-- Row 1: Bill Register No & Advice No -->
-                <div class="grid gap-5 sm:grid-cols-2">
-                    <div>
-                        <label for="bill_register_no" class="form-label font-semibold text-slate-800">
-                            Bill Register No: <span class="text-red-500">*</span>
-                        </label>
-                        <select id="bill_register_no" name="bill_register_no" required class="form-select font-bold text-slate-900">
-                            <option value="" disabled selected>Choose Bill Register No...</option>
-                            @foreach($billRegisterNumbers as $bNo)
-                                <option value="{{ $bNo }}" @selected(old('bill_register_no') == $bNo || $loop->first)>{{ $bNo }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="advice_no" class="form-label font-semibold text-slate-800">
-                            Advice No: <span class="text-red-500">*</span>
-                        </label>
-                        <select id="advice_no" name="advice_no" required class="form-select font-bold text-slate-900">
-                            <option value="" disabled selected>Choose Advice No...</option>
-                            @foreach($adviceNumbers as $aNo)
-                                <option value="{{ $aNo }}" @selected(old('advice_no') == $aNo || $loop->first)>{{ $aNo }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+        <!-- Section 1: Main "Generate Bill Reports:" Form Card (Balanced Horizontal & Vertical Layout) -->
+        <section class="max-w-3xl lg:max-w-4xl mx-auto">
+            <div class="bill-report-card p-5 sm:p-7 text-slate-900 overflow-hidden transition-all">
+                
+                <!-- Header with Close Button -->
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-6">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug">
+                        Generate Bill Reports:
+                    </h2>
+                    <button type="button" id="closeBillReportFormBtn" title="Close" class="text-slate-500 hover:text-slate-900 text-xl font-bold transition-colors focus:outline-none leading-none">
+                        ✕
+                    </button>
                 </div>
 
-                <!-- Row 2: Tharav Description (Multi-select resolutions) -->
-                <div class="space-y-3">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-extrabold bg-rose-500 text-white uppercase tracking-wide">NEW:</span>
-                            <label for="tharav_descriptions" class="text-sm font-bold text-slate-900">
-                                Tharav Description (ઠરાવ વિગત):
-                            </label>
+                <!-- Form Body: Balanced 2-Column Responsive Layout -->
+                <form id="reportGenerationForm" method="POST" action="{{ route('division.bill-advice-reports.generate') }}" class="space-y-6">
+                    @csrf
+                    <input type="hidden" name="report_type" id="selectedReportTypeInput" value="bill_report">
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+                        
+                        <!-- Left Column: Controls (Bill Register No, Advice No, Tharav Multi-Select, Pill Badge) -->
+                        <div class="md:col-span-6 flex flex-col justify-between space-y-4">
+                            
+                            <!-- 1. Bill Register No -->
+                            <div>
+                                <label for="bill_register_no" class="bill-report-label">
+                                    Bill Register No:
+                                </label>
+                                <select id="bill_register_no" name="bill_register_no" required class="bill-report-select-maroon cursor-pointer">
+                                    <option value="" disabled selected>Select...</option>
+                                    @foreach($billRegisterNumbers as $bNo)
+                                        <option value="{{ $bNo }}" @selected(old('bill_register_no') == $bNo || $loop->first)>{{ $bNo }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- 2. Advice No -->
+                            <div>
+                                <label for="advice_no" class="bill-report-label">
+                                    Advice No:
+                                </label>
+                                <select id="advice_no" name="advice_no" required class="bill-report-select-maroon cursor-pointer">
+                                    <option value="" disabled selected>Select...</option>
+                                    @foreach($adviceNumbers as $aNo)
+                                        <option value="{{ $aNo }}" @selected(old('advice_no') == $aNo || $loop->first)>{{ $aNo }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- 3. NEW: Tharav Description Multi-Select Box -->
+                            <div>
+                                <div class="flex items-center justify-center gap-2 mb-1.5">
+                                    <span class="bg-[#d9222a] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                                        NEW:
+                                    </span>
+                                    <label for="tharav_descriptions" class="bill-report-label !mb-0">
+                                        Tharav Description:
+                                    </label>
+                                </div>
+                                <select multiple id="tharav_descriptions" name="tharav_descriptions[]" class="bill-report-multiselect-blue">
+                                    @foreach($defaultTharavs as $index => $tharav)
+                                        <option value="{{ $tharav }}" @selected($index < 2)>{{ $tharav }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- 4. Helper Pill Badge -->
+                            <div class="flex justify-center pt-0.5">
+                                <span class="bill-report-pill-badge">
+                                    ✨ એકથી વધુ સિલેક્ટ કરી શકાય
+                                </span>
+                            </div>
+
                         </div>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                            ✨ એકથી વધુ સિલેક્ટ કરી શકાય (Multi-Selectable)
-                        </span>
-                    </div>
 
-                    <!-- Preset Tharav Pills -->
-                    <div class="space-y-1.5">
-                        <p class="text-xs font-medium text-slate-500">Click resolutions below to quickly add/remove from report:</p>
-                        <div class="flex flex-wrap gap-2" id="tharavPillsContainer">
-                            @foreach($defaultTharavs as $index => $tharav)
-                                <button type="button" 
-                                    class="tharav-pill text-xs font-medium text-left px-3 py-1.5 rounded-lg border transition-all duration-150 cursor-pointer border-slate-200 bg-white hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-700"
-                                    data-text="{{ $tharav }}">
-                                    + {{ $tharav }}
+                        <!-- Right Column: New Feature Notice Box + 4 Action Buttons -->
+                        <div class="md:col-span-6 flex flex-col justify-between space-y-5">
+                            
+                            <!-- 5. Feature Callout Box -->
+                            <div class="bill-report-cyan-box">
+                                <div class="font-black text-cyan-950 flex items-center gap-1.5 text-xs mb-1.5">
+                                    <span>✨</span>
+                                    <span>New Feature:</span>
+                                </div>
+                                <ul class="list-disc list-inside space-y-1.5 pl-0.5 text-cyan-950 font-medium">
+                                    <li>અહીંથી પસંદ કરેલ ઠરાવો સીધા ઓફિસ ઓર્ડર રિપોર્ટમાં પ્રિન્ટ થશે.</li>
+                                    <li>નવા ઠરાવો ઉમેરવા માટે <strong>Master00 workbook</strong> ના <strong>'DropDown'</strong> શીટમાં રેન્જ <strong>A33:E</strong> માં લખો.</li>
+                                </ul>
+                            </div>
+
+                            <!-- 6. 4 Action Buttons (Centered Pill Buttons) -->
+                            <div class="flex flex-col items-center justify-center space-y-3 pt-1">
+                                <button type="button" class="btn-pill-blue btn-generate-report" data-report-type="gst_report">
+                                    GST Report
                                 </button>
-                            @endforeach
+
+                                <button type="button" class="btn-pill-blue btn-generate-report" data-report-type="bill_report">
+                                    Bill Reports
+                                </button>
+
+                                <button type="button" class="btn-pill-blue btn-generate-report" data-report-type="deduction_report">
+                                    Deduction Reports
+                                </button>
+
+                                <button type="button" class="btn-pill-cyan btn-generate-report" data-report-type="range_report">
+                                    Reports for Ranges
+                                </button>
+                            </div>
+
                         </div>
+
                     </div>
-
-                    <!-- Tharav Custom Textarea -->
-                    <div>
-                        <textarea id="tharav_descriptions" name="tharav_descriptions" rows="4"
-                            class="form-textarea text-xs sm:text-sm font-medium leading-relaxed"
-                            placeholder="Selected resolutions will appear here. You can also type or modify custom resolutions...">{{ old('tharav_descriptions', implode("\n", array_slice($defaultTharavs, 0, 2))) }}</textarea>
-                    </div>
-
-                    <!-- Feature Callout Notice Box (Themed) -->
-                    <div class="rounded-lg border border-cyan-200 bg-cyan-50/70 p-4 space-y-1.5 text-xs text-cyan-950">
-                        <div class="flex items-center gap-2 font-bold text-cyan-900">
-                            <span class="text-base">✨</span>
-                            <span>New Feature:</span>
-                        </div>
-                        <ul class="list-disc list-inside space-y-1 pl-1 text-cyan-900/90 leading-relaxed">
-                            <li>અહીંથી પસંદ કરેલ ઠરાવો સીધા ઓફિસ ઓર્ડર રિપોર્ટમાં પ્રિન્ટ થશે. (Selected resolutions will be printed directly in the Office Order report).</li>
-                            <li>નવા ઠરાવો ઉમેરવા માટે Master00 workbook ના 'DropDown' શીટમાં રેન્જ A33:E માં લખો અથવા ઉપર આપેલા બોક્સમાં સીધા ટાઈપ કરો.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Row 3: 4 Report Generation Action Buttons -->
-                <div class="pt-4 border-t border-emerald-50 flex flex-col items-center gap-4">
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-500 text-center">
-                        Select a report type to generate &amp; preview:
-                    </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full max-w-4xl">
-                        <!-- 1. GST Report Button -->
-                        <button type="button" class="btn-generate-report w-full primary-button bg-blue-600 hover:bg-blue-700 active:scale-95 text-white py-2.5 px-4 font-bold text-sm shadow-sm flex items-center justify-center gap-2"
-                            data-report-type="gst_report">
-                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
-                            </svg>
-                            <span>GST Report</span>
-                        </button>
-
-                        <!-- 2. Bill Reports Button -->
-                        <button type="button" class="btn-generate-report w-full primary-button bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-2.5 px-4 font-bold text-sm shadow-sm flex items-center justify-center gap-2"
-                            data-report-type="bill_report">
-                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 100 2h4a1 1 0 100-2H8zm0-3a1 1 0 100 2h4a1 1 0 100-2H8z" clip-rule="evenodd" />
-                            </svg>
-                            <span>Bill Reports</span>
-                        </button>
-
-                        <!-- 3. Deduction Reports Button -->
-                        <button type="button" class="btn-generate-report w-full primary-button bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white py-2.5 px-4 font-bold text-sm shadow-sm flex items-center justify-center gap-2"
-                            data-report-type="deduction_report">
-                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd" />
-                            </svg>
-                            <span>Deduction Reports</span>
-                        </button>
-
-                        <!-- 4. Reports for Ranges Button -->
-                        <button type="button" class="btn-generate-report w-full primary-button bg-cyan-600 hover:bg-cyan-700 active:scale-95 text-white py-2.5 px-4 font-bold text-sm shadow-sm flex items-center justify-center gap-2"
-                            data-report-type="range_report">
-                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-                            </svg>
-                            <span>Reports for Ranges</span>
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </section>
 
-        <!-- Section 2: Interactive Live Report Viewer & Print Sheet (Initially Generated on selection) -->
-        <section id="reportViewerCard" class="hidden rounded-lg border border-emerald-100 bg-white shadow-sm overflow-hidden">
+        <!-- Section 2: Interactive Live Report Viewer & Print Sheet -->
+        <section id="reportViewerCard" class="hidden rounded-xl border border-emerald-100 bg-white shadow-sm overflow-hidden mt-8">
             <div class="flex flex-wrap items-center justify-between border-b border-emerald-100 px-5 py-4 bg-emerald-50/40 gap-3">
                 <div class="flex items-center gap-3">
-                    <span id="activeReportBadge" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    <span id="activeReportBadge" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
                         Bill Reports
                     </span>
                     <h3 id="activeReportTitle" class="text-base font-semibold text-slate-950">Report Preview</h3>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button type="button" id="btnPrintReportSheet" class="primary-button text-xs py-1.5 px-3 bg-emerald-700 hover:bg-emerald-800 flex items-center gap-1.5">
+                    <button type="button" id="btnPrintReportSheet" class="primary-button text-xs py-1.5 px-4 bg-emerald-700 hover:bg-emerald-800 flex items-center gap-1.5">
                         <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
                         </svg>
@@ -186,13 +334,13 @@
 
             <!-- Printable Sheet Container -->
             <div id="printableSheet" class="p-6 sm:p-8 bg-white overflow-x-auto print:p-0">
-                <!-- Populated by JavaScript according to the active report type -->
+                <!-- Populated by JavaScript according to active report type -->
             </div>
         </section>
 
         <!-- Section 3: History of Generated Reports -->
         @if($recentReports->isNotEmpty())
-            <section class="rounded-lg border border-emerald-100 bg-white shadow-sm overflow-hidden">
+            <section class="rounded-xl border border-emerald-100 bg-white shadow-sm overflow-hidden mt-8">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-emerald-100 px-5 py-4 gap-3">
                     <div>
                         <h2 class="text-base font-semibold text-slate-950">Recently Generated Reports</h2>
@@ -215,13 +363,13 @@
                         <tbody class="divide-y divide-slate-100">
                             @foreach($recentReports as $index => $rep)
                                 <tr class="transition-colors hover:bg-emerald-50/40">
-                                    <td class="text-center font-medium text-slate-600">{{ $index + 1 }}</td>
+                                    <td class="text-center font-bold text-slate-700">{{ $index + 1 }}</td>
                                     <td>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold 
-                                            {{ $rep->report_type === 'gst_report' ? 'bg-blue-50 text-blue-700' : '' }}
-                                            {{ $rep->report_type === 'bill_report' ? 'bg-emerald-50 text-emerald-700' : '' }}
-                                            {{ $rep->report_type === 'deduction_report' ? 'bg-indigo-50 text-indigo-700' : '' }}
-                                            {{ $rep->report_type === 'range_report' ? 'bg-cyan-50 text-cyan-700' : '' }}">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold 
+                                            {{ $rep->report_type === 'gst_report' ? 'bg-blue-50 text-blue-700 border border-blue-200' : '' }}
+                                            {{ $rep->report_type === 'bill_report' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : '' }}
+                                            {{ $rep->report_type === 'deduction_report' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : '' }}
+                                            {{ $rep->report_type === 'range_report' ? 'bg-cyan-50 text-cyan-700 border border-cyan-200' : '' }}">
                                             {{ $rep->report_type_label }}
                                         </span>
                                     </td>
@@ -249,7 +397,7 @@
             const alertBox = document.getElementById('reportAlertBox');
             const billSelect = document.getElementById('bill_register_no');
             const adviceSelect = document.getElementById('advice_no');
-            const tharavTextarea = document.getElementById('tharav_descriptions');
+            const tharavSelect = document.getElementById('tharav_descriptions');
             const selectedReportTypeInput = document.getElementById('selectedReportTypeInput');
             const reportViewerCard = document.getElementById('reportViewerCard');
             const printableSheet = document.getElementById('printableSheet');
@@ -258,6 +406,7 @@
             const btnPrintReportSheet = document.getElementById('btnPrintReportSheet');
             const btnExportCsv = document.getElementById('btnExportCsv');
             const btnClosePreview = document.getElementById('btnClosePreview');
+            const closeBillReportFormBtn = document.getElementById('closeBillReportFormBtn');
 
             let billAdviceMap = {};
             try {
@@ -267,6 +416,7 @@
             }
 
             let currentReportData = null;
+            let currentPrintUrl = null;
 
             // Auto-update advice numbers on bill change
             billSelect.addEventListener('change', function () {
@@ -279,41 +429,23 @@
                 }
             });
 
-            // Tharav Pills Interactive Toggle
-            const pills = document.querySelectorAll('.tharav-pill');
-            const updatePillStyles = () => {
-                const currentText = tharavTextarea.value;
-                pills.forEach(pill => {
-                    const t = pill.dataset.text;
-                    if (currentText.includes(t)) {
-                        pill.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
-                        pill.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900', 'font-bold');
-                        pill.innerHTML = '✓ ' + t;
-                    } else {
-                        pill.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-900', 'font-bold');
-                        pill.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
-                        pill.innerHTML = '+ ' + t;
-                    }
-                });
-            };
-
-            pills.forEach(pill => {
-                pill.addEventListener('click', function () {
-                    const text = this.dataset.text;
-                    let lines = tharavTextarea.value.split("\n").map(l => l.trim()).filter(Boolean);
-                    const idx = lines.indexOf(text);
-                    if (idx > -1) {
-                        lines.splice(idx, 1);
-                    } else {
-                        lines.push(text);
-                    }
-                    tharavTextarea.value = lines.join("\n");
-                    updatePillStyles();
-                });
+            // Close button resets form and hides preview
+            closeBillReportFormBtn.addEventListener('click', function () {
+                form.reset();
+                reportViewerCard.classList.add('hidden');
             });
 
-            tharavTextarea.addEventListener('input', updatePillStyles);
-            updatePillStyles();
+            btnClosePreview.addEventListener('click', function () {
+                reportViewerCard.classList.add('hidden');
+            });
+
+            btnPrintReportSheet.addEventListener('click', function () {
+                if (currentPrintUrl) {
+                    window.open(currentPrintUrl + '?autoprint=1', '_blank');
+                } else {
+                    window.print();
+                }
+            });
 
             const formatMoney = (amount) => {
                 return '₹ ' + Number(amount || 0).toLocaleString('en-IN', {
@@ -352,6 +484,7 @@
                         if (response.ok) {
                             const res = await response.json();
                             currentReportData = res.data;
+                            currentPrintUrl = res.print_url || null;
                             renderReportSheet(reportType, res.data);
                             reportViewerCard.classList.remove('hidden');
                             reportViewerCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -392,7 +525,7 @@
                         <div class="flex flex-wrap justify-between items-center text-xs text-slate-600 pt-2 font-medium">
                             <span><strong>Bill Register No:</strong> ${bNo}</span>
                             <span><strong>Advice No:</strong> ${aNo}</span>
-                            <span><strong>GST Challan:</strong> ${data.gst_challan_no}</span>
+                            <span><strong>GST Challan:</strong> ${data.gst_challan_no || '-'}</span>
                             <span><strong>Date:</strong> ${data.generated_at}</span>
                         </div>
                     </div>
@@ -400,7 +533,6 @@
 
                 if (type === 'gst_report') {
                     html = headerHtml + `
-                        <!-- Summary Cards -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                             <div class="rounded-lg border border-slate-200 bg-slate-50 p-3 text-center">
                                 <span class="text-[11px] text-slate-500 font-semibold block uppercase">Total Gross Value</span>
@@ -420,7 +552,6 @@
                             </div>
                         </div>
 
-                        <!-- GST Table -->
                         <table class="w-full text-xs border border-slate-300 border-collapse mb-6">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
@@ -444,7 +575,7 @@
                                         <td class="p-2 border border-slate-300 text-right">${formatMoney(e.cgst)}</td>
                                         <td class="p-2 border border-slate-300 text-right">${formatMoney(e.sgst)}</td>
                                         <td class="p-2 border border-slate-300 text-right font-bold text-emerald-800">${formatMoney(e.total_gst)}</td>
-                                        <td class="p-2 border border-slate-300 text-center font-mono text-[11px]">${data.gst_challan_no}</td>
+                                        <td class="p-2 border border-slate-300 text-center font-mono text-[11px]">${data.gst_challan_no || '-'}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -462,7 +593,6 @@
                     `;
                 } else if (type === 'bill_report') {
                     html = headerHtml + `
-                        <!-- Tharav (Resolutions) section on Bill Reports -->
                         <div class="mb-6 p-4 rounded-lg border border-emerald-200 bg-emerald-50/40">
                             <h4 class="text-xs font-bold text-emerald-950 uppercase tracking-wider mb-2">
                                 ઠરાવ / વહીવટી મંજૂરી સંદર્ભ (Government Resolution References):
@@ -472,7 +602,6 @@
                             </ol>
                         </div>
 
-                        <!-- Master Bill Table -->
                         <table class="w-full text-xs border border-slate-300 border-collapse mb-6">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
@@ -498,193 +627,118 @@
                                             <span class="text-[11px] text-slate-500 font-mono block">${e.bank_name} - ${e.account_no}</span>
                                         </td>
                                         <td class="p-2 border border-slate-300 text-slate-800 leading-relaxed">${e.description}</td>
-                                        <td class="p-2 border border-slate-300 text-right font-medium">${formatMoney(e.gross_amount)}</td>
-                                        <td class="p-2 border border-slate-300 text-right text-rose-700">${formatMoney(e.total_deductions)}</td>
-                                        <td class="p-2 border border-slate-300 text-right font-bold text-emerald-800">${formatMoney(e.net_amount)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono font-medium">${formatMoney(e.gross_amount)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono text-rose-700">${formatMoney(e.deductions)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono font-bold text-emerald-900">${formatMoney(e.net_payable)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                             <tfoot>
                                 <tr class="bg-slate-100 font-bold border-t-2 border-slate-900">
-                                    <td colspan="4" class="p-2 border border-slate-300 text-right uppercase">Total Amount:</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.gross_amount)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold text-rose-800">${formatMoney(totals.total_deductions)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold text-emerald-950">${formatMoney(totals.net_amount)}</td>
+                                    <td colspan="4" class="p-2 border border-slate-300 text-right uppercase">Grand Total:</td>
+                                    <td class="p-2 border border-slate-300 text-right font-bold font-mono">${formatMoney(totals.gross_amount)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-bold font-mono text-rose-700">${formatMoney(totals.total_deductions)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-bold font-mono text-emerald-950">${formatMoney(totals.net_amount)}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     `;
                 } else if (type === 'deduction_report') {
                     html = headerHtml + `
-                        <!-- Deduction Summary Cards -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                            <div class="rounded-lg border border-slate-200 bg-slate-50 p-3 text-center">
-                                <span class="text-[11px] text-slate-500 font-semibold block uppercase">Gross Total</span>
-                                <span class="text-sm font-bold text-slate-950">${formatMoney(totals.gross_amount)}</span>
-                            </div>
-                            <div class="rounded-lg border border-rose-200 bg-rose-50/60 p-3 text-center">
-                                <span class="text-[11px] text-rose-700 font-semibold block uppercase">Total Deductions</span>
-                                <span class="text-sm font-bold text-rose-900">${formatMoney(totals.total_deductions)}</span>
-                            </div>
-                            <div class="rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-center">
-                                <span class="text-[11px] text-amber-700 font-semibold block uppercase">Security Deposit</span>
-                                <span class="text-sm font-bold text-amber-900">${formatMoney(totals.deposit)}</span>
-                            </div>
-                            <div class="rounded-lg border border-emerald-200 bg-emerald-50/60 p-3 text-center">
-                                <span class="text-[11px] text-emerald-700 font-semibold block uppercase">Net Disbursed</span>
-                                <span class="text-sm font-bold text-emerald-950">${formatMoney(totals.net_amount)}</span>
-                            </div>
-                        </div>
-
-                        <!-- Deductions Table -->
                         <table class="w-full text-xs border border-slate-300 border-collapse mb-6">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300 text-center">
-                                    <th class="p-2 border border-slate-300 w-10">Sr.</th>
+                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                                    <th class="p-2 border border-slate-300 text-center w-12">Sr.</th>
                                     <th class="p-2 border border-slate-300 text-left">Party Name</th>
-                                    <th class="p-2 border border-slate-300 text-right">Gross (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right">SGST (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right">CGST (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right">Labour Cess (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right">Deposit (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right">TDS (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right">Total Ded. (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right font-bold text-emerald-900">Net Payable (₹)</th>
+                                    <th class="p-2 border border-slate-300 text-right">Income Tax (₹)</th>
+                                    <th class="p-2 border border-slate-300 text-right">GST TDS (₹)</th>
+                                    <th class="p-2 border border-slate-300 text-right">Prof Tax (₹)</th>
+                                    <th class="p-2 border border-slate-300 text-right">Security Dep (₹)</th>
+                                    <th class="p-2 border border-slate-300 text-right font-bold text-rose-900">Total Deductions (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${entries.map((e, idx) => `
+                                    <tr class="border-b border-slate-200">
+                                        <td class="p-2 border border-slate-300 text-center font-medium">${idx + 1}</td>
+                                        <td class="p-2 border border-slate-300 font-semibold text-slate-900">${e.party_name}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(e.it_deduction)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(e.gst_tds)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(e.pt_deduction)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(e.sd_deduction)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono font-bold text-rose-800">${formatMoney(e.deductions)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-slate-100 font-bold border-t-2 border-slate-900">
+                                    <td colspan="2" class="p-2 border border-slate-300 text-right uppercase">Total Deductions:</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(totals.it_total)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(totals.gst_tds_total)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(totals.pt_total)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(totals.sd_total)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono font-bold text-rose-900">${formatMoney(totals.total_deductions)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    `;
+                } else if (type === 'range_report') {
+                    html = headerHtml + `
+                        <table class="w-full text-xs border border-slate-300 border-collapse mb-6">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                                    <th class="p-2 border border-slate-300 text-center w-12">Sr.</th>
+                                    <th class="p-2 border border-slate-300 text-left">Range Name</th>
+                                    <th class="p-2 border border-slate-300 text-center">Vouchers Count</th>
+                                    <th class="p-2 border border-slate-300 text-right">Gross Claimed (₹)</th>
+                                    <th class="p-2 border border-slate-300 text-right">Deductions (₹)</th>
+                                    <th class="p-2 border border-slate-300 text-right font-bold text-emerald-950">Net Disbursed (₹)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${entries.map((e, idx) => `
                                     <tr class="border-b border-slate-200">
                                         <td class="p-2 border border-slate-300 text-center font-bold">${idx + 1}</td>
-                                        <td class="p-2 border border-slate-300 font-semibold text-slate-900">${e.party_name}</td>
-                                        <td class="p-2 border border-slate-300 text-right font-medium">${formatMoney(e.gross_amount)}</td>
-                                        <td class="p-2 border border-slate-300 text-right">${formatMoney(e.sgst)}</td>
-                                        <td class="p-2 border border-slate-300 text-right">${formatMoney(e.cgst)}</td>
-                                        <td class="p-2 border border-slate-300 text-right">${formatMoney(e.labour_cess)}</td>
-                                        <td class="p-2 border border-slate-300 text-right">${formatMoney(e.deposit)}</td>
-                                        <td class="p-2 border border-slate-300 text-right">${formatMoney(e.tds)}</td>
-                                        <td class="p-2 border border-slate-300 text-right font-bold text-rose-700">${formatMoney(e.total_deductions)}</td>
-                                        <td class="p-2 border border-slate-300 text-right font-bold text-emerald-800">${formatMoney(e.net_amount)}</td>
+                                        <td class="p-2 border border-slate-300 font-bold text-slate-900">${e.range_name}</td>
+                                        <td class="p-2 border border-slate-300 text-center font-medium">${e.voucher_count || 1}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono font-medium">${formatMoney(e.gross_amount)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono text-rose-700">${formatMoney(e.deductions)}</td>
+                                        <td class="p-2 border border-slate-300 text-right font-mono font-bold text-emerald-900">${formatMoney(e.net_payable)}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                             <tfoot>
                                 <tr class="bg-slate-100 font-bold border-t-2 border-slate-900">
-                                    <td colspan="2" class="p-2 border border-slate-300 text-right uppercase">Total:</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.gross_amount)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.sgst)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.cgst)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.labour_cess)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.deposit)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.tds)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold text-rose-800">${formatMoney(totals.total_deductions)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold text-emerald-950">${formatMoney(totals.net_amount)}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    `;
-                } else if (type === 'range_report') {
-                    const rangeSummary = data.range_summary || [];
-                    html = headerHtml + `
-                        <!-- Range Summary Table -->
-                        <table class="w-full text-xs border border-slate-300 border-collapse mb-6">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
-                                    <th class="p-2 border border-slate-300 text-center w-12">Sr.</th>
-                                    <th class="p-2 border border-slate-300 text-left">Range Name</th>
-                                    <th class="p-2 border border-slate-300 text-left">Budget Code &amp; Scheme</th>
-                                    <th class="p-2 border border-slate-300 text-center w-20">Bills Count</th>
-                                    <th class="p-2 border border-slate-300 text-right">Gross Claimed (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right">Total Ded. (₹)</th>
-                                    <th class="p-2 border border-slate-300 text-right font-bold text-emerald-900">Net Disbursed (₹)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${rangeSummary.map((r, idx) => `
-                                    <tr class="border-b border-slate-200">
-                                        <td class="p-2 border border-slate-300 text-center font-bold">${idx + 1}</td>
-                                        <td class="p-2 border border-slate-300 font-bold text-slate-900">${r.range_name}</td>
-                                        <td class="p-2 border border-slate-300">
-                                            <span class="font-semibold text-slate-800 block">${r.budget_code}</span>
-                                            <span class="text-[11px] text-slate-500 block">${r.scheme}</span>
-                                        </td>
-                                        <td class="p-2 border border-slate-300 text-center font-bold">${r.count}</td>
-                                        <td class="p-2 border border-slate-300 text-right font-medium">${formatMoney(r.gross_amount)}</td>
-                                        <td class="p-2 border border-slate-300 text-right text-rose-700">${formatMoney(r.total_deductions)}</td>
-                                        <td class="p-2 border border-slate-300 text-right font-bold text-emerald-800">${formatMoney(r.net_amount)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                            <tfoot>
-                                <tr class="bg-slate-100 font-bold border-t-2 border-slate-900">
-                                    <td colspan="3" class="p-2 border border-slate-300 text-right uppercase">Total:</td>
-                                    <td class="p-2 border border-slate-300 text-center font-bold">${totals.count}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold">${formatMoney(totals.gross_amount)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold text-rose-800">${formatMoney(totals.total_deductions)}</td>
-                                    <td class="p-2 border border-slate-300 text-right font-bold text-emerald-950">${formatMoney(totals.net_amount)}</td>
+                                    <td colspan="3" class="p-2 border border-slate-300 text-right uppercase">Total Range Summary:</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono font-bold">${formatMoney(totals.gross_amount)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono font-bold text-rose-700">${formatMoney(totals.total_deductions)}</td>
+                                    <td class="p-2 border border-slate-300 text-right font-mono font-bold text-emerald-950">${formatMoney(totals.net_amount)}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     `;
                 }
 
-                // Official Signatures Footer
-                html += `
-                    <div class="grid grid-cols-3 gap-4 pt-12 text-center text-xs font-bold text-slate-900">
-                        <div>
-                            <div class="border-t border-slate-400 pt-2">Prepared By (Senior Clerk / Accountant)</div>
-                        </div>
-                        <div>
-                            <div class="border-t border-slate-400 pt-2">Verified By (Account Officer)</div>
-                        </div>
-                        <div>
-                            <div class="border-t border-slate-400 pt-2">Approved By (Deputy Conservator of Forests)</div>
-                        </div>
-                    </div>
-                `;
-
                 printableSheet.innerHTML = html;
             };
 
-            btnPrintReportSheet?.addEventListener('click', function () {
-                window.print();
-            });
-
-            btnClosePreview?.addEventListener('click', function () {
-                reportViewerCard.classList.add('hidden');
-            });
-
-            btnExportCsv?.addEventListener('click', function () {
-                if (!currentReportData || !currentReportData.entries) return;
-                const rows = [
-                    ['Sr No', 'Range', 'Budget Code', 'Party Name', 'GSTIN', 'Gross Amount', 'SGST', 'CGST', 'Labour Cess', 'Deposit', 'TDS', 'Total Deductions', 'Net Amount']
-                ];
-                currentReportData.entries.forEach((e, idx) => {
-                    rows.push([
-                        idx + 1,
-                        `"${e.range_name}"`,
-                        `"${e.budget_code}"`,
-                        `"${e.party_name}"`,
-                        `"${e.party_gst_no}"`,
-                        e.gross_amount,
-                        e.sgst,
-                        e.cgst,
-                        e.labour_cess,
-                        e.deposit,
-                        e.tds,
-                        e.total_deductions,
-                        e.net_amount
-                    ]);
+            // CSV Export Handler
+            btnExportCsv.addEventListener('click', function () {
+                if (!currentReportData || !currentReportData.entries) {
+                    alert('No data available to export.');
+                    return;
+                }
+                const rows = currentReportData.entries;
+                let csv = 'Sr,Party Name,Gross Amount,Deductions,Net Payable\n';
+                rows.forEach((r, idx) => {
+                    csv += `"${idx + 1}","${r.party_name || r.range_name || ''}","${r.gross_amount || 0}","${r.deductions || 0}","${r.net_payable || 0}"\n`;
                 });
-
-                const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `Report_${currentReportData.report_type}_${currentReportData.bill_register_no}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('href', url);
+                a.setAttribute('download', `report_${currentReportData.bill_register_no}_${currentReportData.advice_no}.csv`);
+                a.click();
             });
         });
     </script>

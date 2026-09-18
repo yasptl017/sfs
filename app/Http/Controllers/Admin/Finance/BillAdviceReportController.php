@@ -123,6 +123,7 @@ class BillAdviceReportController extends Controller
                 'message' => $reportRecord->report_type_label . ' generated successfully.',
                 'report' => $reportRecord,
                 'data' => $reportData,
+                'print_url' => route('division.bill-advice-reports.show', $reportRecord),
             ]);
         }
 
