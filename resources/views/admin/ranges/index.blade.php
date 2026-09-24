@@ -1,11 +1,11 @@
 <x-layouts.admin title="Ranges | Forest Inventory" heading="Range Management" subheading="Create and manage range login accounts">
-    <div class="grid gap-5 xl:grid-cols-[.8fr_1.2fr]">
+    <div class="space-y-5">
         <form class="rounded-lg border border-emerald-100 bg-white p-5 shadow-sm" method="POST" action="{{ route('ranges.store') }}">
             @csrf
             <h2 class="text-base font-semibold text-slate-950">Create range login</h2>
             <p class="mt-1 text-sm text-slate-500">The same username and password can be used by the range to log in.</p>
 
-            <div class="mt-5 space-y-4">
+            <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div>
                     <label class="form-label" for="name">Range name</label>
                     <input id="name" class="form-input" name="name" value="{{ old('name') }}" placeholder="North Range">
@@ -29,13 +29,19 @@
                 </div>
             </div>
 
-            <button class="primary-button mt-5 w-full" type="submit">Create range account</button>
+            <button class="primary-button mt-5" type="submit">Create range account</button>
         </form>
 
         <div class="rounded-lg border border-emerald-100 bg-white shadow-sm">
-            <div class="border-b border-emerald-100 px-5 py-4">
-                <h2 class="font-semibold text-slate-950">Created ranges</h2>
-                <p class="text-sm text-slate-500">Accounts linked to your division login</p>
+            <div class="flex flex-col gap-3 border-b border-emerald-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="font-semibold text-slate-950">Created ranges</h2>
+                    <p class="text-sm text-slate-500">Accounts linked to your division login</p>
+                </div>
+                <form class="flex w-full gap-2 sm:w-auto" method="GET" action="{{ route('ranges.index') }}">
+                    <input class="form-input min-w-0 sm:w-64" name="search" value="{{ request('search') }}" placeholder="Search range or username">
+                    <button class="secondary-button" type="submit">Search</button>
+                </form>
             </div>
             <div class="overflow-x-auto">
                 <table class="data-table">

@@ -1,20 +1,20 @@
 <x-layouts.admin title="Divisions | Forest Inventory" heading="Division Management" subheading="Create and manage division login accounts">
-    <div class="grid gap-5 xl:grid-cols-[.8fr_1.2fr]">
+    <div class="space-y-5">
         <form class="rounded-lg border border-emerald-100 bg-white p-5 shadow-sm" method="POST" action="{{ route('admin.divisions.store') }}">
             @csrf
             <h2 class="text-base font-semibold text-slate-950">Create division login</h2>
             <p class="mt-1 text-sm text-slate-500">Division users can create and manage their own range accounts.</p>
 
-            <div class="mt-5 space-y-4">
+            <div class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div><label class="form-label" for="name">Division name</label><input id="name" class="form-input" name="name" value="{{ old('name') }}" placeholder="North Division">@error('name') <p class="form-error">{{ $message }}</p> @enderror</div>
                 <div><label class="form-label" for="username">Login username</label><input id="username" class="form-input" name="username" value="{{ old('username') }}" placeholder="north_division">@error('username') <p class="form-error">{{ $message }}</p> @enderror</div>
                 <div class="grid gap-4 sm:grid-cols-2"><div><label class="form-label" for="password">Password</label><input id="password" class="form-input" type="password" name="password">@error('password') <p class="form-error">{{ $message }}</p> @enderror</div><div><label class="form-label" for="password_confirmation">Confirm password</label><input id="password_confirmation" class="form-input" type="password" name="password_confirmation"></div></div>
             </div>
-            <button class="primary-button mt-5 w-full" type="submit">Create division account</button>
+            <button class="primary-button mt-5" type="submit">Create division account</button>
         </form>
 
         <div class="rounded-lg border border-emerald-100 bg-white shadow-sm">
-            <div class="border-b border-emerald-100 px-5 py-4"><h2 class="font-semibold text-slate-950">Created divisions</h2><p class="text-sm text-slate-500">Division accounts and their linked ranges</p></div>
+            <div class="flex flex-col gap-3 border-b border-emerald-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"><div><h2 class="font-semibold text-slate-950">Created divisions</h2><p class="text-sm text-slate-500">Division accounts and their linked ranges</p></div><form class="flex w-full gap-2 sm:w-auto" method="GET" action="{{ route('admin.divisions.index') }}"><input class="form-input min-w-0 sm:w-64" name="search" value="{{ request('search') }}" placeholder="Search division or username"><button class="secondary-button" type="submit">Search</button></form></div>
             @error('division') <p class="mx-5 mt-4 form-error">{{ $message }}</p> @enderror
             <div class="overflow-x-auto"><table class="data-table"><thead><tr><th>Division</th><th>Username</th><th>Ranges</th><th>Created</th><th class="text-right">Actions</th></tr></thead><tbody>
                 @forelse($divisions as $division)

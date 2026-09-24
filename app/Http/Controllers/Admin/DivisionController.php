@@ -19,9 +19,17 @@ class DivisionController extends Controller
         return view('admin.divisions.index', [
             'divisions' => User::query()
                 ->where('role', 'division')
+                ->when($request->filled('search'), function ($query) use ($request) {
+                    $search = $request->string('search')->trim();
+
+                    $query->where(fn ($query) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('username', 'like', "%{$search}%"));
+                })
                 ->withCount('ranges')
                 ->latest()
-                ->paginate(10),
+                ->paginate(50)
+                ->withQueryString(),
         ]);
     }
 

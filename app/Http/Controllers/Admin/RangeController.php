@@ -17,7 +17,17 @@ class RangeController extends Controller
         abort_unless($request->user()->isDivision(), 403);
 
         return view('admin.ranges.index', [
-            'ranges' => $request->user()->ranges()->latest()->paginate(10),
+            'ranges' => $request->user()->ranges()
+                ->when($request->filled('search'), function ($query) use ($request) {
+                    $search = $request->string('search')->trim();
+
+                    $query->where(fn ($query) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('username', 'like', "%{$search}%"));
+                })
+                ->latest()
+                ->paginate(50)
+                ->withQueryString(),
         ]);
     }
 

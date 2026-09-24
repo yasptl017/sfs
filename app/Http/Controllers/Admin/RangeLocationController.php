@@ -20,7 +20,23 @@ class RangeLocationController extends Controller
         return view('admin.range-locations.index', [
             'ranges' => $ranges,
             'placeYears' => $this->placeYears(),
-            'locations' => RangeLocation::query()->whereIn('range_id', $ranges->pluck('id'))->with('range')->latest()->paginate(15),
+            'locations' => RangeLocation::query()
+                ->whereIn('range_id', $ranges->pluck('id'))
+                ->when($request->filled('search'), function ($query) use ($request) {
+                    $search = $request->string('search')->trim();
+
+                    $query->where(function ($query) use ($search) {
+                        $query->where('round', 'like', "%{$search}%")
+                            ->orWhere('beat', 'like', "%{$search}%")
+                            ->orWhere('place', 'like', "%{$search}%")
+                            ->orWhere('place_year', 'like', "%{$search}%")
+                            ->orWhereHas('range', fn ($range) => $range->where('name', 'like', "%{$search}%"));
+                    });
+                })
+                ->with('range')
+                ->latest()
+                ->paginate(50)
+                ->withQueryString(),
         ]);
     }
 
