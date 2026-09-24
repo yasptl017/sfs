@@ -29,6 +29,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_DIVISION = 'division';
+    public const ROLE_RANGE = 'range';
+
     public function division(): BelongsTo
     {
         return $this->belongsTo(User::class, 'division_id');
@@ -36,7 +40,25 @@ class User extends Authenticatable
 
     public function ranges(): HasMany
     {
-        return $this->hasMany(User::class, 'division_id')->where('role', 'range');
+        return $this->hasMany(User::class, 'division_id')->where('role', self::ROLE_RANGE);
+    }
+
+    public function officeProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(OfficeProfile::class);
+    }
+
+    public function getOrCreateOfficeProfile(): OfficeProfile
+    {
+        return $this->officeProfile()->firstOrCreate(
+            ['user_id' => $this->id],
+            [
+                'office_name' => $this->name,
+                'office_name_gujarati' => $this->isRange() ? 'પરિક્ષેત્ર વન કચેરી' : 'સામાજિક વનીકરણ વિભાગ',
+                'officer_designation' => $this->isRange() ? 'Range Forest Officer' : 'Deputy Conservator of Forests',
+                'officer_designation_gujarati' => $this->isRange() ? 'પરિક્ષેત્ર વન અધિકારી' : 'નાયબ વન સંરક્ષક',
+            ]
+        );
     }
 
     public function isDivision(): bool

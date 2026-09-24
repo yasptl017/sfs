@@ -53,14 +53,14 @@
                 @if(auth()->user()->isDivision())
                     <div class="nav-section-title">Division Finance System</div>
 
-                    <details class="nav-group">
+                    <details class="nav-group" {{ request()->routeIs('division.process-bill.*') || request()->routeIs('division.gst-challan.*') || request()->routeIs('division.bill-advice-reports.*') || request()->routeIs('division.treasury-details.*') || request()->routeIs('division.change-bill-order-no.*') || request()->routeIs('division.delete-advice.*') ? 'open' : '' }}>
                         <summary class="nav-link" title="Bill / Advice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg><span>Bill / Advice</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></summary>
-                        <div class="nav-submenu"><a href="#">Process Bill (Advice)</a><a href="#">Update GST Challan No.</a><a href="#">Bill / Advice Reports</a><a href="#">Add Treasury Details</a><a href="#">Change Bill No. and Order No.</a><a href="#">Delete Advice</a></div>
+                        <div class="nav-submenu"><a class="{{ request()->routeIs('division.process-bill.*') ? 'active' : '' }}" href="{{ route('division.process-bill.index') }}">Process Bill (Advice)</a><a class="{{ request()->routeIs('division.gst-challan.*') ? 'active' : '' }}" href="{{ route('division.gst-challan.index') }}">Update GST Challan No.</a><a class="{{ request()->routeIs('division.bill-advice-reports.*') ? 'active' : '' }}" href="{{ route('division.bill-advice-reports.index') }}">Bill / Advice Reports</a><a class="{{ request()->routeIs('division.treasury-details.*') ? 'active' : '' }}" href="{{ route('division.treasury-details.index') }}">Add Treasury Details</a><a class="{{ request()->routeIs('division.change-bill-order-no.*') ? 'active' : '' }}" href="{{ route('division.change-bill-order-no.index') }}">Change Bill No. and Order No.</a><a class="{{ request()->routeIs('division.delete-advice.*') ? 'active' : '' }}" href="{{ route('division.delete-advice.index') }}">Delete Advice</a></div>
                     </details>
 
-                    <details class="nav-group">
+                    <details class="nav-group" {{ request()->routeIs('division.monthly-reports.*') || request()->routeIs('division.summary-reports.*') || request()->routeIs('division.final-voucher-cashbook.*') ? 'open' : '' }}>
                         <summary class="nav-link" title="Monthly Reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 6h12l-1 4 1 4H4"/><path d="M8 19h12"/></svg><span>Monthly Reports</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></summary>
-                        <div class="nav-submenu"><a href="#">Monthly Reports</a><a href="#">Summary Reports</a><a href="#">Final Voucher Nos. &amp; Form No. 35 &amp; Cashbook</a></div>
+                        <div class="nav-submenu"><a class="{{ request()->routeIs('division.monthly-reports.*') ? 'active' : '' }}" href="{{ route('division.monthly-reports.index') }}">Monthly Reports</a><a class="{{ request()->routeIs('division.summary-reports.*') ? 'active' : '' }}" href="{{ route('division.summary-reports.index') }}">Summary Reports</a><a class="{{ request()->routeIs('division.final-voucher-cashbook.*') ? 'active' : '' }}" href="{{ route('division.final-voucher-cashbook.index') }}">Final Voucher Nos. &amp; Form No. 35 &amp; Cashbook</a></div>
                     </details>
 
                     <details class="nav-group" open>
@@ -102,18 +102,18 @@
                         </div>
                     </details>
 
-                    <details class="nav-group">
+                    <details class="nav-group" {{ request()->routeIs('finance.voucher-print.*') || request()->routeIs('finance.abstract-print.*') || request()->routeIs('finance.work-order-print.*') || request()->routeIs('finance.sor-limit-report.*') || request()->routeIs('finance.vavetar-register.*') ? 'open' : '' }}>
                         <summary class="nav-link" title="Prints & Reports">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
                             <span>Prints & Reports</span>
                             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                         </summary>
                         <div class="nav-submenu">
-                            <a href="#" title="Voucher Print">Voucher Print</a>
-                            <a href="#" title="Abstract Print">Abstract Print</a>
-                            <a href="#" title="Work Order Print">Work Order Print</a>
-                            <a href="#" title="SOR Limit Report">SOR Limit Report</a>
-                            <a href="#" title="Vavtar Register">Vavtar Register</a>
+                            <a class="{{ request()->routeIs('finance.voucher-print.*') ? 'active' : '' }}" href="{{ route('finance.voucher-print.index') }}" title="Voucher Print">Voucher Print</a>
+                            <a class="{{ request()->routeIs('finance.abstract-print.*') ? 'active' : '' }}" href="{{ route('finance.abstract-print.index') }}" title="Abstract Print">Abstract Print</a>
+                            <a class="{{ request()->routeIs('finance.work-order-print.*') ? 'active' : '' }}" href="{{ route('finance.work-order-print.index') }}" title="Work Order Print">Work Order Print</a>
+                            <a class="{{ request()->routeIs('finance.sor-limit-report.*') ? 'active' : '' }}" href="{{ route('finance.sor-limit-report.index') }}" title="SOR Limit Report">SOR Limit Report</a>
+                            <a class="{{ request()->routeIs('finance.vavetar-register.*') ? 'active' : '' }}" href="{{ route('finance.vavetar-register.index') }}" title="Vavetar Register">Vavetar Register</a>
                         </div>
                     </details>
 
@@ -150,6 +150,11 @@
                         <span>Help</span>
                     </a>
                 @endif
+
+                <a class="nav-link {{ request()->routeIs('office-profile.*') ? 'active' : '' }}" href="{{ route('office-profile.edit') }}" title="Office Profile &amp; Logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M8 10h.01M16 10h.01"/></svg>
+                    <span>Office Profile &amp; Logo</span>
+                </a>
 
                 <a class="nav-link {{ request()->routeIs('password.*') ? 'active' : '' }}" href="{{ route('password.edit') }}" title="Password">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
