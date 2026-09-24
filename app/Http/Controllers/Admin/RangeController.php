@@ -42,4 +42,30 @@ class RangeController extends Controller
 
         return back()->with('status', 'Range login created successfully.');
     }
+
+    public function update(Request $request, User $range): RedirectResponse
+    {
+        abort_unless($request->user()->isDivision(), 403);
+        abort_unless($range->isRange() && $range->division_id === $request->user()->id, 403);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'alpha_dash:ascii', 'max:255', Rule::unique('users')->ignore($range)],
+            'password' => ['nullable', 'string', 'min:4', 'confirmed'],
+        ]);
+
+        $attributes = [
+            'name' => $validated['name'],
+            'username' => $validated['username'],
+            'email' => $validated['username'].'@sfs.local',
+        ];
+
+        if (! empty($validated['password'])) {
+            $attributes['password'] = Hash::make($validated['password']);
+        }
+
+        $range->update($attributes);
+
+        return back()->with('status', 'Range login updated successfully.');
+    }
 }

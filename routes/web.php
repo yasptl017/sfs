@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('admin/budget-codes/{budgetCode}', [BudgetCodeController::class, 'destroy'])->name('admin.budget-codes.destroy');
     Route::get('ranges', [RangeController::class, 'index'])->name('ranges.index');
     Route::post('ranges', [RangeController::class, 'store'])->name('ranges.store');
+    Route::put('ranges/{range}', [RangeController::class, 'update'])->name('ranges.update');
     Route::get('range-locations', [RangeLocationController::class, 'index'])->name('range-locations.index');
     Route::post('range-locations', [RangeLocationController::class, 'store'])->name('range-locations.store');
     Route::put('range-locations/{location}', [RangeLocationController::class, 'update'])->name('range-locations.update');

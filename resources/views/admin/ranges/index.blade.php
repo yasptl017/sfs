@@ -44,6 +44,7 @@
                             <th>Range</th>
                             <th>Username</th>
                             <th>Created</th>
+                            <th class="text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,10 +53,30 @@
                                 <td>{{ $range->name }}</td>
                                 <td>{{ $range->username }}</td>
                                 <td>{{ $range->created_at->format('d M Y') }}</td>
+                                <td>
+                                    <div class="flex justify-end">
+                                        <details>
+                                            <summary class="secondary-button cursor-pointer list-none">Edit</summary>
+                                            <form class="mt-2 w-72 rounded-lg border border-emerald-100 bg-white p-3 shadow-lg" method="POST" action="{{ route('ranges.update', $range) }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <label class="form-label">Range name</label>
+                                                <input class="form-input" name="name" value="{{ $range->name }}" required>
+                                                <label class="form-label mt-2 block">Login username</label>
+                                                <input class="form-input" name="username" value="{{ $range->username }}" required>
+                                                <label class="form-label mt-2 block">New password <span class="font-normal">(optional)</span></label>
+                                                <input class="form-input" type="password" name="password">
+                                                <label class="form-label mt-2 block">Confirm password</label>
+                                                <input class="form-input" type="password" name="password_confirmation">
+                                                <button class="primary-button mt-3 w-full" type="submit">Save changes</button>
+                                            </form>
+                                        </details>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center text-slate-500">No ranges available.</td>
+                                <td colspan="4" class="text-center text-slate-500">No ranges available.</td>
                             </tr>
                         @endforelse
                     </tbody>
