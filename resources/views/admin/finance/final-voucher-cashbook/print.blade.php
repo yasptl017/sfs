@@ -174,6 +174,10 @@
                     </div>
                 </div>
 
+                @if(!empty($data['cashbook_note']))
+                    <p class="text-[10px] text-slate-600 mb-2 italic">{{ $data['cashbook_note'] }}</p>
+                @endif
+
                 <!-- Cash Book Table -->
                 <table class="w-full text-xs border border-slate-400 border-collapse mb-4">
                     <thead>

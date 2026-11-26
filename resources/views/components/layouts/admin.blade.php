@@ -28,6 +28,31 @@
                     <span>Dashboard</span>
                 </a>
 
+                <a class="nav-link {{ request()->routeIs('vouchers.*') ? 'active' : '' }}" href="{{ route('vouchers.index') }}" title="All Vouchers">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+                    <span>All Vouchers</span>
+                </a>
+                <a class="nav-link {{ request()->routeIs('reports.position') ? 'active' : '' }}" href="{{ route('reports.position') }}" title="Allotment vs Expenditure">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                    <span>Allotment vs Expenditure</span>
+                </a>
+
+                @php($regMenu = collect(config('registers'))->filter(fn ($d) => in_array(auth()->user()->role, $d['roles'], true))->groupBy('group'))
+                <details class="nav-group" @if(request()->routeIs('registers.*')) open @endif>
+                    <summary class="nav-link" title="Registers & Rates">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h16"/><path d="M8 3v4M8 10v4M8 17v4"/></svg>
+                        <span>Registers &amp; Rates</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    </summary>
+                    <div class="nav-submenu">
+                        @foreach(config('registers') as $regKey => $regDef)
+                            @if(in_array(auth()->user()->role, $regDef['roles'], true))
+                                <a class="{{ request()->route('key') === $regKey && request()->routeIs('registers.*') ? 'active' : '' }}" href="{{ route('registers.index', $regKey) }}">{{ $regDef['title'] }}</a>
+                            @endif
+                        @endforeach
+                    </div>
+                </details>
+
                 @if(auth()->user()->isAdmin())
                     <a class="nav-link {{ request()->routeIs('admin.divisions.*') ? 'active' : '' }}" href="{{ route('admin.divisions.index') }}" title="Divisions">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M8 10h.01M16 10h.01"/></svg>
@@ -190,6 +215,15 @@
                         <p class="truncate text-xs text-slate-500">{{ $subheading ?? 'Forest stock and administrative access control' }}</p>
                     </div>
                 </div>
+                <form method="POST" action="{{ route('financial-year.switch') }}" class="ml-auto mr-3 flex items-center gap-2">
+                    @csrf
+                    <label class="hidden text-xs font-semibold text-slate-500 sm:block" for="fySwitch">Financial year</label>
+                    <select id="fySwitch" name="financial_year_id" class="form-select min-h-9 py-1 text-sm" onchange="this.form.submit()">
+                        @foreach(\App\Models\FinancialYear::orderBy('code')->get() as $fyOpt)
+                            <option value="{{ $fyOpt->id }}" @selected($fyOpt->id === \App\Support\CurrentFinancialYear::id())>{{ $fyOpt->code }}</option>
+                        @endforeach
+                    </select>
+                </form>
                 <div class="hidden items-center gap-2 rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-slate-600 sm:flex">
                     <span class="h-2 w-2 rounded-full bg-emerald-600"></span>
                     {{ now()->format('d M Y') }}

@@ -173,16 +173,16 @@
                                     <td class="p-1.5 font-mono font-bold text-emerald-900 border-r border-slate-200">{{ $row['sor_code'] }}</td>
                                     <td class="p-1.5 font-medium text-slate-900 border-r border-slate-200">{{ $row['work_description'] }}</td>
                                     <td class="p-1.5 text-center text-slate-700 border-r border-slate-200">{{ $row['unit'] }}</td>
-                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ number_format($row['sanctioned_rate'], 2) }}</td>
-                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ number_format($row['sanctioned_qty'], 0) }}</td>
-                                    <td class="p-1.5 text-right font-mono font-bold border-r border-slate-200">{{ number_format($row['sanctioned_limit'], 2) }}</td>
+                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ ($row['sanctioned_rate'] === null ? '-' : number_format($row['sanctioned_rate'], 2)) }}</td>
+                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ ($row['sanctioned_qty'] === null ? '-' : number_format($row['sanctioned_qty'], 0)) }}</td>
+                                    <td class="p-1.5 text-right font-mono font-bold border-r border-slate-200">{{ ($row['sanctioned_limit'] === null ? '-' : number_format($row['sanctioned_limit'], 2)) }}</td>
                                     <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ number_format($row['executed_qty'], 0) }}</td>
-                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ number_format($row['actual_rate'], 2) }}</td>
+                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ ($row['actual_rate'] === null ? '-' : number_format($row['actual_rate'], 2)) }}</td>
                                     <td class="p-1.5 text-right font-mono font-bold text-emerald-900 border-r border-slate-200">{{ number_format($row['actual_amount'], 2) }}</td>
-                                    <td class="p-1.5 text-right font-mono font-bold {{ $row['balance_amount'] >= 0 ? 'text-blue-900' : 'text-rose-700' }} border-r border-slate-200">{{ number_format($row['balance_amount'], 2) }}</td>
-                                    <td class="p-1.5 text-center font-mono border-r border-slate-200">{{ $row['utilization_percent'] }}%</td>
+                                    <td class="p-1.5 text-right font-mono font-bold {{ $row['balance_amount'] >= 0 ? 'text-blue-900' : 'text-rose-700' }} border-r border-slate-200">{{ ($row['balance_amount'] === null ? '-' : number_format($row['balance_amount'], 2)) }}</td>
+                                    <td class="p-1.5 text-center font-mono border-r border-slate-200">{{ $row['utilization_percent'] === null ? '-' : $row['utilization_percent'].'%' }}</td>
                                     <td class="p-1.5 text-center font-bold text-[10px]">
-                                        <span class="{{ $row['status'] === 'Exceeded Limit' ? 'text-rose-700' : ($row['status'] === 'Critical (90%+)' ? 'text-amber-700' : 'text-emerald-700') }}">
+                                        <span class="{{ $row['status'] === 'Exceeded Limit' ? 'text-rose-700' : ($row['status'] === 'Critical (90%+)' ? 'text-amber-700' : ($row['status'] === 'Not in rate list' ? 'text-slate-500' : 'text-emerald-700')) }}">
                                             {{ $row['status'] }}
                                         </span>
                                     </td>
@@ -238,15 +238,15 @@
                                     <td class="p-1.5 font-mono font-bold text-emerald-900 border-r border-slate-200">{{ $row['sor_code'] }}</td>
                                     <td class="p-1.5 text-slate-900 border-r border-slate-200">{{ $row['work_description'] }}</td>
                                     <td class="p-1.5 text-center text-slate-700 border-r border-slate-200">{{ $row['unit'] }}</td>
-                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ number_format($row['sanctioned_rate'], 2) }}</td>
-                                    <td class="p-1.5 text-right font-mono border-r border-slate-200 {{ $row['actual_rate'] > $row['sanctioned_rate'] ? 'text-rose-700 font-bold' : '' }}">{{ number_format($row['actual_rate'], 2) }}</td>
-                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ number_format($row['sanctioned_qty'], 0) }}</td>
-                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ number_format($row['actual_qty'], 0) }}</td>
-                                    <td class="p-1.5 text-right font-mono font-bold border-r border-slate-200">{{ number_format($row['sanctioned_limit'], 2) }}</td>
+                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ ($row['sanctioned_rate'] === null ? '-' : number_format($row['sanctioned_rate'], 2)) }}</td>
+                                    <td class="p-1.5 text-right font-mono border-r border-slate-200 {{ $row['is_rate_violation'] ? 'text-rose-700 font-bold' : '' }}">{{ ($row['actual_rate'] === null ? '-' : number_format($row['actual_rate'], 2)) }}</td>
+                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ ($row['sanctioned_qty'] === null ? '-' : number_format($row['sanctioned_qty'], 0)) }}</td>
+                                    <td class="p-1.5 text-right font-mono border-r border-slate-200">{{ $row['actual_qty'] === null ? '-' : rtrim(rtrim(number_format($row['actual_qty'], 3), '0'), '.') }}</td>
+                                    <td class="p-1.5 text-right font-mono font-bold border-r border-slate-200">{{ ($row['sanctioned_limit'] === null ? '-' : number_format($row['sanctioned_limit'], 2)) }}</td>
                                     <td class="p-1.5 text-right font-mono font-bold text-emerald-900 border-r border-slate-200">{{ number_format($row['actual_amount'], 2) }}</td>
-                                    <td class="p-1.5 text-right font-mono font-bold {{ $row['variance'] >= 0 ? 'text-blue-900' : 'text-rose-700' }} border-r border-slate-200">{{ number_format($row['variance'], 2) }}</td>
+                                    <td class="p-1.5 text-right font-mono font-bold {{ $row['variance'] >= 0 ? 'text-blue-900' : 'text-rose-700' }} border-r border-slate-200">{{ ($row['variance'] === null ? '-' : number_format($row['variance'], 2)) }}</td>
                                     <td class="p-1.5 text-center font-bold text-[10px]">
-                                        <span class="{{ $row['is_violation'] ? 'text-rose-700 font-black' : ($row['status'] === 'Critical (90%+)' ? 'text-amber-700' : 'text-emerald-700') }}">
+                                        <span class="{{ $row['is_violation'] ? 'text-rose-700 font-black' : ($row['status'] === 'Critical (90%+)' ? 'text-amber-700' : ($row['status'] === 'Not in rate list' ? 'text-slate-500' : 'text-emerald-700')) }}">
                                             {{ $row['status'] }}
                                         </span>
                                     </td>

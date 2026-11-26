@@ -3,50 +3,49 @@
 namespace App\Http\Controllers\Admin\Finance;
 
 use App\Http\Controllers\Controller;
-use App\Models\DWagerArrearsEntry;
-use App\Models\DWagerSalaryEntry;
-use App\Models\FreeEntry;
 use App\Models\PartyRegistration;
-use App\Models\SfBeneficiaryEntry;
-use App\Models\TenderEntry;
 use App\Models\User;
-use App\Models\WlBeneficiaryEntry;
+use App\Models\Voucher;
+use App\Support\CurrentFinancialYear;
+use App\Support\ExpenditureReport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
+/**
+ * Voucher print (Form No. 35) for a range's own vouchers, read from the typed voucher tables.
+ * Only real vouchers are printed: serial numbers that do not exist are reported as "not found", never invented.
+ */
 class VoucherPrintController extends Controller
 {
+    /** label shown in the screen => entry type stored on the voucher */
     protected array $entryTypeMap = [
-        'Tender Entry' => TenderEntry::class,
-        'Free Entry' => FreeEntry::class,
-        'D.Wagers Salary' => DWagerSalaryEntry::class,
-        'D.Wagers Arrears' => DWagerArrearsEntry::class,
-        'WL Bene. Entry' => WlBeneficiaryEntry::class,
-        'Bene. Entry' => SfBeneficiaryEntry::class,
-        'SF Bene. Entry' => SfBeneficiaryEntry::class,
+        'Tender Entry' => 'Tender Entry',
+        'Free Entry' => 'Free Entry',
+        'D.Wagers Salary' => 'D.Wagers Salary',
+        'D.Wagers Arrears' => 'D.Wagers Arrears',
+        'WL Bene. Entry' => 'WL Bene. Entry',
+        'Bene. Entry' => 'Bene. Entry',
+        'SF Bene. Entry' => 'Bene. Entry',
     ];
 
     public function index(Request $request): View
     {
         $this->authorizeRange($request);
 
-        $rangeUser = $request->user();
         $selectedType = $request->query('entry_type', 'Tender Entry');
-
-        if (!array_key_exists($selectedType, $this->entryTypeMap)) {
+        if (! array_key_exists($selectedType, $this->entryTypeMap)) {
             $selectedType = 'Tender Entry';
         }
 
-        $availableEntries = $this->getEntriesForType($rangeUser, $selectedType);
-        $serialNumbersList = array_column($availableEntries, 'serial_number');
-        $suggestedRange = !empty($serialNumbersList) ? (min($serialNumbersList) . '-' . max($serialNumbersList)) : '1-4, 19, 23-25, 47';
+        $availableEntries = $this->getEntriesForType($request->user(), $selectedType);
 
         return view('admin.finance.voucher-print.index', [
             'entryTypes' => array_keys($this->entryTypeMap),
             'selectedType' => $selectedType,
             'availableEntries' => $availableEntries,
-            'suggestedRange' => $suggestedRange,
+            'suggestedRange' => $this->suggestedRange($availableEntries),
         ]);
     }
 
@@ -56,14 +55,12 @@ class VoucherPrintController extends Controller
 
         $entryType = $request->query('entry_type', 'Tender Entry');
         $entries = $this->getEntriesForType($request->user(), $entryType);
-        $serialNumbersList = array_column($entries, 'serial_number');
-        $suggestedRange = !empty($serialNumbersList) ? (min($serialNumbersList) . '-' . max($serialNumbersList)) : '1-4, 19, 23-25, 47';
 
         return response()->json([
             'success' => true,
             'entry_type' => $entryType,
             'entries' => $entries,
-            'suggested_range' => $suggestedRange,
+            'suggested_range' => $this->suggestedRange($entries),
             'count' => count($entries),
         ]);
     }
@@ -82,16 +79,14 @@ class VoucherPrintController extends Controller
         $entryType = $validated['entry_type'];
         $withWorkOrder = (bool) ($validated['with_work_order'] ?? false);
         $fitToPage = (bool) ($validated['fit_to_page'] ?? false);
-        $serialNumbersInput = $validated['serial_numbers'] ?? '';
-
-        $serialNumbers = $this->parseSerialNumbers($serialNumbersInput);
-        $vouchers = $this->compileVouchers($request->user(), $entryType, $serialNumbers, $withWorkOrder, $fitToPage);
+        [$vouchers, $missing] = $this->compileVouchers($request->user(), $entryType, $this->parseSerialNumbers($validated['serial_numbers'] ?? ''), $withWorkOrder, $fitToPage);
 
         return response()->json([
             'success' => true,
             'entry_type' => $entryType,
             'count' => count($vouchers),
             'vouchers' => $vouchers,
+            'missing' => $missing,
             'fit_to_page' => $fitToPage,
             'with_work_order' => $withWorkOrder,
         ]);
@@ -102,24 +97,22 @@ class VoucherPrintController extends Controller
         $this->authorizeRange($request);
 
         $entryType = $request->query('entry_type', 'Tender Entry');
-        $serialNumbersInput = $request->query('serial_numbers', '');
         $withWorkOrder = $request->boolean('with_work_order', false);
         $fitToPage = $request->boolean('fit_to_page', false);
-
-        $serialNumbers = $this->parseSerialNumbers($serialNumbersInput);
-        $vouchers = $this->compileVouchers($request->user(), $entryType, $serialNumbers, $withWorkOrder, $fitToPage);
-        $profile = $request->user()->getOrCreateOfficeProfile();
+        [$vouchers, $missing] = $this->compileVouchers($request->user(), $entryType, $this->parseSerialNumbers($request->query('serial_numbers', '')), $withWorkOrder, $fitToPage);
 
         return view('admin.finance.voucher-print.print', [
             'entryType' => $entryType,
             'vouchers' => $vouchers,
+            'missing' => $missing,
             'withWorkOrder' => $withWorkOrder,
             'fitToPage' => $fitToPage,
             'rangeUser' => $request->user(),
-            'profile' => $profile,
+            'profile' => $request->user()->getOrCreateOfficeProfile(),
         ]);
     }
 
+    /** "1-4, 19, 23-25" => [1,2,3,4,19,23,24,25] (a descending range such as 5-3 prints 5,4,3). */
     public function parseSerialNumbers(?string $input): array
     {
         if (blank($input)) {
@@ -127,22 +120,14 @@ class VoucherPrintController extends Controller
         }
 
         $numbers = [];
-        $parts = array_filter(array_map('trim', explode(',', $input)));
-
-        foreach ($parts as $part) {
+        foreach (array_filter(array_map('trim', explode(',', $input))) as $part) {
             if (str_contains($part, '-')) {
                 $range = explode('-', $part);
                 if (count($range) === 2 && is_numeric(trim($range[0])) && is_numeric(trim($range[1]))) {
                     $start = (int) trim($range[0]);
                     $end = (int) trim($range[1]);
-                    if ($start <= $end) {
-                        for ($i = $start; $i <= $end; $i++) {
-                            $numbers[] = $i;
-                        }
-                    } else {
-                        for ($i = $start; $i >= $end; $i--) {
-                            $numbers[] = $i;
-                        }
+                    foreach ($start <= $end ? range($start, $end) : range($start, $end, -1) as $i) {
+                        $numbers[] = $i;
                     }
                 }
             } elseif (is_numeric($part)) {
@@ -153,279 +138,130 @@ class VoucherPrintController extends Controller
         return array_values(array_unique(array_filter($numbers, fn ($n) => $n > 0)));
     }
 
+    // ------------------------------------------------------------------------------------------------ data
+    private function storedType(string $entryType): string
+    {
+        return $this->entryTypeMap[$entryType] ?? 'Tender Entry';
+    }
+
+    private function query(User $rangeUser, string $entryType)
+    {
+        return Voucher::query()->forYear(CurrentFinancialYear::id())->where('range_id', $rangeUser->id)->where('entry_type', $this->storedType($entryType));
+    }
+
+    /** The range's vouchers of one type, for the picker on the print screen. */
     private function getEntriesForType(User $rangeUser, string $entryType): array
     {
-        $modelClass = $this->entryTypeMap[$entryType] ?? TenderEntry::class;
-
-        $records = $modelClass::query()
-            ->where('range_id', $rangeUser->id)
-            ->orderBy('serial_number')
-            ->get();
-
-        if ($records->isNotEmpty()) {
-            return $records->map(function ($rec) use ($entryType) {
-                $d = $rec->data ?? [];
-                $amount = (float) ($d['total_amount'] ?? $d['amount'] ?? 0);
-                if ($amount == 0 && !empty($d['items']) && is_array($d['items'])) {
-                    $amount = array_sum(array_column($d['items'], 'amount'));
-                }
-
-                return [
-                    'id' => $rec->id,
-                    'serial_number' => $rec->serial_number,
-                    'entry_type' => $entryType,
-                    'party_name' => $d['party_name'] ?? ($d['name_of_beneficiary'] ?? 'Standard Vendor / Payee'),
-                    'budget_code' => $d['budget_code'] ?? '2406-01-101',
-                    'docket_no' => $d['docket_no'] ?? '-',
-                    'amount' => $amount,
-                    'date' => $rec->created_at?->format('d/m/Y') ?? date('d/m/Y'),
-                ];
-            })->all();
-        }
-
-        // Default sample entries if range has no active records yet
-        $sample = [];
-        $sampleSerials = [1, 2, 3, 4, 19, 23, 24, 25, 47];
-        foreach ($sampleSerials as $sr) {
-            $sample[] = [
-                'id' => $sr,
-                'serial_number' => $sr,
-                'entry_type' => $entryType,
-                'party_name' => 'Party / Vendor ' . $sr . ' (Forest Works)',
-                'budget_code' => '2406-01-101-0' . (($sr % 4) + 1),
-                'docket_no' => 'DOC/' . date('Y') . '/' . str_pad((string)$sr, 3, '0', STR_PAD_LEFT),
-                'amount' => 15000.00 + ($sr * 1250.00),
-                'date' => date('d/m/Y'),
-            ];
-        }
-
-        return $sample;
+        return $this->query($rangeUser, $entryType)->orderBy('serial_number')->get()->map(fn (Voucher $v) => [
+            'id' => $v->id,
+            'serial_number' => (int) $v->serial_number,
+            'entry_type' => $entryType,
+            'party_name' => $v->party_name,
+            'budget_code' => $v->budget_code,
+            'docket_no' => $v->docket_no ?? '-',
+            'amount' => (float) $v->payable_total_amount,
+            'date' => $this->date($v->bill_date),
+        ])->all();
     }
 
+    private function suggestedRange(array $entries): string
+    {
+        $serials = array_column($entries, 'serial_number');
+
+        return $serials ? min($serials).'-'.max($serials) : '';
+    }
+
+    /** @return array{0: array<int, array<string, mixed>>, 1: array<int, int>} printable vouchers in the requested order, and the serial numbers that do not exist */
     private function compileVouchers(User $rangeUser, string $entryType, array $serialNumbers, bool $withWorkOrder, bool $fitToPage): array
     {
-        $modelClass = $this->entryTypeMap[$entryType] ?? TenderEntry::class;
+        $found = $this->query($rangeUser, $entryType)->whereIn('serial_number', $serialNumbers)->with('items')->get()->keyBy('serial_number');
+        $parties = PartyRegistration::query()->where('range_id', $rangeUser->id)->get()->keyBy('party_code');
+        $division = $rangeUser->division ?? $rangeUser;
+        $divisionName = $division->getOrCreateOfficeProfile()->display_name;
 
-        $query = $modelClass::query()->where('range_id', $rangeUser->id);
-        if (!empty($serialNumbers)) {
-            $query->whereIn('serial_number', $serialNumbers);
-        }
-
-        $records = $query->orderBy('serial_number')->get();
         $vouchers = [];
+        $missing = [];
+        foreach ($serialNumbers as $serial) {
+            $v = $found->get($serial);
+            if (! $v) {
+                $missing[] = $serial;
 
-        // Load Party Registrations for approval letter lookups
-        $partyRegistrations = PartyRegistration::query()
-            ->where('range_id', $rangeUser->id)
-            ->get()
-            ->keyBy('party_name');
-
-        if ($records->isNotEmpty()) {
-            foreach ($records as $rec) {
-                $vouchers[] = $this->formatVoucherRecord($rec, $entryType, $rangeUser, $partyRegistrations, $withWorkOrder, $fitToPage);
+                continue;
             }
-        } else {
-            // Provide realistic sample vouchers matching the requested serial numbers
-            $targetSerials = !empty($serialNumbers) ? $serialNumbers : [1, 2, 3, 4, 19, 23, 24, 25, 47];
-            foreach ($targetSerials as $sr) {
-                $vouchers[] = $this->generateSampleVoucher($sr, $entryType, $rangeUser, $withWorkOrder, $fitToPage);
-            }
+            $vouchers[] = $this->format($v, $entryType, $rangeUser, $divisionName, $parties->get($v->party_code), $withWorkOrder, $fitToPage);
         }
 
-        return $vouchers;
+        return [$vouchers, $missing];
     }
 
-    private function formatVoucherRecord($rec, string $entryType, User $rangeUser, $partyRegistrations, bool $withWorkOrder, bool $fitToPage): array
+    /** @return array<string, mixed> */
+    private function format(Voucher $v, string $entryType, User $rangeUser, string $divisionName, ?PartyRegistration $party, bool $withWorkOrder, bool $fitToPage): array
     {
-        $d = $rec->data ?? [];
-        $partyName = $d['party_name'] ?? ($d['name_of_beneficiary'] ?? 'Authorized Vendor / Party');
-        $partyReg = $partyRegistrations->get($partyName);
+        $f = fn ($x) => (float) $x;
+        $items = $v->items->map(fn ($i) => [
+            'sr_no' => (int) $i->line_no, 'item_code' => $i->sor_code, 'description' => $i->description,
+            'length' => 0.0, 'breadth' => 0.0, 'depth' => 0.0, // not recorded on the vouchers
+            'quantity' => $i->quantity !== null ? (float) $i->quantity : null, 'unit' => $i->unit, 'rate' => $i->rate !== null ? (float) $i->rate : null, 'amount' => (float) $i->amount,
+        ])->all();
+        $withWo = $v->items->first(fn ($i) => $i->work_order_no);
 
-        $approvalNo = $d['party_approval_no'] ?? ($partyReg?->party_approval_no ?? 'FO/APP/' . date('Y') . '/' . str_pad((string)$rec->serial_number, 4, '0', STR_PAD_LEFT));
-        $workOrderNo = $d['work_order_no'] ?? ('WO/' . date('Y') . '/00' . $rec->serial_number);
-        $workOrderDate = $d['work_order_date'] ?? date('d/m/Y');
-
-        $items = [];
-        if (!empty($d['items']) && is_array($d['items'])) {
-            foreach ($d['items'] as $idx => $it) {
-                $items[] = [
-                    'sr_no' => $idx + 1,
-                    'item_code' => $it['item_code'] ?? ($idx + 1),
-                    'description' => $it['item_description'] ?? ($it['description'] ?? 'Forestry Labour & Material Operations'),
-                    'length' => (float) ($it['length'] ?? 0),
-                    'breadth' => (float) ($it['breadth'] ?? 0),
-                    'depth' => (float) ($it['depth'] ?? 0),
-                    'quantity' => (float) ($it['quantity'] ?? $it['qty'] ?? 1),
-                    'unit' => $it['unit'] ?? 'No.',
-                    'rate' => (float) ($it['rate'] ?? 0),
-                    'amount' => (float) ($it['amount'] ?? 0),
-                ];
-            }
-        }
-
-        if (empty($items)) {
-            $items[] = [
-                'sr_no' => 1,
-                'item_code' => 1,
-                'description' => $d['small_description'] ?? ($d['description'] ?? 'Plantation & Protection maintenance charges for Division forest works'),
-                'length' => 0,
-                'breadth' => 0,
-                'depth' => 0,
-                'quantity' => 1,
-                'unit' => 'Job',
-                'rate' => (float) ($d['total_amount'] ?? 25000),
-                'amount' => (float) ($d['total_amount'] ?? 25000),
-            ];
-        }
-
-        $grossAmount = array_sum(array_column($items, 'amount'));
-        if ($grossAmount == 0) {
-            $grossAmount = (float) ($d['total_amount'] ?? 25000);
-        }
-
-        $sgst = (float) ($d['deduction_sgst'] ?? $d['additional_sgst'] ?? ($partyReg?->deduction_sgst ?? 0));
-        $cgst = (float) ($d['deduction_cgst'] ?? $d['additional_cgst'] ?? ($partyReg?->deduction_cgst ?? 0));
-        $igst = (float) ($d['deduction_igst'] ?? $d['additional_igst'] ?? ($partyReg?->deduction_igst ?? 0));
-        $labourCess = (float) ($d['deduction_labour_cess'] ?? ($partyReg?->deduction_labour_cess ?? 0));
-        $deposit = (float) ($d['deposit_deduction'] ?? ($partyReg?->deposit_deduction ?? 0));
-        $tds = (float) ($d['tds'] ?? ($partyReg?->tds ?? 0));
-        $otherDeductions = (float) ($d['other_deductions'] ?? 0);
-
-        $totalDeductions = $sgst + $cgst + $igst + $labourCess + $deposit + $tds + $otherDeductions;
-        $netAmount = max(0, $grossAmount - $totalDeductions);
+        $other = $f($v->gpf) + $f($v->cpf) + $f($v->p_tax) + $f($v->group_insurance) + $f($v->other_deductions);
+        $net = $f($v->net_amount);
 
         return [
-            'id' => $rec->id,
-            'serial_number' => $rec->serial_number,
-            'voucher_no' => 'VCH-' . str_pad((string)$rec->serial_number, 4, '0', STR_PAD_LEFT),
+            'id' => $v->id,
+            'serial_number' => (int) $v->serial_number,
+            'voucher_no' => $v->voucher_no_final ?: 'Sr. '.$v->serial_number,
             'entry_type' => $entryType,
-            'date' => $rec->created_at?->format('d/m/Y') ?? date('d/m/Y'),
-            'docket_no' => $d['docket_no'] ?? ('DOC/' . date('Y') . '/' . $rec->serial_number),
-            'month' => $d['data_entry_month'] ?? date('F Y'),
-            'range_name' => $rangeUser->name ?? 'Range Forest Office',
-            'division_name' => 'Gujarat State Forest Division',
-            'budget_code' => $d['budget_code'] ?? '2406-01-101-01',
-            'head' => $d['head'] ?? '01 (State Forestry Works)',
-            'scheme' => $d['scheme'] ?? 'State Plantation & Soil Conservation Scheme',
-            'model' => $d['model'] ?? 'Standard Model',
-            'scheme_year' => $d['scheme_year'] ?? date('Y') . '-' . substr(date('Y') + 1, 2),
-            'round' => $d['round'] ?? 'North Round',
-            'beat' => $d['beat'] ?? 'Beat 1',
-            'place' => $d['place'] ?? 'Forest Compartment No. 42',
-            'party_name' => $partyName,
-            'party_address' => $d['party_address'] ?? ($partyReg?->party_address ?? 'Gujarat, India'),
-            'pan_card_no' => $d['pan_card_no'] ?? ($partyReg?->pan_card_no ?? 'ABCDE1234F'),
-            'gst_no' => $d['gst_no'] ?? ($partyReg?->gst_no ?? '24ABCDE1234F1Z1'),
-            'bank_name' => $d['bank_name'] ?? ($partyReg?->bank_name ?? 'State Bank of India'),
-            'account_no' => $d['account_no'] ?? ($partyReg?->account_no ?? '309876543210'),
-            'ifsc' => $d['ifsc'] ?? ($partyReg?->ifsc ?? 'SBIN0001234'),
-            'branch' => $d['branch'] ?? ($partyReg?->branch ?? 'Gandhinagar Main'),
-            'approval_no' => $approvalNo,
+            'date' => $this->date($v->bill_date),
+            'docket_no' => $v->docket_no ?? '-',
+            'month' => $this->monthLabel($v),
+            'range_name' => $rangeUser->name,
+            'division_name' => $divisionName,
+            'budget_code' => $v->budget_code,
+            'head' => $v->operating_head ?? '',
+            'scheme' => $v->scheme,
+            'model' => $v->model,
+            'scheme_year' => $v->scheme_year,
+            'round' => $v->round,
+            'beat' => $v->beat,
+            'place' => $v->place,
+            'party_name' => $v->party_name,
+            'party_address' => $party?->party_address ?? $v->address ?? '',
+            'pan_card_no' => $v->pan_card_no,
+            'gst_no' => $v->gst_no,
+            'bank_name' => $v->bank_name,
+            'account_no' => $v->account_no,
+            'ifsc' => $v->ifsc,
+            'branch' => $v->branch,
+            'approval_no' => $party?->party_approval_no ?? '',
             'with_work_order' => $withWorkOrder,
-            'work_order_no' => $workOrderNo,
-            'work_order_date' => $workOrderDate,
+            'work_order_no' => $withWo?->work_order_no ?? '',
+            'work_order_date' => $this->date($withWo?->work_order_date),
             'fit_to_page' => $fitToPage,
             'items' => $items,
-            'gross_amount' => $grossAmount,
+            'gross_amount' => $f($v->payable_total_amount),
             'deductions' => [
-                'sgst' => $sgst,
-                'cgst' => $cgst,
-                'igst' => $igst,
-                'labour_cess' => $labourCess,
-                'deposit' => $deposit,
-                'tds' => $tds,
-                'other' => $otherDeductions,
-                'total' => $totalDeductions,
+                'sgst' => $f($v->deduction_sgst), 'cgst' => $f($v->deduction_cgst), 'igst' => $f($v->deduction_igst), 'labour_cess' => $f($v->deduction_labour_cess),
+                'deposit' => $f($v->deposit_deduction_amount), 'tds' => $f($v->tds), 'other' => $other, 'total' => $f($v->total_deduction) ?: $f($v->payable_total_amount) - $net,
             ],
-            'net_amount' => $netAmount,
-            'net_amount_in_words' => $this->numberToWords((int) round($netAmount)) . ' Rupees Only',
+            'net_amount' => $net,
+            'net_amount_in_words' => $this->numberToWords((int) round($net)).' Rupees Only',
         ];
     }
 
-    private function generateSampleVoucher(int $serialNumber, string $entryType, User $rangeUser, bool $withWorkOrder, bool $fitToPage): array
+    private function date(mixed $value): string
     {
-        $grossAmount = 18500.00 + ($serialNumber * 1200.00);
-        $sgst = round($grossAmount * 0.09, 2);
-        $cgst = round($grossAmount * 0.09, 2);
-        $labourCess = round($grossAmount * 0.01, 2);
-        $deposit = round($grossAmount * 0.05, 2);
-        $tds = round($grossAmount * 0.02, 2);
-        $totalDeductions = $sgst + $cgst + $labourCess + $deposit + $tds;
-        $netAmount = $grossAmount - $totalDeductions;
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
 
-        $items = [
-            [
-                'sr_no' => 1,
-                'item_code' => 1,
-                'description' => 'પ્લાન્ટેશન ખોદકામ અને માટી કામગીરી (Plantation Pitting & Soil Conservation Work)',
-                'length' => 150.00,
-                'breadth' => 2.00,
-                'depth' => 0.45,
-                'quantity' => 135.00,
-                'unit' => 'Cu.M.',
-                'rate' => round(($grossAmount * 0.6) / 135, 2),
-                'amount' => round($grossAmount * 0.6, 2),
-            ],
-            [
-                'sr_no' => 2,
-                'item_code' => 2,
-                'description' => 'કાંટાળી વાડ અને છોડ રોપણી મજૂરી ખર્ચ (Fencing & Sapling Plantation Labour Charges)',
-                'length' => 0,
-                'breadth' => 0,
-                'depth' => 0,
-                'quantity' => 500.00,
-                'unit' => 'Plants',
-                'rate' => round(($grossAmount * 0.4) / 500, 2),
-                'amount' => round($grossAmount * 0.4, 2),
-            ]
-        ];
+    private function monthLabel(Voucher $v): string
+    {
+        if (! $v->entry_month) {
+            return '';
+        }
 
-        return [
-            'id' => $serialNumber,
-            'serial_number' => $serialNumber,
-            'voucher_no' => 'VCH-' . str_pad((string)$serialNumber, 4, '0', STR_PAD_LEFT),
-            'entry_type' => $entryType,
-            'date' => date('d/m/Y'),
-            'docket_no' => 'DOC/' . date('Y') . '/' . str_pad((string)$serialNumber, 3, '0', STR_PAD_LEFT),
-            'month' => date('F Y'),
-            'range_name' => $rangeUser->name ?? 'Range Forest Office',
-            'division_name' => 'Gujarat State Forest Division',
-            'budget_code' => '2406-01-101-0' . (($serialNumber % 4) + 1),
-            'head' => '01 (Salaries & Forestry Works)',
-            'scheme' => 'State Eco-Restoration & Plantation Scheme',
-            'model' => 'Model Scheme ' . (($serialNumber % 3) + 1),
-            'scheme_year' => date('Y') . '-' . substr(date('Y') + 1, 2),
-            'round' => 'North Range Round',
-            'beat' => 'Beat ' . (($serialNumber % 5) + 1),
-            'place' => 'Survey Plot No. ' . (100 + $serialNumber),
-            'party_name' => 'Shree Ram Forest Labour Co-op Society (' . $serialNumber . ')',
-            'party_address' => 'Forest Range Office Area, Gujarat',
-            'pan_card_no' => 'ABCDE' . (1000 + $serialNumber) . 'F',
-            'gst_no' => '24ABCDE' . (1000 + $serialNumber) . 'F1Z1',
-            'bank_name' => 'State Bank of India',
-            'account_no' => '30987654' . str_pad((string)$serialNumber, 4, '0', STR_PAD_LEFT),
-            'ifsc' => 'SBIN0001234',
-            'branch' => 'District Main Branch',
-            'approval_no' => 'DFO/LETT/APP/' . date('Y') . '/' . (400 + $serialNumber),
-            'with_work_order' => $withWorkOrder,
-            'work_order_no' => 'WO/' . date('Y') . '/' . str_pad((string)$serialNumber, 3, '0', STR_PAD_LEFT),
-            'work_order_date' => date('d/m/Y', strtotime('-10 days')),
-            'fit_to_page' => $fitToPage,
-            'items' => $items,
-            'gross_amount' => $grossAmount,
-            'deductions' => [
-                'sgst' => $sgst,
-                'cgst' => $cgst,
-                'igst' => 0.00,
-                'labour_cess' => $labourCess,
-                'deposit' => $deposit,
-                'tds' => $tds,
-                'other' => 0.00,
-                'total' => $totalDeductions,
-            ],
-            'net_amount' => $netAmount,
-            'net_amount_in_words' => $this->numberToWords((int) round($netAmount)) . ' Rupees Only',
-        ];
+        return Carbon::parse(ExpenditureReport::window($v->financial_year_id, $v->entry_month)['start'])->format('F Y');
     }
 
     private function numberToWords(int $num): string
@@ -433,31 +269,19 @@ class VoucherPrintController extends Controller
         $ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
         $tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
 
-        if ($num == 0) return 'Zero';
+        if ($num == 0) {
+            return 'Zero';
+        }
 
         $words = '';
-        if ($num >= 10000000) {
-            $words .= $this->numberToWords((int)($num / 10000000)) . ' Crore ';
-            $num %= 10000000;
-        }
-        if ($num >= 100000) {
-            $words .= $this->numberToWords((int)($num / 100000)) . ' Lakh ';
-            $num %= 100000;
-        }
-        if ($num >= 1000) {
-            $words .= $this->numberToWords((int)($num / 1000)) . ' Thousand ';
-            $num %= 1000;
-        }
-        if ($num >= 100) {
-            $words .= $this->numberToWords((int)($num / 100)) . ' Hundred ';
-            $num %= 100;
+        foreach ([[10000000, 'Crore'], [100000, 'Lakh'], [1000, 'Thousand'], [100, 'Hundred']] as [$unit, $name]) {
+            if ($num >= $unit) {
+                $words .= $this->numberToWords((int) ($num / $unit)).' '.$name.' ';
+                $num %= $unit;
+            }
         }
         if ($num > 0) {
-            if ($num < 20) {
-                $words .= $ones[$num];
-            } else {
-                $words .= $tens[(int)($num / 10)] . ($num % 10 ? ' ' . $ones[$num % 10] : '');
-            }
+            $words .= $num < 20 ? $ones[$num] : $tens[(int) ($num / 10)].($num % 10 ? ' '.$ones[$num % 10] : '');
         }
 
         return trim($words);

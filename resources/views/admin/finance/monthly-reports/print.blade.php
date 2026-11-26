@@ -379,8 +379,12 @@
                             <div class="grid grid-cols-2 gap-1 text-[11px]">
                                 <div><strong>Name:</strong> {{ $slip['employee_name'] }}</div>
                                 <div><strong>Range:</strong> {{ $slip['range'] }}</div>
-                                <div><strong>Days Worked:</strong> {{ $slip['days_worked'] }} days</div>
-                                <div><strong>Daily Rate:</strong> ₹ {{ number_format($slip['daily_rate'], 2) }}</div>
+                                <div><strong>Days Worked:</strong> {{ $slip['days_worked'] !== null ? $slip['days_worked'].' days' : '-' }}</div>
+                                <div><strong>Daily Rate:</strong> {{ $slip['daily_rate'] !== null ? '₹ '.number_format($slip['daily_rate'], 2) : '-' }}</div>
+                                @if(isset($slip['leaves']) || isset($slip['basic_pay']))
+                                    <div><strong>Leaves:</strong> {{ $slip['leaves'] ?? '-' }}</div>
+                                    <div><strong>Basic Pay:</strong> {{ isset($slip['basic_pay']) ? '₹ '.number_format($slip['basic_pay'], 2) : '-' }}@if(!empty($slip['pay_scale'])) <span class="text-[10px] text-slate-500">({{ $slip['pay_scale'] }})</span>@endif</div>
+                                @endif
                                 <div><strong>Gross Wage:</strong> <span class="font-mono font-bold">₹ {{ number_format($slip['gross_wage'], 2) }}</span></div>
                                 <div><strong>Voucher Ref:</strong> {{ $slip['voucher_no'] }}</div>
                             </div>

@@ -414,7 +414,7 @@
                                             <td class="p-2 border border-slate-300 text-center font-mono text-[11px] text-blue-900 font-bold">${row.voucher_no}</td>
                                             <td class="p-2 border border-slate-300 font-medium text-slate-950">${row.party_name}</td>
                                             <td class="p-2 border border-slate-300 text-slate-800">${row.description}</td>
-                                            <td class="p-2 border border-slate-300 text-right font-semibold">${row.quantity} ${row.unit}</td>
+                                            <td class="p-2 border border-slate-300 text-right font-semibold">${row.quantity != null ? row.quantity : '-'} ${row.unit || ''}</td>
                                             <td class="p-2 border border-slate-300 text-right font-mono">${formatMoney(row.rate)}</td>
                                             <td class="p-2 border border-slate-300 text-right font-mono font-bold">${formatMoney(row.amount)}</td>
                                             <td class="p-2 border border-slate-300 text-right font-mono font-extrabold text-emerald-900 bg-emerald-50/50">${formatMoney(row.cumulative_amount)}</td>
@@ -454,7 +454,7 @@
                                                     <td class="p-2 font-medium text-slate-900">${it.description}</td>
                                                     <td class="p-2 text-center font-mono text-[11px] text-blue-900">${it.voucher_no}</td>
                                                     <td class="p-2 text-center text-slate-600">${it.date}</td>
-                                                    <td class="p-2 text-right font-semibold">${it.quantity} ${it.unit}</td>
+                                                    <td class="p-2 text-right font-semibold">${it.quantity != null ? it.quantity : '-'} ${it.unit || ''}</td>
                                                     <td class="p-2 text-right font-mono">${formatMoney(it.rate)}</td>
                                                     <td class="p-2 text-right font-mono font-bold text-slate-950">${formatMoney(it.amount)}</td>
                                                 </tr>

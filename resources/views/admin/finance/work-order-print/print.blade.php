@@ -86,6 +86,9 @@
             </div>
         </div>
 
+        @if(($data['without_work_order'] ?? 0) > 0 && !empty($data['work_orders']))
+            <div class="no-print rounded border border-amber-300 bg-amber-50 p-2 text-xs text-amber-900">{{ $data['without_work_order'] }} other voucher(s) of this selection have no work order recorded and are not printed.</div>
+        @endif
         <!-- Work Orders List -->
         @forelse($data['work_orders'] ?? [] as $index => $wo)
             <div class="work-order-sheet bg-white rounded-xl border border-slate-300 p-6 sm:p-8 shadow-sm space-y-4 print:border-slate-800 print:shadow-none {{ $attachmentMode === 'Separate' && !$loop->last ? 'page-break-always mb-8' : 'mb-4' }}">
@@ -169,8 +172,8 @@
                                 <td class="p-1.5 border border-slate-300 text-center font-bold whitespace-nowrap">{{ $item['sr_no'] }}</td>
                                 <td class="p-1.5 border border-slate-300 font-medium text-slate-950">{{ $item['description'] }}</td>
                                 <td class="p-1.5 border border-slate-300 text-slate-700">{{ $item['plot_area'] }}</td>
-                                <td class="p-1.5 border border-slate-300 text-right font-semibold whitespace-nowrap">{{ $item['quantity'] }} {{ $item['unit'] }}</td>
-                                <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">₹ {{ number_format($item['rate'], 2) }}</td>
+                                <td class="p-1.5 border border-slate-300 text-right font-semibold whitespace-nowrap">{{ $item['quantity'] !== null ? rtrim(rtrim(number_format($item['quantity'], 3), '0'), '.') : '-' }} {{ $item['unit'] }}</td>
+                                <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">{{ $item['rate'] !== null ? '₹ '.number_format($item['rate'], 2) : '-' }}</td>
                                 <td class="p-1.5 border border-slate-300 text-right font-mono font-bold whitespace-nowrap">₹ {{ number_format($item['amount'], 2) }}</td>
                             </tr>
                         @endforeach
@@ -218,6 +221,9 @@
         @empty
             <div class="bg-white rounded-xl border border-slate-300 p-12 text-center">
                 <p class="text-slate-600 font-semibold">No work orders found for the selected criteria.</p>
+                @if(($data['without_work_order'] ?? 0) > 0)
+                    <p class="text-xs text-amber-800 mt-2">{{ $data['without_work_order'] }} voucher(s) of this selection have no work order recorded.</p>
+                @endif
             </div>
         @endforelse
     </div>

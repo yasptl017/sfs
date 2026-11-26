@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Admin\Finance;
 
 use App\Http\Controllers\Controller;
-use App\Models\DWagerArrearsEntry;
-use App\Models\DWagerSalaryEntry;
-use App\Models\FreeEntry;
-use App\Models\SfBeneficiaryEntry;
-use App\Models\TenderEntry;
+use App\Models\PartyRegistration;
 use App\Models\User;
-use App\Models\WlBeneficiaryEntry;
+use App\Models\Voucher;
+use App\Support\CurrentFinancialYear;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,14 +24,14 @@ class WorkOrderPrintController extends Controller
         $this->authorizeRange($request);
 
         $rangeUser = $request->user();
-        $selectedMonth = $request->query('month', 'Aug');
+        $recentWorkOrders = $this->getRecentWorkOrdersSummary($rangeUser);
+        $selectedMonth = $request->query('month', $recentWorkOrders[0]['month'] ?? 'Aug');
         $attachmentMode = $request->query('attachment_mode', 'Separate');
         $extendDays = (int) $request->query('extend_days', 2);
         $printAllDockets = (bool) $request->query('print_all_dockets', false);
         $docketNo = $request->query('docket_no', '');
 
         $dockets = $this->getAvailableDockets($rangeUser, $selectedMonth);
-        $recentWorkOrders = $this->getRecentWorkOrdersSummary($rangeUser);
 
         return view('admin.finance.work-order-print.index', [
             'months' => $this->months,
@@ -118,39 +115,28 @@ class WorkOrderPrintController extends Controller
         ]);
     }
 
+    // ------------------------------------------------------------------------------------------------ data
+    private function query(User $rangeUser)
+    {
+        return Voucher::query()->forYear(CurrentFinancialYear::id())->where('range_id', $rangeUser->id);
+    }
+
+    /** A work order exists for a voucher only when one of its items records a work order number. */
+    private function withWorkOrder($q)
+    {
+        return $q->whereHas('items', fn ($i) => $i->whereNotNull('work_order_no')->where('work_order_no', '<>', ''));
+    }
+
+    /** Docket numbers really used by the range's vouchers (with a work order) of that month. */
     private function getAvailableDockets(User $rangeUser, string $month): array
     {
-        $modelClasses = [
-            TenderEntry::class,
-            FreeEntry::class,
-            DWagerSalaryEntry::class,
-            DWagerArrearsEntry::class,
-            WlBeneficiaryEntry::class,
-            SfBeneficiaryEntry::class,
-        ];
+        return $this->withWorkOrder($this->query($rangeUser))->where('entry_month', $month)->whereNotNull('docket_no')
+            ->distinct()->orderBy('docket_no')->pluck('docket_no')->map(fn ($d) => (string) $d)->all();
+    }
 
-        $dockets = [];
-
-        foreach ($modelClasses as $modelClass) {
-            $records = $modelClass::query()->where('range_id', $rangeUser->id)->get();
-            foreach ($records as $rec) {
-                $d = $rec->data ?? [];
-                $entryMonth = $d['data_entry_month'] ?? ($d['month'] ?? '');
-                if (!$month || stripos($entryMonth, $month) !== false || $entryMonth === '') {
-                    if (!empty($d['docket_no'])) {
-                        $dockets[] = (string) $d['docket_no'];
-                    }
-                }
-            }
-        }
-
-        $dockets = array_values(array_unique(array_filter($dockets)));
-
-        if (empty($dockets)) {
-            $dockets = ['DOC/2026/001', 'DOC/2026/002', 'DOC/2026/042', 'DOC/2026/043'];
-        }
-
-        return $dockets;
+    private function date(mixed $value): string
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
     }
 
     private function compileWorkOrdersData(
@@ -161,213 +147,93 @@ class WorkOrderPrintController extends Controller
         int $extendDays,
         bool $printAllDockets
     ): array {
-        $modelClasses = [
-            'Tender Entry' => TenderEntry::class,
-            'Free Entry' => FreeEntry::class,
-            'D.Wagers Salary' => DWagerSalaryEntry::class,
-            'D.Wagers Arrears' => DWagerArrearsEntry::class,
-            'WL Bene. Entry' => WlBeneficiaryEntry::class,
-            'SF Bene. Entry' => SfBeneficiaryEntry::class,
-        ];
+        $base = $this->query($rangeUser);
+        if ($month !== '') {
+            $base->where('entry_month', $month);
+        }
+        if (! $printAllDockets && ! blank($docketNo)) {
+            is_numeric($docketNo) ? $base->where('docket_no', (int) $docketNo) : $base->whereRaw('1 = 0');
+        }
+        $withoutWorkOrder = (clone $base)->whereDoesntHave('items', fn ($i) => $i->whereNotNull('work_order_no')->where('work_order_no', '<>', ''))->count();
+        $vouchers = $this->withWorkOrder($base)->with('items')->orderBy('entry_type')->orderBy('serial_number')->get();
+        $parties = PartyRegistration::query()->where('range_id', $rangeUser->id)->get()->keyBy('party_code');
 
         $workOrders = [];
+        foreach ($vouchers as $v) {
+            $items = $v->items->values();
+            $orderNos = $items->pluck('work_order_no')->filter(fn ($x) => filled($x))->unique()->values();
+            $start = $items->pluck('work_start_date')->filter()->min() ?? $items->pluck('work_order_date')->filter()->min();
+            $end = $items->pluck('work_end_date')->filter()->max();
+            $extended = $end ? Carbon::parse($end)->addDays($extendDays)->format('d/m/Y') : '';
+            $lines = $items->map(fn ($i) => [
+                'sr_no' => (int) $i->line_no,
+                'description' => $i->description,
+                'plot_area' => $v->place ?: '',
+                'quantity' => $i->quantity !== null ? (float) $i->quantity : null,
+                'unit' => $i->unit,
+                'rate' => $i->rate !== null ? (float) $i->rate : null,
+                'amount' => (float) $i->amount,
+            ])->all();
+            $total = array_sum(array_column($lines, 'amount')) ?: (float) $v->sub_total;
+            $party = $parties->get($v->party_code);
 
-        foreach ($modelClasses as $typeName => $modelClass) {
-            $records = $modelClass::query()->where('range_id', $rangeUser->id)->get();
-            foreach ($records as $rec) {
-                $d = $rec->data ?? [];
-                $entryMonth = $d['data_entry_month'] ?? ($d['month'] ?? '');
-                $entryDocket = $d['docket_no'] ?? '';
-
-                $monthMatch = empty($month) || stripos($entryMonth, $month) !== false;
-                $docketMatch = $printAllDockets || empty($docketNo) || stripos((string)$entryDocket, (string)$docketNo) !== false;
-
-                if ($monthMatch && $docketMatch) {
-                    $items = [];
-                    if (!empty($d['items']) && is_array($d['items'])) {
-                        foreach ($d['items'] as $idx => $it) {
-                            $items[] = [
-                                'sr_no' => $idx + 1,
-                                'description' => $it['item_description'] ?? ($it['description'] ?? 'Forestry Labour Operations'),
-                                'plot_area' => $it['plot_area'] ?? ($d['place'] ?? 'Compartment No. ' . (10 + $rec->serial_number)),
-                                'quantity' => (float) ($it['quantity'] ?? $it['qty'] ?? 1),
-                                'unit' => $it['unit'] ?? 'Job',
-                                'rate' => (float) ($it['rate'] ?? 0),
-                                'amount' => (float) ($it['amount'] ?? 0),
-                            ];
-                        }
-                    }
-
-                    if (empty($items)) {
-                        $items[] = [
-                            'sr_no' => 1,
-                            'description' => $d['small_description'] ?? ($d['description'] ?? 'Plantation & Soil Conservation maintenance charges'),
-                            'plot_area' => $d['place'] ?? 'Compartment 42',
-                            'quantity' => 1,
-                            'unit' => 'Job',
-                            'rate' => (float) ($d['total_amount'] ?? 25000),
-                            'amount' => (float) ($d['total_amount'] ?? 25000),
-                        ];
-                    }
-
-                    $totalAmount = array_sum(array_column($items, 'amount'));
-                    if ($totalAmount == 0) {
-                        $totalAmount = (float) ($d['total_amount'] ?? 25000);
-                    }
-
-                    $baseStartDate = !empty($d['work_order_date']) ? Carbon::parse($d['work_order_date']) : Carbon::now()->startOfMonth();
-                    $baseEndDate = (clone $baseStartDate)->addDays(15);
-                    $extendedEndDate = (clone $baseEndDate)->addDays($extendDays);
-
-                    $workOrderNo = $d['work_order_no'] ?? ('WO/' . ($rangeUser->name ? preg_replace('/[^A-Za-z0-9]/', '', strtoupper($rangeUser->name)) : 'RNG') . '/' . date('Y') . '/' . str_pad((string)$rec->serial_number, 3, '0', STR_PAD_LEFT));
-                    $outwardNo = $d['order_outward_no'] ?? ('વન/કાર્ય/' . str_pad((string)$rec->serial_number, 3, '0', STR_PAD_LEFT) . '/' . date('Y'));
-
-                    $workOrders[] = [
-                        'id' => $rec->id,
-                        'serial_number' => $rec->serial_number,
-                        'entry_type' => $typeName,
-                        'work_order_no' => $workOrderNo,
-                        'outward_no' => $outwardNo,
-                        'voucher_no' => 'VCH-' . str_pad((string)$rec->serial_number, 4, '0', STR_PAD_LEFT),
-                        'docket_no' => $entryDocket ?: ($docketNo ?: 'DOC/' . date('Y') . '/' . $rec->serial_number),
-                        'party_name' => $d['party_name'] ?? ($d['name_of_beneficiary'] ?? 'Authorized Vendor / Party'),
-                        'party_address' => $d['party_address'] ?? 'Gujarat State',
-                        'budget_code' => $d['budget_code'] ?? '2406-01-101-01',
-                        'head' => $d['head'] ?? '01',
-                        'scheme' => $d['scheme'] ?? 'State Plantation & Soil Conservation Scheme',
-                        'round' => $d['round'] ?? 'North Round',
-                        'beat' => $d['beat'] ?? 'Beat 1',
-                        'place' => $d['place'] ?? 'Compartment 42',
-                        'start_date' => $baseStartDate->format('d/m/Y'),
-                        'original_end_date' => $baseEndDate->format('d/m/Y'),
-                        'extended_end_date' => $extendedEndDate->format('d/m/Y'),
-                        'extend_days' => $extendDays,
-                        'items' => $items,
-                        'total_amount' => $totalAmount,
-                        'total_amount_words' => $this->numberToWords((int) $totalAmount) . ' Rupees Only',
-                        'date' => $baseStartDate->format('d/m/Y'),
-                    ];
-                }
-            }
-        }
-
-        // If no records in database, create realistic starter work orders
-        if (empty($workOrders)) {
-            $sampleWorkOrders = [
-                [
-                    'party_name' => 'Shree Ram Forest Labour Co-operative Society',
-                    'party_address' => 'At & Post: Forest Colony, Sector-5',
-                    'code' => '2406-01-101-01',
-                    'scheme' => 'State Plantation & Eco-Restoration Scheme',
-                    'desc' => 'ખુલ્લા વિસ્તારોમાં પ્લાન્ટેશન માટે ખાડા ખોદવા તેમજ માટી ચઢાવવાની મજૂરી કામગીરી',
-                    'place' => 'Compartment No. 12 (10 Ha)',
-                    'round' => 'North Range Round',
-                    'beat' => 'Beat 1',
-                    'qty' => 1250,
-                    'unit' => 'Pits',
-                    'rate' => 35.00,
-                ],
-                [
-                    'party_name' => 'Girnar Forest Workers & Construction Services',
-                    'party_address' => 'Opp. Forest Rest House, Main Road',
-                    'code' => '2406-01-101-01',
-                    'scheme' => 'State Plantation & Eco-Restoration Scheme',
-                    'desc' => 'કાંટાળી વાડ (Fencing) તથા સિમેન્ટ પોલ ઉભા કરવા અંગેની મજૂરી કામગીરી',
-                    'place' => 'Survey No. 45 (8 Ha)',
-                    'round' => 'South Range Round',
-                    'beat' => 'Beat 2',
-                    'qty' => 450,
-                    'unit' => 'Mtr',
-                    'rate' => 95.00,
-                ],
-                [
-                    'party_name' => 'Gujarat Agro Forestry Services Pvt Ltd',
-                    'party_address' => 'Agro Bhavan, Near Taluka Seva Sadan',
-                    'code' => '2406-01-101-02',
-                    'scheme' => 'Afforestation & Forest Protection Scheme',
-                    'desc' => 'છોડ રોપણી, ખાતર આપવું અને નીંદણ કાઢવાની વન સંરક્ષણ મજૂરી કામગીરી',
-                    'place' => 'Forest Beat 2 (12 Ha)',
-                    'round' => 'Central Range Round',
-                    'beat' => 'Beat 3',
-                    'qty' => 2000,
-                    'unit' => 'Plants',
-                    'rate' => 18.50,
-                ],
+            $workOrders[] = [
+                'id' => $v->id,
+                'serial_number' => (int) $v->serial_number,
+                'entry_type' => $v->entry_type,
+                'work_order_no' => $orderNos->implode(', '),
+                'outward_no' => (string) $v->bill_order_outward_no,
+                'voucher_no' => $v->voucher_no_final ?: 'Sr. '.$v->serial_number,
+                'docket_no' => $v->docket_no === null ? '' : (string) $v->docket_no,
+                'party_name' => $v->party_name,
+                'party_address' => $party?->party_address ?? $v->address ?? '',
+                'budget_code' => $v->budget_code,
+                'head' => $v->operating_head ?? '',
+                'scheme' => $v->scheme,
+                'round' => $v->round,
+                'beat' => $v->beat,
+                'place' => $v->place,
+                'start_date' => $this->date($start),
+                'original_end_date' => $this->date($end),
+                'extended_end_date' => $extended,
+                'extend_days' => $extendDays,
+                'items' => $lines,
+                'total_amount' => $total,
+                'total_amount_words' => $this->numberToWords((int) round($total)).' Rupees Only',
+                'date' => $this->date($items->pluck('work_order_date')->filter()->min() ?? $start),
             ];
-
-            foreach ($sampleWorkOrders as $idx => $p) {
-                $sr = $idx + 1;
-                $itemAmt = round($p['qty'] * $p['rate'], 2);
-                $baseStartDate = Carbon::now()->startOfMonth()->addDays($idx * 3);
-                $baseEndDate = (clone $baseStartDate)->addDays(15);
-                $extendedEndDate = (clone $baseEndDate)->addDays($extendDays);
-
-                $items = [
-                    [
-                        'sr_no' => 1,
-                        'description' => $p['desc'],
-                        'plot_area' => $p['place'],
-                        'quantity' => $p['qty'],
-                        'unit' => $p['unit'],
-                        'rate' => $p['rate'],
-                        'amount' => $itemAmt,
-                    ]
-                ];
-
-                $workOrders[] = [
-                    'id' => $sr,
-                    'serial_number' => $sr,
-                    'entry_type' => 'Tender Entry',
-                    'work_order_no' => 'WO/RFO/' . date('Y') . '/' . str_pad((string)$sr, 3, '0', STR_PAD_LEFT),
-                    'outward_no' => 'વન/કાર્ય/હુકમ/' . str_pad((string)$sr, 3, '0', STR_PAD_LEFT) . '/' . date('Y'),
-                    'voucher_no' => 'VCH-' . str_pad((string)$sr, 4, '0', STR_PAD_LEFT),
-                    'docket_no' => $docketNo ?: 'DOC/' . date('Y') . '/001',
-                    'party_name' => $p['party_name'],
-                    'party_address' => $p['party_address'],
-                    'budget_code' => $p['code'],
-                    'head' => '01 (Salaries & Works)',
-                    'scheme' => $p['scheme'],
-                    'round' => $p['round'],
-                    'beat' => $p['beat'],
-                    'place' => $p['place'],
-                    'start_date' => $baseStartDate->format('d/m/Y'),
-                    'original_end_date' => $baseEndDate->format('d/m/Y'),
-                    'extended_end_date' => $extendedEndDate->format('d/m/Y'),
-                    'extend_days' => $extendDays,
-                    'items' => $items,
-                    'total_amount' => $itemAmt,
-                    'total_amount_words' => $this->numberToWords((int) $itemAmt) . ' Rupees Only',
-                    'date' => $baseStartDate->format('d/m/Y'),
-                ];
-            }
         }
-
-        $totals = [
-            'count' => count($workOrders),
-            'total_amount' => array_sum(array_column($workOrders, 'total_amount')),
-        ];
 
         return [
             'month' => $month,
             'attachment_mode' => $attachmentMode,
             'extend_days' => $extendDays,
             'print_all_dockets' => $printAllDockets,
-            'docket_no' => $printAllDockets ? 'All Dockets (' . $month . ')' : ($docketNo ?: 'All Dockets (' . $month . ')'),
-            'range_name' => $rangeUser->name ?? 'Range Forest Office',
-            'division_name' => 'Gujarat State Forest Department',
+            'docket_no' => $printAllDockets || blank($docketNo) ? 'All Dockets ('.$month.')' : $docketNo,
+            'range_name' => $rangeUser->name,
+            'division_name' => ($rangeUser->division ?? $rangeUser)->getOrCreateOfficeProfile()->display_name,
             'work_orders' => $workOrders,
-            'totals' => $totals,
+            'without_work_order' => $withoutWorkOrder,
+            'totals' => ['count' => count($workOrders), 'total_amount' => array_sum(array_column($workOrders, 'total_amount'))],
             'generated_at' => now()->format('d M Y, h:i A'),
         ];
     }
 
+    /** The range's real month x docket batches that have work orders (latest month first). */
     private function getRecentWorkOrdersSummary(User $rangeUser): array
     {
-        return [
-            ['month' => 'Aug', 'docket_no' => 'DOC/2026/001', 'count' => 3, 'total_amount' => 121500.00, 'mode' => 'Separate'],
-            ['month' => 'Jul', 'docket_no' => 'DOC/2026/042', 'count' => 5, 'total_amount' => 195000.00, 'mode' => 'Separate'],
-            ['month' => 'Jun', 'docket_no' => 'DOC/2026/018', 'count' => 2, 'total_amount' => 84000.00, 'mode' => 'Combined'],
-        ];
+        $vouchers = $this->withWorkOrder($this->query($rangeUser))->whereNotNull('entry_month')->with('items')->get(['id', 'entry_month', 'docket_no', 'sub_total']);
+        $order = array_flip($this->months);
+        $groups = [];
+        foreach ($vouchers as $v) {
+            $k = $v->entry_month.'|'.$v->docket_no;
+            $groups[$k] ??= ['month' => $v->entry_month, 'docket_no' => $v->docket_no === null ? '' : (string) $v->docket_no, 'count' => 0, 'total_amount' => 0.0, 'mode' => 'Separate'];
+            $groups[$k]['count']++;
+            $groups[$k]['total_amount'] += (float) $v->items->sum('amount') ?: (float) $v->sub_total;
+        }
+        usort($groups, fn ($x, $y) => [$order[$y['month']] ?? -1, (int) $y['docket_no']] <=> [$order[$x['month']] ?? -1, (int) $x['docket_no']]);
+
+        return array_slice($groups, 0, 12);
     }
 
     private function authorizeRange(Request $request): void

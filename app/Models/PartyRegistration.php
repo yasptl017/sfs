@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToFinancialYear;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PartyRegistration extends Model
 {
-    use HasFactory;
+    use BelongsToFinancialYear, HasFactory;
 
     protected $fillable = [
         'range_id',

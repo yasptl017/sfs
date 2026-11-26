@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/** Circle allotments are cumulative restatements: the newest entry of a budget code is its current allotment. */
 class AllotmentFromCircleController extends Controller
 {
     public function index(Request $request): View
@@ -17,10 +18,10 @@ class AllotmentFromCircleController extends Controller
         $this->authorizeDivision($request);
 
         return view('admin.finance.allotments-from-circle.index', [
-            'entries' => AllotmentFromCircle::query()
+            'entries' => AllotmentFromCircle::query()->with('budgetCode')
                 ->where('division_id', $request->user()->id)
-                ->latest()
-                ->paginate(10),
+                ->orderByDesc('source_time_stamp')->orderByDesc('id')
+                ->paginate(25),
         ]);
     }
 
@@ -39,20 +40,20 @@ class AllotmentFromCircleController extends Controller
         AllotmentFromCircle::create([
             'division_id' => $request->user()->id,
             'budget_code_id' => BudgetCode::where('budget_code', $data['budget_code'])->value('id'),
-            'data' => $data,
+            'ledger_sr' => ((int) AllotmentFromCircle::where('division_id', $request->user()->id)->max('ledger_sr')) + 1,
+            'rate' => $data['rate'], 'target' => $data['target'], 'amount' => $data['allotment'], 'allotment_date' => $data['allotment_date'],
+            'source_time_stamp' => now(), 'entered_by' => $request->user()->email, 'times_edited' => 0,
         ]);
 
         return redirect()->route('division.allotments-from-circle.index')
-            ->with('status', 'Allotment from Circle entry created successfully.');
+            ->with('status', 'Allotment from Circle entry created successfully. It is now the current (cumulative) allotment of this budget code.');
     }
 
     public function edit(Request $request, AllotmentFromCircle $allotmentFromCircle): View
     {
         $this->authorizeOwner($request, $allotmentFromCircle);
 
-        return view('admin.finance.allotments-from-circle.form', array_merge($this->formData(), [
-            'entry' => $allotmentFromCircle,
-        ]));
+        return view('admin.finance.allotments-from-circle.form', array_merge($this->formData(), ['entry' => $allotmentFromCircle->load('budgetCode')]));
     }
 
     public function update(Request $request, AllotmentFromCircle $allotmentFromCircle): RedirectResponse
@@ -62,11 +63,11 @@ class AllotmentFromCircleController extends Controller
 
         $allotmentFromCircle->update([
             'budget_code_id' => BudgetCode::where('budget_code', $data['budget_code'])->value('id'),
-            'data' => $data,
+            'rate' => $data['rate'], 'target' => $data['target'], 'amount' => $data['allotment'], 'allotment_date' => $data['allotment_date'],
+            'times_edited' => ((int) $allotmentFromCircle->times_edited) + 1,
         ]);
 
-        return redirect()->route('division.allotments-from-circle.index')
-            ->with('status', 'Allotment from Circle entry updated successfully.');
+        return redirect()->route('division.allotments-from-circle.index')->with('status', 'Allotment from Circle entry updated successfully.');
     }
 
     public function destroy(Request $request, AllotmentFromCircle $allotmentFromCircle): RedirectResponse
@@ -85,41 +86,19 @@ class AllotmentFromCircleController extends Controller
         return [
             'entry' => null,
             'budgetCodes' => $budgetCodes,
-            'budgetCodeDetails' => $budgetCodes->mapWithKeys(fn (BudgetCode $code) => [$code->budget_code => [
-                'operating_head' => $code->operating_head,
-                'scheme' => $code->scheme,
-                'object_class' => $code->object_class,
-                'object_code' => $code->object_code,
-                'description' => $code->description,
-                'item' => $code->item,
-                'model' => $code->model,
-                'scheme_year' => $code->scheme_year,
-            ]]),
+            'budgetCodeDetails' => $budgetCodes->mapWithKeys(fn (BudgetCode $code) => [$code->budget_code => $code->only(['operating_head', 'scheme', 'object_class', 'object_code', 'description', 'item', 'model', 'scheme_year'])]),
         ];
     }
 
     /** @return array<string, mixed> */
     private function validatedData(Request $request): array
     {
-        $validated = $request->validate([
-            'budget_code' => ['required', 'string', Rule::exists('budget_codes', 'budget_code')],
+        return $request->validate([
+            'budget_code' => ['required', 'string', Rule::exists('budget_codes', 'budget_code')->where('financial_year_id', \App\Support\CurrentFinancialYear::id())],
             'allotment_date' => ['required', 'date'],
             'rate' => ['required', 'numeric', 'min:0'],
             'target' => ['required', 'numeric', 'min:0'],
             'allotment' => ['required', 'numeric', 'min:0'],
-        ]);
-
-        $budgetCode = BudgetCode::where('budget_code', $validated['budget_code'])->firstOrFail();
-
-        return array_merge($validated, [
-            'operating_head' => $budgetCode->operating_head,
-            'scheme' => $budgetCode->scheme,
-            'object_class' => $budgetCode->object_class,
-            'object_code' => $budgetCode->object_code,
-            'description' => $budgetCode->description,
-            'item' => $budgetCode->item,
-            'model' => $budgetCode->model,
-            'scheme_year' => $budgetCode->scheme_year,
         ]);
     }
 

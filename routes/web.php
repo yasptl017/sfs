@@ -2,16 +2,16 @@
 
 use App\Http\Controllers\Admin\BudgetCodeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Finance\AdviceController;
+use App\Http\Controllers\Admin\FinancialYearController;
+use App\Http\Controllers\Admin\PositionReportController;
+use App\Http\Controllers\Admin\RegisterBrowseController;
+use App\Http\Controllers\Admin\VoucherEntryController;
+use App\Http\Controllers\Admin\VoucherBrowseController;
 use App\Http\Controllers\Admin\DivisionController;
-use App\Http\Controllers\Admin\Finance\BillAdviceReportController;
-use App\Http\Controllers\Admin\Finance\DeleteAdviceController;
-use App\Http\Controllers\Admin\Finance\ChangeBillOrderNoController;
-use App\Http\Controllers\Admin\Finance\GstChallanController;
 use App\Http\Controllers\Admin\Finance\FinalVoucherCashbookController;
 use App\Http\Controllers\Admin\Finance\MonthlyReportController;
 use App\Http\Controllers\Admin\Finance\SummaryReportController;
-use App\Http\Controllers\Admin\Finance\ProcessBillController;
-use App\Http\Controllers\Admin\Finance\TreasuryDetailController;
 use App\Http\Controllers\Admin\Finance\PartyRegistrationController;
 use App\Http\Controllers\Admin\Finance\WlBeneficiaryController;
 use App\Http\Controllers\Admin\Finance\SfBeneficiaryController;
@@ -21,17 +21,11 @@ use App\Http\Controllers\Admin\Finance\AllotmentFromCircleController;
 use App\Http\Controllers\Admin\Finance\AllotmentToRangeController;
 use App\Http\Controllers\Admin\Finance\AllotmentAdjustmentController;
 use App\Http\Controllers\Admin\Finance\LcEntryController;
-use App\Http\Controllers\Admin\Finance\TenderEntryController;
-use App\Http\Controllers\Admin\Finance\FreeEntryController;
-use App\Http\Controllers\Admin\Finance\DWagerSalaryEntryController;
 use App\Http\Controllers\Admin\Finance\AbstractPrintController;
 use App\Http\Controllers\Admin\Finance\WorkOrderPrintController;
 use App\Http\Controllers\Admin\Finance\VavetarRegisterController;
-use App\Http\Controllers\Admin\Finance\DWagerArrearsEntryController;
-use App\Http\Controllers\Admin\Finance\SfBeneficiaryEntryController;
 use App\Http\Controllers\Admin\Finance\VoucherPrintController;
 use App\Http\Controllers\Admin\Finance\SorLimitReportController;
-use App\Http\Controllers\Admin\Finance\WlBeneficiaryEntryController;
 use App\Http\Controllers\Admin\OfficeProfileController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\RangeController;
@@ -52,6 +46,27 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
 
     Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::post('financial-year', [FinancialYearController::class, 'switch'])->name('financial-year.switch');
+    Route::get('vouchers', [VoucherBrowseController::class, 'index'])->name('vouchers.index');
+    Route::get('vouchers/{voucher}', [VoucherBrowseController::class, 'show'])->whereNumber('voucher')->name('vouchers.show');
+    Route::get('vouchers/{voucher}/print', [VoucherBrowseController::class, 'print'])->whereNumber('voucher')->name('vouchers.print');
+    Route::get('reports/position', [PositionReportController::class, 'index'])->name('reports.position');
+    Route::get('registers/{key}', [RegisterBrowseController::class, 'index'])->name('registers.index');
+    Route::get('registers/{key}/{id}', [RegisterBrowseController::class, 'show'])->whereNumber('id')->name('registers.show');
+
+    // Voucher entry (all six types, typed tables). Legacy URLs and route names are kept so menus and links keep working.
+    foreach ([
+        'tender' => ['tender-entries', 'tender-entry', 'Tender Entry'], 'free' => ['free-entries', 'free-entry', 'Free Entry'],
+        'dw-salary' => ['d-wager-salary-entries', 'd-wager-salary-entry', 'D.Wagers Salary'], 'dw-arrears' => ['d-wager-arrears-entries', 'd-wager-arrears-entry', 'D.Wagers Arrears'],
+        'sf-bene' => ['sf-beneficiary-entries', 'sf-beneficiary-entry', 'Bene. Entry'], 'wl-bene' => ['wl-beneficiary-entries', 'wl-beneficiary-entry', 'WL Bene. Entry'],
+    ] as $slug => [$plural, $single, $label]) {
+        Route::get("finance/$plural", fn () => redirect()->route('vouchers.index', ['entry_type' => $label]))->name("finance.$plural.index");
+        Route::get("finance/$single", fn (\Illuminate\Http\Request $r) => app(VoucherEntryController::class)->create($r, $slug))->name("finance.$plural.create");
+        Route::post("finance/$single", fn (\Illuminate\Http\Request $r) => app(VoucherEntryController::class)->store($r, $slug))->name("finance.$plural.store");
+        Route::get("finance/$single/{voucher}/edit", [VoucherEntryController::class, 'edit'])->whereNumber('voucher')->name("finance.$plural.edit");
+        Route::put("finance/$single/{voucher}", [VoucherEntryController::class, 'update'])->whereNumber('voucher')->name("finance.$plural.update");
+        Route::delete("finance/$single/{voucher}", [VoucherEntryController::class, 'destroy'])->whereNumber('voucher')->name("finance.$plural.destroy");
+    }
     Route::get('division/parties', [DivisionTenderPartyController::class, 'index'])->name('division.parties.index');
     Route::get('division/parties/create', [DivisionTenderPartyController::class, 'create'])->name('division.parties.create');
     Route::post('division/parties', [DivisionTenderPartyController::class, 'store'])->name('division.parties.store');
@@ -85,28 +100,23 @@ Route::middleware('auth')->group(function () {
     Route::get('division/lc-entry/{lcEntry}/edit', [LcEntryController::class, 'edit'])->name('division.lc-entries.edit');
     Route::put('division/lc-entry/{lcEntry}', [LcEntryController::class, 'update'])->name('division.lc-entries.update');
     Route::delete('division/lc-entry/{lcEntry}', [LcEntryController::class, 'destroy'])->name('division.lc-entries.destroy');
-    Route::get('division/process-bill', [ProcessBillController::class, 'index'])->name('division.process-bill.index');
-    Route::post('division/process-bill', [ProcessBillController::class, 'store'])->name('division.process-bill.store');
-    Route::get('division/gst-challans', [GstChallanController::class, 'index'])->name('division.gst-challan.index');
-    Route::get('division/gst-challan/details', [GstChallanController::class, 'details'])->name('division.gst-challan.details');
-    Route::post('division/gst-challans', [GstChallanController::class, 'store'])->name('division.gst-challan.store');
-    Route::delete('division/gst-challans/{gstChallan}', [GstChallanController::class, 'destroy'])->name('division.gst-challan.destroy');
-    Route::get('division/bill-advice-reports', [BillAdviceReportController::class, 'index'])->name('division.bill-advice-reports.index');
-    Route::get('division/bill-advice-reports/details', [BillAdviceReportController::class, 'details'])->name('division.bill-advice-reports.details');
-    Route::post('division/bill-advice-reports/generate', [BillAdviceReportController::class, 'generate'])->name('division.bill-advice-reports.generate');
-    Route::get('division/bill-advice-reports/{report}', [BillAdviceReportController::class, 'show'])->name('division.bill-advice-reports.show');
-    Route::get('division/treasury-details', [TreasuryDetailController::class, 'index'])->name('division.treasury-details.index');
-    Route::get('division/treasury-details/info', [TreasuryDetailController::class, 'info'])->name('division.treasury-details.info');
-    Route::post('division/treasury-details', [TreasuryDetailController::class, 'store'])->name('division.treasury-details.store');
-    Route::delete('division/treasury-details/{treasuryDetail}', [TreasuryDetailController::class, 'destroy'])->name('division.treasury-details.destroy');
-    Route::get('division/change-bill-order-no', [ChangeBillOrderNoController::class, 'index'])->name('division.change-bill-order-no.index');
-    Route::get('division/change-bill-order-no/details', [ChangeBillOrderNoController::class, 'details'])->name('division.change-bill-order-no.details');
-    Route::post('division/change-bill-order-no', [ChangeBillOrderNoController::class, 'store'])->name('division.change-bill-order-no.store');
-    Route::delete('division/change-bill-order-no/{changeBillOrderNo}', [ChangeBillOrderNoController::class, 'destroy'])->name('division.change-bill-order-no.destroy');
-    Route::get('division/delete-advice', [DeleteAdviceController::class, 'index'])->name('division.delete-advice.index');
-    Route::get('division/delete-advice/details', [DeleteAdviceController::class, 'details'])->name('division.delete-advice.details');
-    Route::delete('division/delete-advice', [DeleteAdviceController::class, 'destroy'])->name('division.delete-advice.destroy');
-    Route::delete('division/delete-advice/{billAdvice}', [DeleteAdviceController::class, 'destroyModel'])->name('division.delete-advice.destroy-model');
+
+    // Division bill processing on the voucher columns. Legacy route names keep the menu working.
+    Route::get('division/advices', [AdviceController::class, 'index'])->name('division.advices.index');
+    Route::get('division/advices/pending', [AdviceController::class, 'pending'])->name('division.advices.pending');
+    Route::post('division/advices', [AdviceController::class, 'store'])->name('division.advices.store');
+    Route::post('division/advices/receive', [AdviceController::class, 'receive'])->name('division.advices.receive');
+    Route::get('division/advices/{adviceNo}', [AdviceController::class, 'show'])->whereNumber('adviceNo')->name('division.advices.show');
+    Route::put('division/advices/{adviceNo}/treasury', [AdviceController::class, 'treasury'])->whereNumber('adviceNo')->name('division.advices.treasury');
+    Route::put('division/advices/{adviceNo}/gst', [AdviceController::class, 'gst'])->whereNumber('adviceNo')->name('division.advices.gst');
+    Route::put('division/advices/{adviceNo}/numbers', [AdviceController::class, 'numbers'])->whereNumber('adviceNo')->name('division.advices.numbers');
+    Route::post('division/advices/{adviceNo}/final-numbers', [AdviceController::class, 'finalNumbers'])->whereNumber('adviceNo')->name('division.advices.final');
+    Route::delete('division/advices/{adviceNo}', [AdviceController::class, 'destroy'])->whereNumber('adviceNo')->name('division.advices.destroy');
+    Route::get('division/process-bill', fn () => redirect()->route('division.advices.pending'))->name('division.process-bill.index');
+    foreach (['gst-challans' => 'division.gst-challan.index', 'bill-advice-reports' => 'division.bill-advice-reports.index', 'treasury-details' => 'division.treasury-details.index',
+        'change-bill-order-no' => 'division.change-bill-order-no.index', 'delete-advice' => 'division.delete-advice.index'] as $uri => $name) {
+        Route::get("division/$uri", fn () => redirect()->route('division.advices.index'))->name($name);
+    }
 
     Route::get('division/monthly-reports', [MonthlyReportController::class, 'index'])->name('division.monthly-reports.index');
     Route::get('division/monthly-reports/schemes', [MonthlyReportController::class, 'schemes'])->name('division.monthly-reports.schemes');
@@ -162,53 +172,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('finance/registration/sf-beneficiary/{beneficiary}/status', [SfBeneficiaryController::class, 'toggleStatus'])->name('finance.registration.sf-beneficiaries.status');
     Route::delete('finance/registration/sf-beneficiary/{beneficiary}', [SfBeneficiaryController::class, 'destroy'])->name('finance.registration.sf-beneficiaries.destroy');
 
-    Route::get('finance/tender-entries', [TenderEntryController::class, 'index'])->name('finance.tender-entries.index');
-    Route::get('finance/tender-entry', [TenderEntryController::class, 'create'])->name('finance.tender-entries.create');
-    Route::post('finance/tender-entry', [TenderEntryController::class, 'store'])->name('finance.tender-entries.store');
-    Route::get('finance/tender-entry/copy/{serialNumber}', [TenderEntryController::class, 'copy'])->name('finance.tender-entries.copy');
-    Route::get('finance/tender-entry/{tenderEntry}/edit', [TenderEntryController::class, 'edit'])->name('finance.tender-entries.edit');
-    Route::put('finance/tender-entry/{tenderEntry}', [TenderEntryController::class, 'update'])->name('finance.tender-entries.update');
-    Route::delete('finance/tender-entry/{tenderEntry}', [TenderEntryController::class, 'destroy'])->name('finance.tender-entries.destroy');
 
-    Route::get('finance/free-entries', [FreeEntryController::class, 'index'])->name('finance.free-entries.index');
-    Route::get('finance/free-entry', [FreeEntryController::class, 'create'])->name('finance.free-entries.create');
-    Route::post('finance/free-entry', [FreeEntryController::class, 'store'])->name('finance.free-entries.store');
-    Route::get('finance/free-entry/copy/{serialNumber}', [FreeEntryController::class, 'copy'])->name('finance.free-entries.copy');
-    Route::get('finance/free-entry/{freeEntry}/edit', [FreeEntryController::class, 'edit'])->name('finance.free-entries.edit');
-    Route::put('finance/free-entry/{freeEntry}', [FreeEntryController::class, 'update'])->name('finance.free-entries.update');
-    Route::delete('finance/free-entry/{freeEntry}', [FreeEntryController::class, 'destroy'])->name('finance.free-entries.destroy');
 
-    Route::get('finance/d-wager-salary-entries', [DWagerSalaryEntryController::class, 'index'])->name('finance.d-wager-salary-entries.index');
-    Route::get('finance/d-wager-salary-entry', [DWagerSalaryEntryController::class, 'create'])->name('finance.d-wager-salary-entries.create');
-    Route::post('finance/d-wager-salary-entry', [DWagerSalaryEntryController::class, 'store'])->name('finance.d-wager-salary-entries.store');
-    Route::get('finance/d-wager-salary-entry/copy/{serialNumber}', [DWagerSalaryEntryController::class, 'copy'])->name('finance.d-wager-salary-entries.copy');
-    Route::get('finance/d-wager-salary-entry/{dWagerSalaryEntry}/edit', [DWagerSalaryEntryController::class, 'edit'])->name('finance.d-wager-salary-entries.edit');
-    Route::put('finance/d-wager-salary-entry/{dWagerSalaryEntry}', [DWagerSalaryEntryController::class, 'update'])->name('finance.d-wager-salary-entries.update');
-    Route::delete('finance/d-wager-salary-entry/{dWagerSalaryEntry}', [DWagerSalaryEntryController::class, 'destroy'])->name('finance.d-wager-salary-entries.destroy');
 
-    Route::get('finance/d-wager-arrears-entries', [DWagerArrearsEntryController::class, 'index'])->name('finance.d-wager-arrears-entries.index');
-    Route::get('finance/d-wager-arrears-entry', [DWagerArrearsEntryController::class, 'create'])->name('finance.d-wager-arrears-entries.create');
-    Route::post('finance/d-wager-arrears-entry', [DWagerArrearsEntryController::class, 'store'])->name('finance.d-wager-arrears-entries.store');
-    Route::get('finance/d-wager-arrears-entry/copy/{serialNumber}', [DWagerArrearsEntryController::class, 'copy'])->name('finance.d-wager-arrears-entries.copy');
-    Route::get('finance/d-wager-arrears-entry/{dWagerArrearsEntry}/edit', [DWagerArrearsEntryController::class, 'edit'])->name('finance.d-wager-arrears-entries.edit');
-    Route::put('finance/d-wager-arrears-entry/{dWagerArrearsEntry}', [DWagerArrearsEntryController::class, 'update'])->name('finance.d-wager-arrears-entries.update');
-    Route::delete('finance/d-wager-arrears-entry/{dWagerArrearsEntry}', [DWagerArrearsEntryController::class, 'destroy'])->name('finance.d-wager-arrears-entries.destroy');
 
-    Route::get('finance/sf-beneficiary-entries', [SfBeneficiaryEntryController::class, 'index'])->name('finance.sf-beneficiary-entries.index');
-    Route::get('finance/sf-beneficiary-entry', [SfBeneficiaryEntryController::class, 'create'])->name('finance.sf-beneficiary-entries.create');
-    Route::post('finance/sf-beneficiary-entry', [SfBeneficiaryEntryController::class, 'store'])->name('finance.sf-beneficiary-entries.store');
-    Route::get('finance/sf-beneficiary-entry/copy/{serialNumber}', [SfBeneficiaryEntryController::class, 'copy'])->name('finance.sf-beneficiary-entries.copy');
-    Route::get('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}/edit', [SfBeneficiaryEntryController::class, 'edit'])->name('finance.sf-beneficiary-entries.edit');
-    Route::put('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}', [SfBeneficiaryEntryController::class, 'update'])->name('finance.sf-beneficiary-entries.update');
-    Route::delete('finance/sf-beneficiary-entry/{sfBeneficiaryEntry}', [SfBeneficiaryEntryController::class, 'destroy'])->name('finance.sf-beneficiary-entries.destroy');
 
-    Route::get('finance/wl-beneficiary-entries', [WlBeneficiaryEntryController::class, 'index'])->name('finance.wl-beneficiary-entries.index');
-    Route::get('finance/wl-beneficiary-entry', [WlBeneficiaryEntryController::class, 'create'])->name('finance.wl-beneficiary-entries.create');
-    Route::post('finance/wl-beneficiary-entry', [WlBeneficiaryEntryController::class, 'store'])->name('finance.wl-beneficiary-entries.store');
-    Route::get('finance/wl-beneficiary-entry/copy/{serialNumber}', [WlBeneficiaryEntryController::class, 'copy'])->name('finance.wl-beneficiary-entries.copy');
-    Route::get('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}/edit', [WlBeneficiaryEntryController::class, 'edit'])->name('finance.wl-beneficiary-entries.edit');
-    Route::put('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}', [WlBeneficiaryEntryController::class, 'update'])->name('finance.wl-beneficiary-entries.update');
-    Route::delete('finance/wl-beneficiary-entry/{wlBeneficiaryEntry}', [WlBeneficiaryEntryController::class, 'destroy'])->name('finance.wl-beneficiary-entries.destroy');
 
     Route::get('finance/voucher-print', [VoucherPrintController::class, 'index'])->name('finance.voucher-print.index');
     Route::get('finance/voucher-print/entries', [VoucherPrintController::class, 'entries'])->name('finance.voucher-print.entries');

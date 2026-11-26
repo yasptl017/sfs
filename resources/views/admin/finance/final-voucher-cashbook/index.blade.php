@@ -660,6 +660,7 @@
                 if (type === 'cashbook' || type === 'cashbook_credit' || type === 'cashbook_debit' || type === 'range_cashbook') {
                     const sum = data.cashbook_summary;
                     tableHtml = `
+                        ${data.cashbook_note ? `<p class="text-[11px] text-slate-600 italic mb-2">${data.cashbook_note}</p>` : ''}
                         <!-- Cash Book Balance Summary Header -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                             <div class="rounded-lg border border-slate-300 bg-slate-50 p-3 text-center">

@@ -368,7 +368,7 @@
                                         </td>
                                         ${isDetailed ? `
                                             <td class="p-2 border border-slate-300 text-center text-[11px] text-slate-600">${it.work_dates || '-'}</td>
-                                            <td class="p-2 border border-slate-300 text-right font-bold">${it.quantity || 1} ${it.unit || ''}</td>
+                                            <td class="p-2 border border-slate-300 text-right font-bold">${it.quantity != null ? it.quantity : '-'} ${it.unit || ''}</td>
                                             <td class="p-2 border border-slate-300 text-right font-medium">${formatMoney(it.rate || 0)}</td>
                                         ` : ''}
                                         <td class="p-2 border border-slate-300 text-right font-bold text-slate-900">${formatMoney(e.gross_amount)}</td>

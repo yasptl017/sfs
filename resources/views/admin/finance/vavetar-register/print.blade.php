@@ -143,8 +143,8 @@
                                 <td class="p-1.5 border border-slate-300 text-center font-mono font-bold text-slate-900 whitespace-nowrap">{{ $row['voucher_no'] }}</td>
                                 <td class="p-1.5 border border-slate-300 font-medium text-slate-900">{{ $row['party_name'] }}</td>
                                 <td class="p-1.5 border border-slate-300 text-slate-800">{{ $row['description'] }}</td>
-                                <td class="p-1.5 border border-slate-300 text-right font-semibold whitespace-nowrap">{{ $row['quantity'] }} {{ $row['unit'] }}</td>
-                                <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">₹ {{ number_format($row['rate'], 2) }}</td>
+                                <td class="p-1.5 border border-slate-300 text-right font-semibold whitespace-nowrap">{{ $row['quantity'] !== null ? rtrim(rtrim(number_format($row['quantity'], 3), '0'), '.') : '-' }} {{ $row['unit'] }}</td>
+                                <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">{{ $row['rate'] !== null ? '₹ '.number_format($row['rate'], 2) : '-' }}</td>
                                 <td class="p-1.5 border border-slate-300 text-right font-mono font-bold whitespace-nowrap">₹ {{ number_format($row['amount'], 2) }}</td>
                                 <td class="p-1.5 border border-slate-300 text-right font-mono font-extrabold text-emerald-950 bg-emerald-50/40 whitespace-nowrap">
                                     ₹ {{ number_format($row['cumulative_amount'], 2) }}
@@ -191,8 +191,8 @@
                                             <td class="p-1.5 font-medium text-slate-900">{{ $it['description'] }}</td>
                                             <td class="p-1.5 text-center font-mono text-[11px] font-bold text-slate-900 whitespace-nowrap">{{ $it['voucher_no'] }}</td>
                                             <td class="p-1.5 text-center text-slate-700 whitespace-nowrap">{{ $it['date'] }}</td>
-                                            <td class="p-1.5 text-right font-semibold whitespace-nowrap">{{ $it['quantity'] }} {{ $it['unit'] }}</td>
-                                            <td class="p-1.5 text-right font-mono whitespace-nowrap">₹ {{ number_format($it['rate'], 2) }}</td>
+                                            <td class="p-1.5 text-right font-semibold whitespace-nowrap">{{ $it['quantity'] !== null ? rtrim(rtrim(number_format($it['quantity'], 3), '0'), '.') : '-' }} {{ $it['unit'] }}</td>
+                                            <td class="p-1.5 text-right font-mono whitespace-nowrap">{{ $it['rate'] !== null ? '₹ '.number_format($it['rate'], 2) : '-' }}</td>
                                             <td class="p-1.5 text-right font-mono font-bold text-slate-950 whitespace-nowrap">₹ {{ number_format($it['amount'], 2) }}</td>
                                         </tr>
                                     @endforeach

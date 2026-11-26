@@ -4,14 +4,40 @@ namespace Tests\Feature;
 
 use App\Models\BudgetCode;
 use App\Models\RangeLocation;
-use App\Models\TenderEntry;
 use App\Models\User;
+use App\Models\Voucher;
+use App\Support\CurrentFinancialYear;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class SorLimitReportTest extends TestCase
 {
     use RefreshDatabase;
+
+    /** A SOR master line with two dated rates. */
+    private function sor(string $code, float $oldRate, float $newRate): int
+    {
+        $id = DB::table('sor_items')->insertGetId(['financial_year_id' => CurrentFinancialYear::id(), 'tender_code' => 'SN01', 'divi_code' => $code, 'serial_number' => 1, 'particular' => 'Work '.$code, 'unit' => 'Nos']);
+        DB::table('sor_rates')->insert([['sor_item_id' => $id, 'effective_from' => '2024-04-01', 'rate' => $oldRate, 'source_col' => 1], ['sor_item_id' => $id, 'effective_from' => '2026-04-01', 'rate' => $newRate, 'source_col' => 2]]);
+
+        return $id;
+    }
+
+    private function voucher(User $range, int $serial, array $over = [], array $item = []): Voucher
+    {
+        $v = Voucher::create(array_merge([
+            'financial_year_id' => CurrentFinancialYear::id(), 'range_id' => $range->id, 'entry_type' => 'Tender Entry', 'serial_number' => $serial,
+            'party_name' => 'Party '.$serial, 'budget_code' => '2406-01-101-01', 'scheme' => 'State Plantation Scheme', 'entry_month' => 'Aug',
+            'round' => 'Gir Round', 'beat' => 'Talala Beat', 'place' => 'Plot 55',
+        ], $over));
+        $v->items()->create(array_merge([
+            'line_no' => 1, 'sor_code' => 'SN01/1', 'description' => 'Pit Digging', 'quantity' => 100, 'unit' => 'Pits', 'rate' => 12.50, 'amount' => 1250,
+            'work_start_date' => '2026-08-01', 'raw_line' => '[]',
+        ], $item));
+
+        return $v;
+    }
 
     public function test_range_user_can_access_sor_limit_report_page(): void
     {
@@ -90,6 +116,9 @@ class SorLimitReportTest extends TestCase
             'place_year' => '2026-27',
         ]);
 
+        $this->sor('SN01/1', 10, 12.5);
+        $this->voucher($rangeUser, 1);
+
         $response = $this->actingAs($rangeUser)->getJson(route('finance.sor-limit-report.filters'));
 
         $response->assertStatus(200);
@@ -98,7 +127,8 @@ class SorLimitReportTest extends TestCase
         ]);
         $response->assertJsonPath('budget_codes.0.budget_code', '2406-02-110-03');
         $response->assertJsonPath('locations.Gir Round.Talala Beat.0', 'Plot 55');
-        $response->assertJsonPath('sor_items.0.code', 'SOR-01');
+        $response->assertJsonPath('sor_items.0.code', 'SN01/1');
+        $response->assertJsonPath('sor_items.0.standard_rate', 12.5);
     }
 
     public function test_preview_endpoint_returns_detailed_summary_and_violations_data(): void
@@ -112,38 +142,10 @@ class SorLimitReportTest extends TestCase
             'scheme_year' => '2026-27',
         ]);
 
-        TenderEntry::create([
-            'range_id' => $rangeUser->id,
-            'serial_number' => 501,
-            'data' => [
-                'data_entry_month' => 'Aug',
-                'budget_code' => '2406-01-101-01',
-                'round' => 'Gir Round',
-                'beat' => 'Talala Beat',
-                'place' => 'Plot 55',
-                'party_name' => 'Somnath Forest Labour Society',
-                'items' => [
-                    [
-                        'sor_code' => 'SOR-01',
-                        'work_description' => 'Pit Digging 30x30x30 cm',
-                        'unit' => 'Pits',
-                        'rate' => 12.50,
-                        'quantity' => 1000,
-                        'sanctioned_quantity' => 1200,
-                        'amount' => 12500.00,
-                    ],
-                    [
-                        'sor_code' => 'SOR-02',
-                        'work_description' => 'Barbed Wire Fencing',
-                        'unit' => 'Mtr',
-                        'rate' => 70.00, // Exceeds standard rate of 65.00
-                        'quantity' => 500,
-                        'sanctioned_quantity' => 500,
-                        'amount' => 35000.00,
-                    ]
-                ]
-            ]
-        ]);
+        $this->sor('SN01/1', 10, 12.5);
+        $this->sor('SN01/2', 60, 65);
+        $this->voucher($rangeUser, 501);                                                    // 12.50 vs 12.50 -> within
+        $this->voucher($rangeUser, 502, [], ['sor_code' => 'SN01/2', 'rate' => 70, 'quantity' => 500, 'amount' => 35000]); // 70 > 65 -> exceeded
 
         // 1. Detailed Mode
         $detailedResp = $this->actingAs($rangeUser)->postJson(route('finance.sor-limit-report.preview'), [
@@ -157,9 +159,9 @@ class SorLimitReportTest extends TestCase
             'success' => true,
             'report_mode' => 'detailed',
         ]);
-        $detailedResp->assertJsonPath('data.detailed_rows.0.sor_code', 'SOR-01');
+        $detailedResp->assertJsonPath('data.detailed_rows.0.sor_code', 'SN01/1');
         $detailedResp->assertJsonPath('data.detailed_rows.0.status', 'Within Limit');
-        $detailedResp->assertJsonPath('data.detailed_rows.1.sor_code', 'SOR-02');
+        $detailedResp->assertJsonPath('data.detailed_rows.1.sor_code', 'SN01/2');
         $detailedResp->assertJsonPath('data.detailed_rows.1.status', 'Exceeded Limit');
         $detailedResp->assertJsonPath('data.detailed_rows.1.is_violation', true);
 
@@ -191,7 +193,8 @@ class SorLimitReportTest extends TestCase
         ]);
         $violRows = $violResp->json('data.detailed_rows');
         $this->assertCount(1, $violRows);
-        $this->assertEquals('SOR-02', $violRows[0]['sor_code']);
+        $this->assertEquals('SN01/2', $violRows[0]['sor_code']);
+        $this->assertEquals(65, $violRows[0]['sanctioned_rate']);
     }
 
     public function test_print_endpoint_renders_printable_report_with_office_profile(): void
@@ -251,5 +254,62 @@ class SorLimitReportTest extends TestCase
         $this->assertStringContainsString('text/csv', $response->headers->get('Content-Type'));
         $this->assertStringContainsString('GUJARAT FOREST DEPARTMENT - SOR LIMIT REPORT', $response->getContent());
         $this->assertStringContainsString('SOR Sanctioned Rate (Rs)', $response->getContent());
+    }
+
+    public function test_sor_rate_in_force_on_the_work_date_is_used(): void
+    {
+        $rangeUser = User::factory()->create(['role' => 'range']);
+        $this->sor('SN01/1', 10, 12.5);
+        $this->voucher($rangeUser, 1, [], ['work_start_date' => '2025-06-01', 'rate' => 12.5]); // old rate 10 applied: 12.5 is too high
+        $this->voucher($rangeUser, 2, [], ['work_start_date' => '2026-08-01', 'rate' => 12.5]); // new rate 12.5: fine
+
+        $rows = $this->actingAs($rangeUser)->postJson(route('finance.sor-limit-report.preview'), ['report_mode' => 'detailed'])->json('data.detailed_rows');
+
+        $this->assertEquals(10, $rows[0]['sanctioned_rate']);
+        $this->assertTrue($rows[0]['is_rate_violation']);
+        $this->assertEquals(12.5, $rows[1]['sanctioned_rate']);
+        $this->assertFalse($rows[1]['is_violation']);
+    }
+
+    public function test_estimate_quantity_and_amount_limit_uses_the_years_cumulative_billing(): void
+    {
+        $rangeUser = User::factory()->create(['role' => 'range']);
+        DB::table('estimate_items')->insert(['financial_year_id' => CurrentFinancialYear::id(), 'range_id' => $rangeUser->id, 'tender_code' => 'EN03', 'divi_code' => 'EN03/1', 'serial_number' => 1,
+            'particular' => 'Fencing', 'unit' => 'Mtr', 'rate' => 10, 'quantity' => 150, 'amount' => 1500]);
+        $this->voucher($rangeUser, 1, [], ['sor_code' => 'EN03/1', 'quantity' => 100, 'rate' => 10, 'amount' => 1000]);
+        $this->voucher($rangeUser, 2, ['entry_month' => 'Sep'], ['sor_code' => 'EN03/1', 'quantity' => 100, 'rate' => 10, 'amount' => 1000]);
+
+        // August alone is within 1,500, but the year's billing (2,000) exceeds the estimate.
+        $d = $this->actingAs($rangeUser)->postJson(route('finance.sor-limit-report.preview'), ['month' => 'Aug', 'report_mode' => 'summary'])->json('data');
+        $row = $d['summary_rows'][0];
+        $this->assertEquals(1500, $row['sanctioned_limit']);
+        $this->assertEquals(150, $row['sanctioned_qty']);
+        $this->assertEquals(1000, $row['actual_amount']);
+        $this->assertEquals(-500, $row['balance_amount']);
+        $this->assertSame('Exceeded Limit', $row['status']);
+    }
+
+    public function test_items_without_a_reference_are_listed_as_not_in_rate_list_and_nothing_is_invented(): void
+    {
+        $rangeUser = User::factory()->create(['role' => 'range']);
+        $other = User::factory()->create(['role' => 'range']);
+        $this->voucher($rangeUser, 1, [], ['sor_code' => 'XX/9']);
+        $this->voucher($other, 1, ['party_name' => 'Somebody Else']);
+
+        $d = $this->actingAs($rangeUser)->postJson(route('finance.sor-limit-report.preview'), ['report_mode' => 'detailed'])->json('data');
+
+        $this->assertCount(1, $d['detailed_rows']);
+        $this->assertSame('Not in rate list', $d['detailed_rows'][0]['status']);
+        $this->assertNull($d['detailed_rows'][0]['sanctioned_rate']);
+        $this->assertNull($d['detailed_rows'][0]['sanctioned_limit']);
+        $this->assertSame(1, $d['totals']['items_not_in_rate_list']);
+
+        $page = $this->actingAs($rangeUser)->get(route('finance.sor-limit-report.print', ['report_mode' => 'detailed']));
+        foreach (['Shree Ram Forest Labour', 'VCH-0001', 'Compartment No. 12', 'Girnar Forest Workers'] as $demo) {
+            $page->assertDontSee($demo);
+        }
+        $empty = User::factory()->create(['role' => 'range']);
+        $this->actingAs($empty)->postJson(route('finance.sor-limit-report.preview'), [])->assertJsonPath('data.totals.total_items_count', 0);
+        $this->actingAs($empty)->get(route('finance.sor-limit-report.index'))->assertOk()->assertDontSee('SOR-01');
     }
 }

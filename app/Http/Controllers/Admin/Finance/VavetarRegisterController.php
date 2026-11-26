@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Admin\Finance;
 
 use App\Http\Controllers\Controller;
-use App\Models\DWagerArrearsEntry;
-use App\Models\DWagerSalaryEntry;
-use App\Models\FreeEntry;
 use App\Models\RangeLocation;
-use App\Models\SfBeneficiaryEntry;
-use App\Models\TenderEntry;
 use App\Models\User;
-use App\Models\WlBeneficiaryEntry;
+use App\Models\Voucher;
+use App\Support\CurrentFinancialYear;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -109,299 +106,136 @@ class VavetarRegisterController extends Controller
         ]);
     }
 
+    // ------------------------------------------------------------------------------------------------ data
+    private function query(User $rangeUser)
+    {
+        return Voucher::query()->forYear(CurrentFinancialYear::id())->where('range_id', $rangeUser->id)->whereNull('rejected_reason');
+    }
+
+    private function date(mixed $value): string
+    {
+        return $value ? Carbon::parse($value)->format('d/m/Y') : '';
+    }
+
+    /** Round > beat > places: the range's location list plus every place its vouchers really use (so no voucher is unreachable). */
     private function getLocationHierarchy(User $rangeUser): array
     {
-        $locations = RangeLocation::query()
-            ->where('range_id', $rangeUser->id)
-            ->orderBy('round')
-            ->orderBy('beat')
-            ->orderBy('place')
-            ->get();
-
         $hierarchy = [];
-
-        foreach ($locations as $loc) {
-            $r = trim($loc->round);
-            $b = trim($loc->beat);
-            $p = trim($loc->place);
-            $ha = $loc->hectares ? number_format((float) $loc->hectares, 2) : '';
-
-            if (!$r) continue;
-
-            if (!isset($hierarchy[$r])) {
-                $hierarchy[$r] = [];
+        $add = function (string $r, string $b, string $p, string $ha, string $year) use (&$hierarchy) {
+            $r = trim($r);
+            $b = trim($b);
+            $p = trim($p);
+            if ($r === '' && $b === '' && $p === '') {
+                return;
             }
-            if (!isset($hierarchy[$r][$b])) {
-                $hierarchy[$r][$b] = [];
+            foreach ($hierarchy[$r][$b] ?? [] as $existing) {
+                if (mb_strtolower($existing['place']) === mb_strtolower($p)) {
+                    return;
+                }
             }
+            $hierarchy[$r][$b][] = ['place' => $p, 'hectares' => $ha, 'place_year' => $year];
+        };
 
-            $hierarchy[$r][$b][] = [
-                'place' => $p,
-                'hectares' => $ha,
-                'place_year' => $loc->place_year ?? '',
-            ];
+        foreach (RangeLocation::query()->where('range_id', $rangeUser->id)->orderBy('round')->orderBy('beat')->orderBy('place')->get() as $loc) {
+            $add((string) $loc->round, (string) $loc->beat, (string) $loc->place, $loc->hectares ? number_format((float) $loc->hectares, 2) : '', (string) ($loc->place_year ?? ''));
         }
-
-        if (empty($hierarchy)) {
-            $hierarchy = [
-                'North Round' => [
-                    'Beat 1' => [
-                        ['place' => 'Compartment No. 12', 'hectares' => '10.00', 'place_year' => '2026-27'],
-                        ['place' => 'Compartment No. 14', 'hectares' => '15.50', 'place_year' => '2026-27'],
-                    ],
-                    'Beat 2' => [
-                        ['place' => 'Survey No. 28', 'hectares' => '8.00', 'place_year' => '2025-26'],
-                    ]
-                ],
-                'South Round' => [
-                    'Beat 3' => [
-                        ['place' => 'Survey No. 45', 'hectares' => '12.00', 'place_year' => '2026-27'],
-                        ['place' => 'Checkdam Plot B', 'hectares' => '5.00', 'place_year' => '2026-27'],
-                    ]
-                ],
-                'Central Round' => [
-                    'Beat 4' => [
-                        ['place' => 'Forest Beat 2 Area', 'hectares' => '20.00', 'place_year' => '2026-27'],
-                    ]
-                ]
-            ];
+        foreach ($this->query($rangeUser)->where('place', '<>', '')->select('round', 'beat', 'place')->distinct()->orderBy('round')->orderBy('beat')->orderBy('place')->get() as $v) {
+            $add((string) $v->round, (string) $v->beat, (string) $v->place, '', '');
         }
+        ksort($hierarchy);
 
         return $hierarchy;
     }
 
-    private function compileVavetarData(
-        User $rangeUser,
-        string $round,
-        string $beat,
-        string $place,
-        string $area,
-        string $reportType
-    ): array {
-        $modelClasses = [
-            'Tender Entry' => TenderEntry::class,
-            'Free Entry' => FreeEntry::class,
-            'D.Wagers Salary' => DWagerSalaryEntry::class,
-            'D.Wagers Arrears' => DWagerArrearsEntry::class,
-            'WL Bene. Entry' => WlBeneficiaryEntry::class,
-            'SF Bene. Entry' => SfBeneficiaryEntry::class,
-        ];
-
-        $matchedEntries = [];
-
-        foreach ($modelClasses as $typeName => $modelClass) {
-            $records = $modelClass::query()->where('range_id', $rangeUser->id)->get();
-            foreach ($records as $rec) {
-                $d = $rec->data ?? [];
-
-                $entryRound = $d['round'] ?? '';
-                $entryBeat = $d['beat'] ?? '';
-                $entryPlace = $d['place'] ?? '';
-
-                $roundMatch = empty($round) || stripos($entryRound, $round) !== false || $entryRound === '';
-                $beatMatch = empty($beat) || stripos($entryBeat, $beat) !== false || $entryBeat === '';
-                $placeMatch = empty($place) || stripos($entryPlace, $place) !== false || $entryPlace === '';
-
-                if ($roundMatch && $beatMatch && $placeMatch) {
-                    $items = [];
-                    if (!empty($d['items']) && is_array($d['items'])) {
-                        foreach ($d['items'] as $idx => $it) {
-                            $items[] = [
-                                'sr_no' => $idx + 1,
-                                'description' => $it['item_description'] ?? ($it['description'] ?? 'Plantation Maintenance / Soil Work'),
-                                'plot_area' => $it['plot_area'] ?? ($entryPlace ?: ($place ?: 'Plot Area')),
-                                'quantity' => (float) ($it['quantity'] ?? $it['qty'] ?? 1),
-                                'unit' => $it['unit'] ?? 'Job',
-                                'rate' => (float) ($it['rate'] ?? 0),
-                                'amount' => (float) ($it['amount'] ?? 0),
-                            ];
-                        }
-                    }
-
-                    if (empty($items)) {
-                        $items[] = [
-                            'sr_no' => 1,
-                            'description' => $d['small_description'] ?? ($d['description'] ?? 'Plantation & Soil Conservation labour operations'),
-                            'plot_area' => $entryPlace ?: ($place ?: 'Plot Area'),
-                            'quantity' => 1,
-                            'unit' => 'Job',
-                            'rate' => (float) ($d['total_amount'] ?? 25000),
-                            'amount' => (float) ($d['total_amount'] ?? 25000),
-                        ];
-                    }
-
-                    $totalAmount = array_sum(array_column($items, 'amount'));
-                    if ($totalAmount == 0) {
-                        $totalAmount = (float) ($d['total_amount'] ?? 25000);
-                    }
-
-                    $date = !empty($d['work_order_date']) ? Carbon::parse($d['work_order_date'])->format('d/m/Y') : ($rec->created_at ? $rec->created_at->format('d/m/Y') : date('d/m/Y'));
-
-                    $matchedEntries[] = [
-                        'id' => $rec->id,
-                        'serial_number' => $rec->serial_number,
-                        'entry_type' => $typeName,
-                        'voucher_no' => 'VCH-' . str_pad((string)$rec->serial_number, 4, '0', STR_PAD_LEFT),
-                        'docket_no' => $d['docket_no'] ?? ('DOC/' . date('Y') . '/' . $rec->serial_number),
-                        'party_name' => $d['party_name'] ?? ($d['name_of_beneficiary'] ?? 'Forest Labour Co-operative Society'),
-                        'budget_code' => $d['budget_code'] ?? '2406-01-101-01',
-                        'head' => $d['head'] ?? '01',
-                        'scheme' => $d['scheme'] ?? 'State Plantation & Soil Conservation Scheme',
-                        'round' => $entryRound ?: ($round ?: 'North Round'),
-                        'beat' => $entryBeat ?: ($beat ?: 'Beat 1'),
-                        'place' => $entryPlace ?: ($place ?: 'Compartment No. 12'),
-                        'area' => $area ?: '10.00 Ha',
-                        'date' => $date,
-                        'items' => $items,
-                        'total_amount' => $totalAmount,
-                    ];
-                }
+    private function compileVavetarData(User $rangeUser, string $round, string $beat, string $place, string $area, string $reportType): array
+    {
+        $q = $this->query($rangeUser)->with('items');
+        foreach (['round' => $round, 'beat' => $beat, 'place' => $place] as $col => $val) {
+            if (trim($val) !== '') {
+                $q->whereRaw("TRIM($col) = ?", [trim($val)]);
             }
         }
+        $vouchers = $q->get();
 
-        // If no records in database, provide realistic plantation activities
-        if (empty($matchedEntries)) {
-            $sampleActivities = [
-                ['date' => '05/06/2026', 'voucher' => 'VCH-0001', 'party' => 'Shree Ram Forest Labour Co-op Society', 'desc' => '૧. પ્લાન્ટેશન સાઈટ પર અગાઉથી ખાડા ખોદવા (Pit Digging 30x30x30 cm)', 'qty' => 2500, 'unit' => 'Pits', 'rate' => 12.50, 'cat' => 'Advance Soil & Moisture Work'],
-                ['date' => '18/06/2026', 'voucher' => 'VCH-0002', 'party' => 'Girnar Forest Workers Agency', 'desc' => '૨. કાંટાળી તારની વાડ (Barbed Wire Fencing 4 Strands) તથા સિમેન્ટ પોલ ઊભા કરવા', 'qty' => 800, 'unit' => 'Mtr', 'rate' => 65.00, 'cat' => 'Fencing & Protection'],
-                ['date' => '08/07/2026', 'voucher' => 'VCH-0003', 'party' => 'Gujarat State Forest Seeds Agency', 'desc' => '૩. પોલીથીન બેગ રોપા વાવેતર (Teak, Neem, Bamboo Sapling Plantation)', 'qty' => 2500, 'unit' => 'Plants', 'rate' => 8.00, 'cat' => 'Planting & Sowing'],
-                ['date' => '25/07/2026', 'voucher' => 'VCH-0004', 'party' => 'Shree Ram Forest Labour Co-op Society', 'desc' => '૪. પ્રથમ નિંદામણ અને માટી ચઢાવવાની મજૂરી કામગીરી (1st Weeding & Soil Mulching)', 'qty' => 2500, 'unit' => 'Plants', 'rate' => 4.50, 'cat' => 'Maintenance & Weeding'],
-                ['date' => '12/08/2026', 'voucher' => 'VCH-0005', 'party' => 'Saurashtra Earthmovers & Labourers', 'desc' => '૫. વરસાદી પાણી સંચય માટે અર્ધચંદ્રાકાર ટ્રેન્ચ (Contour Trenching Work)', 'qty' => 350, 'unit' => 'Cu.M.', 'rate' => 75.00, 'cat' => 'Advance Soil & Moisture Work'],
-                ['date' => '28/08/2026', 'voucher' => 'VCH-0006', 'party' => 'Girnar Forest Workers Agency', 'desc' => '૬. દ્વિતીય નિંદામણ તથા પાળા સમારકામ (2nd Weeding & Bund Repair)', 'qty' => 2500, 'unit' => 'Plants', 'rate' => 4.00, 'cat' => 'Maintenance & Weeding'],
-            ];
-
-            foreach ($sampleActivities as $idx => $act) {
-                $sr = $idx + 1;
-                $amt = round($act['qty'] * $act['rate'], 2);
-
-                $items = [
-                    [
-                        'sr_no' => 1,
-                        'description' => $act['desc'],
-                        'category' => $act['cat'],
-                        'plot_area' => $place ?: 'Compartment No. 12',
-                        'quantity' => $act['qty'],
-                        'unit' => $act['unit'],
-                        'rate' => $act['rate'],
-                        'amount' => $amt,
-                    ]
-                ];
-
-                $matchedEntries[] = [
-                    'id' => $sr,
-                    'serial_number' => $sr,
-                    'entry_type' => 'Tender Entry',
-                    'voucher_no' => $act['voucher'],
-                    'docket_no' => 'DOC/2026/001',
-                    'party_name' => $act['party'],
-                    'budget_code' => '2406-01-101-01',
-                    'head' => '01',
-                    'scheme' => 'State Eco-Restoration & Afforestation Scheme',
-                    'round' => $round ?: 'North Round',
-                    'beat' => $beat ?: 'Beat 1',
-                    'place' => $place ?: 'Compartment No. 12',
-                    'area' => $area ?: '10.00 Ha',
-                    'category' => $act['cat'],
-                    'date' => $act['date'],
-                    'items' => $items,
-                    'total_amount' => $amt,
+        $rows = [];
+        foreach ($vouchers as $v) {
+            foreach ($v->items as $i) {
+                $rows[] = [
+                    'sort' => ($d = $i->work_start_date ?? $i->work_order_date ?? $v->bill_date) ? Carbon::parse($d)->format('Y-m-d') : '9999-12-31',
+                    'serial' => (int) $v->serial_number, 'line' => (int) $i->line_no,
+                    'date' => $this->date($i->work_start_date ?? $i->work_order_date ?? $v->bill_date),
+                    'voucher_no' => $v->voucher_no_final ?: 'Sr. '.$v->serial_number,
+                    'party_name' => $v->party_name,
+                    'description' => trim((string) $i->description),
+                    'plot_area' => $v->place,
+                    'quantity' => $i->quantity !== null ? (float) $i->quantity : null,
+                    'unit' => $i->unit,
+                    'rate' => $i->rate !== null ? (float) $i->rate : null,
+                    'amount' => (float) $i->amount,
                 ];
             }
         }
+        usort($rows, fn ($a, $b) => [$a['sort'], $a['serial'], $a['line']] <=> [$b['sort'], $b['serial'], $b['line']]);
 
-        // Prepare Date Wise rows
-        $dateWiseRows = [];
-        $cumulative = 0;
-        foreach ($matchedEntries as $entry) {
-            foreach ($entry['items'] as $it) {
-                $cumulative += $it['amount'];
-                $dateWiseRows[] = [
-                    'date' => $entry['date'],
-                    'voucher_no' => $entry['voucher_no'],
-                    'party_name' => $entry['party_name'],
-                    'description' => $it['description'],
-                    'plot_area' => $it['plot_area'],
-                    'quantity' => $it['quantity'],
-                    'unit' => $it['unit'],
-                    'rate' => $it['rate'],
-                    'amount' => $it['amount'],
-                    'cumulative_amount' => $cumulative,
-                ];
-            }
+        $dateWise = [];
+        $cumulative = 0.0;
+        foreach ($rows as $r) {
+            $cumulative += $r['amount'];
+            $dateWise[] = array_merge(array_diff_key($r, ['sort' => 1, 'serial' => 1, 'line' => 1]), ['cumulative_amount' => $cumulative]);
         }
 
-        // Prepare Work Wise grouped rows
-        $workWiseGroups = [];
-        foreach ($matchedEntries as $entry) {
-            foreach ($entry['items'] as $it) {
-                $category = $it['category'] ?? ($this->guessCategory($it['description']));
-                if (!isset($workWiseGroups[$category])) {
-                    $workWiseGroups[$category] = [
-                        'category' => $category,
-                        'total_quantity' => 0,
-                        'unit' => $it['unit'],
-                        'total_amount' => 0,
-                        'items' => [],
-                    ];
-                }
-                $workWiseGroups[$category]['total_quantity'] += $it['quantity'];
-                $workWiseGroups[$category]['total_amount'] += $it['amount'];
-                $workWiseGroups[$category]['items'][] = [
-                    'date' => $entry['date'],
-                    'voucher_no' => $entry['voucher_no'],
-                    'description' => $it['description'],
-                    'quantity' => $it['quantity'],
-                    'unit' => $it['unit'],
-                    'rate' => $it['rate'],
-                    'amount' => $it['amount'],
-                ];
-            }
+        // Work wise = the same work (item description) added up over all its vouchers.
+        $groups = [];
+        foreach ($rows as $r) {
+            $k = $r['description'] !== '' ? $r['description'] : '(no description recorded)';
+            $groups[$k] ??= ['category' => $k, 'total_quantity' => 0.0, 'unit' => $r['unit'], 'total_amount' => 0.0, 'items' => []];
+            $groups[$k]['total_quantity'] += (float) $r['quantity'];
+            $groups[$k]['total_amount'] += $r['amount'];
+            $groups[$k]['items'][] = ['date' => $r['date'], 'voucher_no' => $r['voucher_no'], 'description' => $r['description'], 'quantity' => $r['quantity'], 'unit' => $r['unit'], 'rate' => $r['rate'], 'amount' => $r['amount']];
         }
+        uasort($groups, fn ($a, $b) => $b['total_amount'] <=> $a['total_amount']);
 
-        $totalExpenditure = array_sum(array_column($dateWiseRows, 'amount'));
+        // Area / year of creation come from the range's location list (only when exactly one place is chosen).
+        $loc = null;
+        if (trim($place) !== '') {
+            $loc = RangeLocation::query()->where('range_id', $rangeUser->id)->whereRaw('TRIM(place) = ?', [trim($place)])
+                ->when(trim($round) !== '', fn ($x) => $x->whereRaw('TRIM(round) = ?', [trim($round)]))
+                ->when(trim($beat) !== '', fn ($x) => $x->whereRaw('TRIM(beat) = ?', [trim($beat)]))->first();
+        }
+        $areaText = trim($area) !== '' ? $area : ($loc?->hectares ? number_format((float) $loc->hectares, 2).' Ha' : '');
+        $schemes = $vouchers->pluck('scheme')->filter()->unique()->values();
 
         return [
-            'round' => $round ?: 'North Round',
-            'beat' => $beat ?: 'Beat 1',
-            'place' => $place ?: 'Compartment No. 12',
-            'area' => $area ?: '10.00 Ha',
+            'round' => $round ?: 'All rounds',
+            'beat' => $beat ?: 'All beats',
+            'place' => $place ?: 'All places',
+            'area' => $areaText ?: '-',
             'report_type' => $reportType,
-            'range_name' => $rangeUser->name ?? 'Range Forest Office',
-            'division_name' => 'Gujarat State Forest Department',
-            'year_of_plantation' => '2026-27',
-            'scheme_name' => 'State Plantation & Eco-Restoration Scheme (2406-01-101-01)',
-            'date_wise_rows' => $dateWiseRows,
-            'work_wise_groups' => array_values($workWiseGroups),
-            'total_expenditure' => $totalExpenditure,
-            'total_vouchers' => count($matchedEntries),
+            'range_name' => $rangeUser->name,
+            'division_name' => ($rangeUser->division ?? $rangeUser)->getOrCreateOfficeProfile()->display_name,
+            'year_of_plantation' => $loc?->place_year ?: '-',
+            'scheme_name' => $schemes->isEmpty() ? '-' : $schemes->implode('; '),
+            'date_wise_rows' => $dateWise,
+            'work_wise_groups' => array_values($groups),
+            'total_expenditure' => array_sum(array_column($rows, 'amount')),
+            'total_vouchers' => $vouchers->count(),
             'generated_at' => now()->format('d M Y, h:i A'),
         ];
     }
 
-    private function guessCategory(string $desc): string
-    {
-        if (stripos($desc, 'ખાડા') !== false || stripos($desc, 'Pit') !== false || stripos($desc, 'Trench') !== false) {
-            return 'Advance Soil & Moisture Work (અગાઉની માટીકામ કામગીરી)';
-        }
-        if (stripos($desc, 'Fencing') !== false || stripos($desc, 'વાડ') !== false || stripos($desc, 'Pole') !== false) {
-            return 'Fencing & Protection (તાર વાડ તથા સંરક્ષણ)';
-        }
-        if (stripos($desc, 'Plantation') !== false || stripos($desc, 'વાવેતર') !== false || stripos($desc, 'રોપા') !== false || stripos($desc, 'Sapling') !== false) {
-            return 'Planting & Sowing (છોડ રોપણી કામગીરી)';
-        }
-        if (stripos($desc, 'Weeding') !== false || stripos($desc, 'નિંદામણ') !== false || stripos($desc, 'માટી') !== false || stripos($desc, 'Mulching') !== false) {
-            return 'Maintenance & Weeding (નિંદામણ તથા સારસંભાળ)';
-        }
-        return 'General Forestry Operations (સામાન્ય વન સંરક્ષણ કામગીરી)';
-    }
-
+    /** The range's busiest real places (by expenditure) for the quick-pick table. */
     private function getRecentRegistersSummary(User $rangeUser): array
     {
-        return [
-            ['round' => 'North Round', 'beat' => 'Beat 1', 'place' => 'Compartment No. 12', 'area' => '10.00 Ha', 'vouchers_count' => 6, 'total_expenditure' => 114500.00],
-            ['round' => 'South Round', 'beat' => 'Beat 3', 'place' => 'Survey No. 45', 'area' => '12.00 Ha', 'vouchers_count' => 4, 'total_expenditure' => 86000.00],
-            ['round' => 'Central Round', 'beat' => 'Beat 4', 'place' => 'Forest Beat 2 Area', 'area' => '20.00 Ha', 'vouchers_count' => 5, 'total_expenditure' => 148200.00],
-        ];
+        $rows = DB::table('vouchers as v')->join('voucher_items as i', 'i.voucher_id', '=', 'v.id')
+            ->where('v.financial_year_id', CurrentFinancialYear::id())->where('v.range_id', $rangeUser->id)->whereNull('v.rejected_reason')->where('v.place', '<>', '')
+            ->selectRaw('TRIM(v.round) as round, TRIM(v.beat) as beat, TRIM(v.place) as place, COUNT(DISTINCT v.id) as vouchers_count, SUM(i.amount) as total_expenditure')
+            ->groupByRaw('TRIM(v.round), TRIM(v.beat), TRIM(v.place)')->orderByDesc('total_expenditure')->limit(12)->get();
+        $areas = RangeLocation::query()->where('range_id', $rangeUser->id)->get()->mapWithKeys(fn ($l) => [trim($l->place) => $l->hectares ? number_format((float) $l->hectares, 2).' Ha' : '']);
+
+        return $rows->map(fn ($r) => [
+            'round' => $r->round, 'beat' => $r->beat, 'place' => $r->place, 'area' => $areas[$r->place] ?? '',
+            'vouchers_count' => (int) $r->vouchers_count, 'total_expenditure' => (float) $r->total_expenditure,
+        ])->all();
     }
 
     private function authorizeRange(Request $request): void

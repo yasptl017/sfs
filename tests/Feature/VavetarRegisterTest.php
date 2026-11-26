@@ -3,7 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\RangeLocation;
-use App\Models\TenderEntry;
+use App\Models\Voucher;
+use App\Support\CurrentFinancialYear;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,6 +12,19 @@ use Tests\TestCase;
 class VavetarRegisterTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function voucher(User $range, int $serial, array $over = [], array $item = []): Voucher
+    {
+        $v = Voucher::create(array_merge([
+            'financial_year_id' => CurrentFinancialYear::id(), 'range_id' => $range->id, 'entry_type' => 'Tender Entry', 'serial_number' => $serial,
+            'party_name' => 'Party '.$serial, 'budget_code' => 'A3', 'scheme' => '02- Divisional', 'round' => 'Gir Round', 'beat' => 'Talala Beat', 'place' => 'Plot 55',
+        ], $over));
+        $v->items()->create(array_merge([
+            'line_no' => 1, 'description' => 'Pit digging', 'quantity' => 10, 'unit' => 'Pits', 'rate' => 100, 'amount' => 1000, 'work_start_date' => '2026-08-01', 'raw_line' => '[]',
+        ], $item));
+
+        return $v;
+    }
 
     public function test_range_user_can_access_vavetar_register_page(): void
     {
@@ -77,26 +91,7 @@ class VavetarRegisterTest extends TestCase
     {
         $rangeUser = User::factory()->create(['role' => 'range']);
 
-        TenderEntry::create([
-            'range_id' => $rangeUser->id,
-            'serial_number' => 401,
-            'data' => [
-                'party_name' => 'Somnath Forest Labour Society',
-                'round' => 'Gir Round',
-                'beat' => 'Talala Beat',
-                'place' => 'Plot 55',
-                'total_amount' => 50000.00,
-                'items' => [
-                    [
-                        'description' => 'Pit Digging Work for Teak Plantation',
-                        'quantity' => 2000,
-                        'unit' => 'Pits',
-                        'rate' => 25,
-                        'amount' => 50000.00,
-                    ]
-                ]
-            ]
-        ]);
+        $this->voucher($rangeUser, 401, ['party_name' => 'Somnath Forest Labour Society'], ['description' => 'Pit Digging Work for Teak Plantation', 'quantity' => 2000, 'unit' => 'Pits', 'rate' => 25, 'amount' => 50000]);
 
         // 1. Date Wise
         $responseDateWise = $this->actingAs($rangeUser)->postJson(route('finance.vavetar-register.preview'), [
@@ -174,5 +169,50 @@ class VavetarRegisterTest extends TestCase
         $response->assertSee('GUJARAT STATE FOREST DEPARTMENT');
         $response->assertSee('વાવેતર રજીસ્ટર (PLANTATION EXPENDITURE REGISTER)');
         $response->assertSee('કામગીરીવાર (WORK WISE)');
+    }
+
+    public function test_register_lists_only_real_vouchers_with_running_total_and_work_wise_groups(): void
+    {
+        $rangeUser = User::factory()->create(['role' => 'range']);
+        $other = User::factory()->create(['role' => 'range']);
+        $this->voucher($rangeUser, 1, [], ['amount' => 1000, 'work_start_date' => '2026-08-10']);
+        $this->voucher($rangeUser, 2, [], ['amount' => 500, 'work_start_date' => '2026-08-02']);
+        $this->voucher($rangeUser, 3, ['place' => 'Plot 99']);                              // another place
+        $this->voucher($rangeUser, 4, ['rejected_reason' => 'wrong'], ['amount' => 7777]);   // rejected: not expenditure
+        $this->voucher($other, 1, ['party_name' => 'Somebody Else']);
+
+        $d = $this->actingAs($rangeUser)->postJson(route('finance.vavetar-register.preview'), ['round' => 'Gir Round', 'beat' => 'Talala Beat', 'place' => 'Plot 55', 'report_type' => 'date_wise'])->json('data');
+
+        $this->assertEquals(1500, $d['total_expenditure']);
+        $this->assertSame(2, $d['total_vouchers']);
+        $this->assertSame(['02/08/2026', '10/08/2026'], array_column($d['date_wise_rows'], 'date'));
+        $this->assertEquals([500, 1500], array_column($d['date_wise_rows'], 'cumulative_amount'));
+        $this->assertCount(1, $d['work_wise_groups']);
+        $this->assertSame('Pit digging', $d['work_wise_groups'][0]['category']);
+        $this->assertEquals(1500, $d['work_wise_groups'][0]['total_amount']);
+    }
+
+    public function test_nothing_is_invented_for_a_place_without_vouchers(): void
+    {
+        $rangeUser = User::factory()->create(['role' => 'range']);
+
+        $json = $this->actingAs($rangeUser)->getJson(route('finance.vavetar-register.locations'))->json('locations');
+        $this->assertSame([], $json);
+        $page = $this->actingAs($rangeUser)->get(route('finance.vavetar-register.print', ['round' => 'X', 'beat' => 'Y', 'place' => 'Z', 'report_type' => 'date_wise']));
+        foreach (['Shree Ram Forest Labour', 'Compartment No. 12', 'VCH-0001', 'Girnar Forest Workers'] as $demo) {
+            $page->assertDontSee($demo);
+        }
+        $this->actingAs($rangeUser)->get(route('finance.vavetar-register.index'))->assertDontSee('North Round');
+    }
+
+    public function test_places_used_by_vouchers_are_reachable_even_when_not_in_the_location_list(): void
+    {
+        $rangeUser = User::factory()->create(['role' => 'range']);
+        $this->voucher($rangeUser, 1, ['round' => 'Round A', 'beat' => 'Beat A', 'place' => 'Unlisted Plot ']);
+
+        $loc = $this->actingAs($rangeUser)->getJson(route('finance.vavetar-register.locations'))->json('locations');
+        $this->assertSame('Unlisted Plot', $loc['Round A']['Beat A'][0]['place']);
+        $d = $this->actingAs($rangeUser)->postJson(route('finance.vavetar-register.preview'), ['round' => 'Round A', 'beat' => 'Beat A', 'place' => 'Unlisted Plot'])->json('data');
+        $this->assertSame(1, $d['total_vouchers']);
     }
 }

@@ -202,7 +202,16 @@ class PartyRegistrationController extends Controller
     /**
      * @return array<int, string>
      */
+    /** Hard-coded list + the sheet's own bank list + any bank already used by a record, so no existing party becomes un-saveable. */
     private function banks(): array
+    {
+        $lookup = \Illuminate\Support\Facades\DB::table('lookups')->where('financial_year_id', \App\Support\CurrentFinancialYear::id())->where('list_name', 'Bank Name')->pluck('value')->all();
+        $used = PartyRegistration::query()->whereNotNull('bank_name')->distinct()->pluck('bank_name')->all();
+
+        return array_values(array_unique(array_merge($this->baseBanks(), $lookup, $used)));
+    }
+
+    private function baseBanks(): array
     {
         return [
             'State Bank of India',

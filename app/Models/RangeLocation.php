@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToFinancialYear;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RangeLocation extends Model
-{
-    protected $fillable = ['range_id', 'round', 'beat', 'place', 'hectares', 'place_year'];
+{ use BelongsToFinancialYear;
+    protected $fillable = ['sr', 'range_id', 'round', 'beat', 'place', 'hectares', 'place_year'];
 
     protected function casts(): array
     {

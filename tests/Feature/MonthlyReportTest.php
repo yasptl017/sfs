@@ -2,8 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\BillAdvice;
 use App\Models\User;
+use App\Models\Voucher;
+use App\Support\CurrentFinancialYear;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -77,22 +78,13 @@ class MonthlyReportTest extends TestCase
     {
         $divisionUser = User::factory()->create(['role' => 'division']);
 
-        BillAdvice::create([
-            'division_id' => $divisionUser->id,
-            'bill_type' => 'Simple Receipt',
-            'advice_no' => 'ADV-77',
-            'advice_date' => '2026-04-15',
-            'total_amount' => 25000.00,
-            'total_bills_count' => 1,
-            'selected_entries' => [
-                [
-                    'bill_register_no' => '99',
-                    'order_outward_no' => 'વન/હસબ/૧૨૩૪/૨૦૨૬-૨૭',
-                    'amount' => 25000.00,
-                ],
-            ],
-            'status' => 'approved',
-            'remarks' => 'Monthly passed advice',
+        // the report reads treasury-approved vouchers: one voucher of advice 77, approved on 15 April
+        $range = User::factory()->create(['role' => 'range', 'division_id' => $divisionUser->id]);
+        Voucher::create([
+            'financial_year_id' => CurrentFinancialYear::id(), 'range_id' => $range->id, 'entry_type' => 'Tender Entry', 'serial_number' => 1, 'budget_code' => 'A3',
+            'scheme' => '02- Divisional', 'party_name' => 'Test Party', 'payable_total_amount' => 25000, 'total_deduction' => 500, 'net_amount' => 24500, 'tds' => 250, 'deduction_labour_cess' => 250,
+            'payment_mode' => 'IFMS', 'ifms_bill_type' => 'Simple Receipt', 'advice_no' => 77, 'advice_date' => '2026-04-15', 'bill_register_no' => '99/2026-27',
+            'treasury_status' => 'Approved', 'treasury_approval_date' => '2026-04-15', 'treasury_approval_month' => 'Apr', 'treasury_voucher_no' => '12',
         ]);
 
         $response = $this->actingAs($divisionUser)->postJson(route('division.monthly-reports.preview'), [
@@ -110,7 +102,11 @@ class MonthlyReportTest extends TestCase
             'report_type' => 'form_53_abstract',
         ]);
         $response->assertJsonPath('data.totals.count', 1);
-        $response->assertJsonPath('data.bills.0.advice_no', 'ADV-77');
+        $response->assertJsonPath('data.bills.0.advice_no', 77);
+        $response->assertJsonPath('data.totals.gross', 25000);
+        $response->assertJsonPath('data.totals.deductions', 500);
+        $response->assertJsonPath('data.totals.it_tds', 250);
+        $response->assertJsonPath('data.totals.net', 24500);
     }
 
     public function test_print_endpoint_renders_printable_page(): void

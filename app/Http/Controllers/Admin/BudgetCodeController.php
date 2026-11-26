@@ -70,7 +70,7 @@ class BudgetCodeController extends Controller
     private function validated(Request $request, ?BudgetCode $budgetCode = null): array
     {
         return $request->validate([
-            'budget_code' => ['required', 'string', 'max:255', Rule::unique('budget_codes')->ignore($budgetCode)],
+            'budget_code' => ['required', 'string', 'max:255', Rule::unique('budget_codes')->where('financial_year_id', \App\Support\CurrentFinancialYear::id())->ignore($budgetCode)],
             'operating_head' => ['nullable', 'string', 'max:255'],
             'scheme' => ['nullable', 'string', 'max:255'],
             'object_class' => ['nullable', 'string', 'max:255'],

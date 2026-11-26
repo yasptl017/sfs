@@ -155,14 +155,17 @@
                             </td>
                             @if($mode === 'detailed')
                                 <td class="p-1.5 border border-slate-300 text-center text-[11px] text-slate-700 whitespace-nowrap">{{ $it['work_dates'] ?? '-' }}</td>
-                                <td class="p-1.5 border border-slate-300 text-right font-bold whitespace-nowrap">{{ $it['quantity'] ?? 1 }} {{ $it['unit'] ?? '' }}</td>
-                                <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">₹ {{ number_format($it['rate'] ?? 0, 2) }}</td>
+                                <td class="p-1.5 border border-slate-300 text-right font-bold whitespace-nowrap">{{ isset($it['quantity']) ? rtrim(rtrim(number_format($it['quantity'], 3), '0'), '.') : '-' }} {{ $it['unit'] ?? '' }}</td>
+                                <td class="p-1.5 border border-slate-300 text-right font-mono whitespace-nowrap">{{ isset($it['rate']) ? '₹ '.number_format($it['rate'], 2) : '-' }}</td>
                             @endif
                             <td class="p-1.5 border border-slate-300 text-right font-mono font-medium whitespace-nowrap">₹ {{ number_format($entry['gross_amount'], 2) }}</td>
                             <td class="p-1.5 border border-slate-300 text-right font-mono text-rose-700 whitespace-nowrap">₹ {{ number_format($entry['total_deductions'], 2) }}</td>
                             <td class="p-1.5 border border-slate-300 text-right font-mono font-bold text-emerald-950 bg-emerald-50/40 whitespace-nowrap">₹ {{ number_format($entry['net_amount'], 2) }}</td>
                         </tr>
                     @endforeach
+                    @if(empty($data['entries']))
+                        <tr><td colspan="{{ $mode === 'detailed' ? 10 : 7 }}" class="p-3 border border-slate-300 text-center font-semibold text-amber-800 bg-amber-50">No vouchers found for {{ $month }} / {{ $docketNo ?: 'all dockets' }} - nothing to print.</td></tr>
+                    @endif
                 </tbody>
                 <tfoot>
                     <tr class="bg-slate-100 font-bold border-t-2 border-slate-900">

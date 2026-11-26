@@ -91,6 +91,13 @@
             </div>
         </div>
 
+        @if(!empty($missing))
+            <div class="no-print rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                <strong>Not found - nothing was printed for:</strong> {{ $entryType }} Sr. {{ implode(', ', $missing) }}.
+                These serial numbers do not exist for this range in the selected financial year.
+            </div>
+        @endif
+
         <!-- Vouchers List -->
         @forelse($vouchers as $index => $v)
             <div class="voucher-page bg-white rounded-xl border border-slate-300 p-6 sm:p-8 shadow-sm space-y-4 print:border-slate-800 print:shadow-none {{ $fitToPage ? 'fit-page' : '' }}">
@@ -223,7 +230,7 @@
             </div>
         @empty
             <div class="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-500">
-                No vouchers found to print.
+                No vouchers found to print. Check the serial numbers and the financial year.
             </div>
         @endforelse
     </div>

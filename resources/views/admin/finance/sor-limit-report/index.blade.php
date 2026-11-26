@@ -132,7 +132,7 @@
                                 <label for="yearInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                                     Fin. Year (વર્ષ)
                                 </label>
-                                <input type="text" id="yearInput" name="year" value="{{ $selectedYear }}" class="maroon-border-field" placeholder="2026-27">
+                                <input type="text" id="yearInput" name="year" value="{{ $selectedYear }}" readonly title="Follows the financial year selected in the header" class="maroon-border-field" placeholder="2026-27">
                             </div>
                         </div>
 
@@ -178,7 +178,7 @@
                                 <option value="">All SOR Operations (બધી કામગીરી)</option>
                                 @foreach($sorList as $sor)
                                     <option value="{{ $sor['code'] }}" @selected($selectedSorCode === $sor['code'])>
-                                        {{ $sor['code'] }} - {{ $sor['name_gu'] }} (Std Rate: ₹{{ number_format($sor['standard_rate'], 2) }}/{{ $sor['unit'] }})
+                                        {{ $sor['code'] }} - {{ $sor['name_gu'] }} (Std Rate: ₹{{ ($sor['standard_rate'] === null ? '-' : number_format($sor['standard_rate'], 2)) }}/{{ $sor['unit'] }})
                                     </option>
                                 @endforeach
                             </select>
@@ -354,13 +354,13 @@
                                                 <span class="text-slate-700">{{ $r['work_description'] }}</span>
                                             </td>
                                             <td class="p-2 text-center text-slate-600">{{ $r['unit'] }}</td>
-                                            <td class="p-2 text-right font-mono font-semibold">₹ {{ number_format($r['sanctioned_rate'], 2) }}</td>
-                                            <td class="p-2 text-right font-semibold text-slate-800">{{ number_format($r['sanctioned_qty']) }}</td>
-                                            <td class="p-2 text-right font-mono font-bold text-slate-950">₹ {{ number_format($r['sanctioned_limit'], 2) }}</td>
+                                            <td class="p-2 text-right font-mono font-semibold">₹ {{ ($r['sanctioned_rate'] === null ? '-' : number_format($r['sanctioned_rate'], 2)) }}</td>
+                                            <td class="p-2 text-right font-semibold text-slate-800">{{ ($r['sanctioned_qty'] === null ? '-' : number_format($r['sanctioned_qty'])) }}</td>
+                                            <td class="p-2 text-right font-mono font-bold text-slate-950">₹ {{ ($r['sanctioned_limit'] === null ? '-' : number_format($r['sanctioned_limit'], 2)) }}</td>
                                             <td class="p-2 text-right font-semibold text-slate-800">{{ number_format($r['executed_qty']) }}</td>
                                             <td class="p-2 text-right font-mono font-bold text-blue-900">₹ {{ number_format($r['actual_amount'], 2) }}</td>
                                             <td class="p-2 text-right font-mono font-bold {{ $r['balance_amount'] < 0 ? 'text-rose-700' : 'text-emerald-700' }}">
-                                                ₹ {{ number_format($r['balance_amount'], 2) }}
+                                                ₹ {{ ($r['balance_amount'] === null ? '-' : number_format($r['balance_amount'], 2)) }}
                                             </td>
                                             <td class="p-2 text-center">
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border {{ $r['badge_class'] }}">
@@ -390,14 +390,14 @@
                                                 <span class="text-slate-800 block text-[11px] mt-0.5 leading-snug">{{ $r['work_description'] }}</span>
                                             </td>
                                             <td class="p-2 text-center text-slate-600">{{ $r['unit'] }}</td>
-                                            <td class="p-2 text-right font-mono text-slate-600">₹ {{ number_format($r['sanctioned_rate'], 2) }}</td>
-                                            <td class="p-2 text-right font-mono font-bold {{ $r['actual_rate'] > $r['sanctioned_rate'] ? 'text-rose-700' : 'text-slate-900' }}">
-                                                ₹ {{ number_format($r['actual_rate'], 2) }}
+                                            <td class="p-2 text-right font-mono text-slate-600">₹ {{ ($r['sanctioned_rate'] === null ? '-' : number_format($r['sanctioned_rate'], 2)) }}</td>
+                                            <td class="p-2 text-right font-mono font-bold {{ $r['is_rate_violation'] ? 'text-rose-700' : 'text-slate-900' }}">
+                                                ₹ {{ ($r['actual_rate'] === null ? '-' : number_format($r['actual_rate'], 2)) }}
                                             </td>
-                                            <td class="p-2 text-right font-mono font-semibold text-slate-800">₹ {{ number_format($r['sanctioned_limit'], 2) }}</td>
+                                            <td class="p-2 text-right font-mono font-semibold text-slate-800">₹ {{ ($r['sanctioned_limit'] === null ? '-' : number_format($r['sanctioned_limit'], 2)) }}</td>
                                             <td class="p-2 text-right font-mono font-bold text-blue-900">₹ {{ number_format($r['actual_amount'], 2) }}</td>
                                             <td class="p-2 text-right font-mono font-bold {{ $r['variance'] < 0 ? 'text-rose-700' : 'text-emerald-700' }}">
-                                                ₹ {{ number_format($r['variance'], 2) }}
+                                                ₹ {{ ($r['variance'] === null ? '-' : number_format($r['variance'], 2)) }}
                                             </td>
                                             <td class="p-2 text-center">
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border {{ $r['badge_class'] }}">
@@ -605,13 +605,13 @@
                                 <span class="text-slate-700">${r.work_description}</span>
                             </td>
                             <td class="p-2 text-center text-slate-600">${r.unit}</td>
-                            <td class="p-2 text-right font-mono font-semibold">₹ ${formatNumber(r.sanctioned_rate)}</td>
-                            <td class="p-2 text-right font-semibold text-slate-800">${r.sanctioned_qty.toLocaleString()}</td>
-                            <td class="p-2 text-right font-mono font-bold text-slate-950">₹ ${formatNumber(r.sanctioned_limit)}</td>
-                            <td class="p-2 text-right font-semibold text-slate-800">${r.executed_qty.toLocaleString()}</td>
+                            <td class="p-2 text-right font-mono font-semibold">₹ ${(r.sanctioned_rate == null ? '-' : formatNumber(r.sanctioned_rate))}</td>
+                            <td class="p-2 text-right font-semibold text-slate-800">${(r.sanctioned_qty == null ? '-' : r.sanctioned_qty.toLocaleString())}</td>
+                            <td class="p-2 text-right font-mono font-bold text-slate-950">₹ ${(r.sanctioned_limit == null ? '-' : formatNumber(r.sanctioned_limit))}</td>
+                            <td class="p-2 text-right font-semibold text-slate-800">${(r.executed_qty == null ? '-' : r.executed_qty.toLocaleString())}</td>
                             <td class="p-2 text-right font-mono font-bold text-blue-900">₹ ${formatNumber(r.actual_amount)}</td>
                             <td class="p-2 text-right font-mono font-bold ${r.balance_amount < 0 ? 'text-rose-700' : 'text-emerald-700'}">
-                                ₹ ${formatNumber(r.balance_amount)}
+                                ₹ ${(r.balance_amount == null ? '-' : formatNumber(r.balance_amount))}
                             </td>
                             <td class="p-2 text-center">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${r.badge_class}">
@@ -644,14 +644,14 @@
                                 <span class="text-slate-800 block text-[11px] mt-0.5 leading-snug">${r.work_description}</span>
                             </td>
                             <td class="p-2 text-center text-slate-600">${r.unit}</td>
-                            <td class="p-2 text-right font-mono text-slate-600">₹ ${formatNumber(r.sanctioned_rate)}</td>
-                            <td class="p-2 text-right font-mono font-bold ${r.actual_rate > r.sanctioned_rate ? 'text-rose-700' : 'text-slate-900'}">
-                                ₹ ${formatNumber(r.actual_rate)}
+                            <td class="p-2 text-right font-mono text-slate-600">₹ ${(r.sanctioned_rate == null ? '-' : formatNumber(r.sanctioned_rate))}</td>
+                            <td class="p-2 text-right font-mono font-bold ${r.is_rate_violation ? 'text-rose-700' : 'text-slate-900'}">
+                                ₹ ${(r.actual_rate == null ? '-' : formatNumber(r.actual_rate))}
                             </td>
-                            <td class="p-2 text-right font-mono font-semibold text-slate-800">₹ ${formatNumber(r.sanctioned_limit)}</td>
+                            <td class="p-2 text-right font-mono font-semibold text-slate-800">₹ ${(r.sanctioned_limit == null ? '-' : formatNumber(r.sanctioned_limit))}</td>
                             <td class="p-2 text-right font-mono font-bold text-blue-900">₹ ${formatNumber(r.actual_amount)}</td>
                             <td class="p-2 text-right font-mono font-bold ${r.variance < 0 ? 'text-rose-700' : 'text-emerald-700'}">
-                                ₹ ${formatNumber(r.variance)}
+                                ₹ ${(r.variance == null ? '-' : formatNumber(r.variance))}
                             </td>
                             <td class="p-2 text-center">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${r.badge_class}">
