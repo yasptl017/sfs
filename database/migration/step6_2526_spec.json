@@ -1,0 +1,764 @@
+{
+ "source": "Master00 SF Sabarkantha 25-26 DFS.xlsx > Master All",
+ "sheet": "Master All",
+ "columns": [
+  {
+   "idx": 0,
+   "header": "Range",
+   "name": "range",
+   "kind": "range"
+  },
+  {
+   "idx": 1,
+   "header": "Sr. No.",
+   "name": "serial_number",
+   "kind": "int",
+   "n": 7565
+  },
+  {
+   "idx": 2,
+   "header": "Entry Type",
+   "name": "entry_type",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 3,
+   "header": "Tender Code",
+   "name": "tender_code",
+   "kind": "str",
+   "n": 7018
+  },
+  {
+   "idx": 4,
+   "header": "Budget Code",
+   "name": "budget_code",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 5,
+   "header": "Scheme",
+   "name": "scheme",
+   "kind": "text",
+   "n": 7565
+  },
+  {
+   "idx": 6,
+   "header": "Class",
+   "name": "class",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 7,
+   "header": "Model",
+   "name": "model",
+   "kind": "text",
+   "n": 7565
+  },
+  {
+   "idx": 8,
+   "header": "Scheme Year",
+   "name": "scheme_year",
+   "kind": "text",
+   "n": 7565
+  },
+  {
+   "idx": 9,
+   "header": "Entry Month",
+   "name": "entry_month",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 10,
+   "header": "Docket No.",
+   "name": "docket_no",
+   "kind": "int",
+   "n": 7565
+  },
+  {
+   "idx": 11,
+   "header": "Round",
+   "name": "round",
+   "kind": "str",
+   "n": 7435
+  },
+  {
+   "idx": 12,
+   "header": "Beat",
+   "name": "beat",
+   "kind": "str",
+   "n": 7431
+  },
+  {
+   "idx": 13,
+   "header": "Place",
+   "name": "place",
+   "kind": "text",
+   "n": 6868
+  },
+  {
+   "idx": 14,
+   "header": "Area (Ha.)",
+   "name": "area_ha",
+   "kind": "dec",
+   "n": 2821
+  },
+  {
+   "idx": 15,
+   "header": "Description",
+   "name": "description",
+   "kind": "text",
+   "n": 6279
+  },
+  {
+   "idx": 16,
+   "header": "Bill No.",
+   "name": "bill_no",
+   "kind": "str",
+   "n": 5744
+  },
+  {
+   "idx": 17,
+   "header": "Bill Date",
+   "name": "bill_date",
+   "kind": "date",
+   "n": 5745
+  },
+  {
+   "idx": 18,
+   "header": "Party Code",
+   "name": "party_code",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 19,
+   "header": "Party Name",
+   "name": "party_name",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 20,
+   "header": "Pan Card No.",
+   "name": "pan_card_no",
+   "kind": "str",
+   "n": 6299
+  },
+  {
+   "idx": 21,
+   "header": "GST No.",
+   "name": "gst_no",
+   "kind": "str",
+   "n": 4973
+  },
+  {
+   "idx": 22,
+   "header": "Account No.",
+   "name": "account_no",
+   "kind": "str",
+   "n": 7559
+  },
+  {
+   "idx": 23,
+   "header": "Bank Name",
+   "name": "bank_name",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 24,
+   "header": "IFSC",
+   "name": "ifsc",
+   "kind": "str",
+   "n": 7559
+  },
+  {
+   "idx": 25,
+   "header": "Branch",
+   "name": "branch",
+   "kind": "str",
+   "n": 7559
+  },
+  {
+   "idx": 26,
+   "header": "Register Name",
+   "name": "register_name",
+   "kind": "str",
+   "n": 3850
+  },
+  {
+   "idx": 27,
+   "header": "Register Page No.",
+   "name": "register_page_no",
+   "kind": "int",
+   "n": 3831
+  },
+  {
+   "idx": 28,
+   "header": "Item Details",
+   "name": "item_details_json",
+   "kind": "longtext",
+   "n": 7565
+  },
+  {
+   "idx": 29,
+   "header": "Sub Total",
+   "name": "sub_total",
+   "kind": "dec",
+   "n": 7565
+  },
+  {
+   "idx": 30,
+   "header": "Remarks By RFO If Any",
+   "name": "remarks_by_rfo",
+   "kind": "text",
+   "n": 4286
+  },
+  {
+   "idx": 31,
+   "header": "Approved %",
+   "name": "approved_percent",
+   "kind": "dec",
+   "n": 5346
+  },
+  {
+   "idx": 32,
+   "header": "Amount as per Approved Rate",
+   "name": "amount_as_per_approved_rate",
+   "kind": "dec",
+   "n": 6726
+  },
+  {
+   "idx": 33,
+   "header": "SGST",
+   "name": "sgst",
+   "kind": "dec",
+   "n": 5123
+  },
+  {
+   "idx": 34,
+   "header": "CGST",
+   "name": "cgst",
+   "kind": "dec",
+   "n": 5115
+  },
+  {
+   "idx": 35,
+   "header": "IGST",
+   "name": "igst",
+   "kind": "dec",
+   "n": 4828
+  },
+  {
+   "idx": 36,
+   "header": "Labour Cess",
+   "name": "labour_cess",
+   "kind": "dec",
+   "n": 4803
+  },
+  {
+   "idx": 37,
+   "header": "Adjustment (+ or -)",
+   "name": "adjustment",
+   "kind": "dec",
+   "n": 108
+  },
+  {
+   "idx": 38,
+   "header": "Payable Total Amount",
+   "name": "payable_total_amount",
+   "kind": "dec",
+   "n": 7565
+  },
+  {
+   "idx": 39,
+   "header": "Deduction SGST",
+   "name": "deduction_sgst",
+   "kind": "dec",
+   "n": 6185
+  },
+  {
+   "idx": 40,
+   "header": "Deduction CGST",
+   "name": "deduction_cgst",
+   "kind": "dec",
+   "n": 6185
+  },
+  {
+   "idx": 41,
+   "header": "Deduction IGST",
+   "name": "deduction_igst",
+   "kind": "dec",
+   "n": 6185
+  },
+  {
+   "idx": 42,
+   "header": "GPF",
+   "name": "gpf",
+   "kind": "dec",
+   "n": 648
+  },
+  {
+   "idx": 43,
+   "header": "CPF",
+   "name": "cpf",
+   "kind": "dec",
+   "n": 820
+  },
+  {
+   "idx": 44,
+   "header": "P.Tax",
+   "name": "p_tax",
+   "kind": "dec",
+   "n": 1217
+  },
+  {
+   "idx": 45,
+   "header": "Group Insurance",
+   "name": "group_insurance",
+   "kind": "dec",
+   "n": 815
+  },
+  {
+   "idx": 46,
+   "header": "Deposit Deduction Amount from Bill",
+   "name": "deposit_deduction_amount",
+   "kind": "dec",
+   "n": 4803
+  },
+  {
+   "idx": 47,
+   "header": "TDS",
+   "name": "tds",
+   "kind": "dec",
+   "n": 6996
+  },
+  {
+   "idx": 48,
+   "header": "Deduction Labour Cess",
+   "name": "deduction_labour_cess",
+   "kind": "dec",
+   "n": 6185
+  },
+  {
+   "idx": 49,
+   "header": "Total Deduction",
+   "name": "total_deduction",
+   "kind": "dec",
+   "n": 7018
+  },
+  {
+   "idx": 50,
+   "header": "Net Amount",
+   "name": "net_amount",
+   "kind": "dec",
+   "n": 7565
+  },
+  {
+   "idx": 51,
+   "header": "Unique Code of Data Entry",
+   "name": "unique_code",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 52,
+   "header": "Received at Division",
+   "name": "received_at_division",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 53,
+   "header": "Approved By ACF",
+   "name": "approved_by_acf",
+   "kind": "str",
+   "n": 0
+  },
+  {
+   "idx": 54,
+   "header": "Rejected Reason",
+   "name": "rejected_reason",
+   "kind": "text",
+   "n": 74
+  },
+  {
+   "idx": 55,
+   "header": "Rejection Date",
+   "name": "rejection_date",
+   "kind": "date",
+   "n": 74
+  },
+  {
+   "idx": 56,
+   "header": "Remark by Division",
+   "name": "remark_by_division",
+   "kind": "text",
+   "n": 0
+  },
+  {
+   "idx": 57,
+   "header": "Advice Date",
+   "name": "advice_date",
+   "kind": "date",
+   "n": 6841
+  },
+  {
+   "idx": 58,
+   "header": "Advice No.",
+   "name": "advice_no",
+   "kind": "int",
+   "n": 6841
+  },
+  {
+   "idx": 59,
+   "header": "Pass / Wait for LC / Rejected",
+   "name": "pass_status",
+   "kind": "text"
+  },
+  {
+   "idx": 60,
+   "header": "Approval Month",
+   "name": "approval_month",
+   "kind": "text"
+  },
+  {
+   "idx": 61,
+   "header": "Cheque No.",
+   "name": "cheque_no",
+   "kind": "text"
+  },
+  {
+   "idx": 62,
+   "header": "Voucher No. Final",
+   "name": "voucher_no_final",
+   "kind": "str",
+   "n": 6541
+  },
+  {
+   "idx": 63,
+   "header": "Treasury Approval Date",
+   "name": "treasury_approval_date",
+   "kind": "date",
+   "n": 6652
+  },
+  {
+   "idx": 64,
+   "header": "Bank Clearing Date",
+   "name": "bank_clearing_date",
+   "kind": "date"
+  },
+  {
+   "idx": 65,
+   "header": "Join 1 to 9",
+   "name": "join_1_to_9",
+   "kind": "text",
+   "n": 7565
+  },
+  {
+   "idx": 66,
+   "header": "Bene. Code",
+   "name": "bene_code",
+   "kind": "str",
+   "n": 15
+  },
+  {
+   "idx": 67,
+   "header": "Bene. Full Name",
+   "name": "bene_full_name",
+   "kind": "str",
+   "n": 15
+  },
+  {
+   "idx": 68,
+   "header": "Year / Instal. No.",
+   "name": "year_installment_no",
+   "kind": "int",
+   "n": 534
+  },
+  {
+   "idx": 69,
+   "header": "Bene. Application Date",
+   "name": "bene_application_date",
+   "kind": "date",
+   "n": 568
+  },
+  {
+   "idx": 70,
+   "header": "Bene. Application Sanctioned Date",
+   "name": "bene_application_sanctioned_date",
+   "kind": "date",
+   "n": 568
+  },
+  {
+   "idx": 71,
+   "header": "Status",
+   "name": "status_log",
+   "kind": "text",
+   "n": 404
+  },
+  {
+   "idx": 72,
+   "header": "Time Stamp",
+   "name": "source_time_stamp",
+   "kind": "datetime",
+   "n": 7565
+  },
+  {
+   "idx": 73,
+   "header": "Entered By",
+   "name": "entered_by",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 74,
+   "header": "No. of times Edited",
+   "name": "times_edited",
+   "kind": "int",
+   "n": 7565
+  },
+  {
+   "idx": 75,
+   "header": "Program Remark",
+   "name": "program_remark",
+   "kind": "text",
+   "n": 0
+  },
+  {
+   "idx": 76,
+   "header": "Name of Yojana",
+   "name": "name_of_yojana",
+   "kind": "text",
+   "n": 547
+  },
+  {
+   "idx": 77,
+   "header": "Bene. Name In Gujarati",
+   "name": "bene_name_gujarati",
+   "kind": "text",
+   "n": 547
+  },
+  {
+   "idx": 78,
+   "header": "Mobile No.",
+   "name": "mobile_no",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 79,
+   "header": "Gender",
+   "name": "gender",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 80,
+   "header": "Fathers Name in case of Female Bene.",
+   "name": "father_name",
+   "kind": "str",
+   "n": 413
+  },
+  {
+   "idx": 81,
+   "header": "Birth Date",
+   "name": "birth_date",
+   "kind": "date",
+   "n": 258
+  },
+  {
+   "idx": 82,
+   "header": "Address",
+   "name": "address",
+   "kind": "text",
+   "n": 422
+  },
+  {
+   "idx": 83,
+   "header": "Pin Code",
+   "name": "pin_code",
+   "kind": "str",
+   "n": 423
+  },
+  {
+   "idx": 84,
+   "header": "Category",
+   "name": "category",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 85,
+   "header": "District",
+   "name": "district",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 86,
+   "header": "Taluka",
+   "name": "taluka",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 87,
+   "header": "Village",
+   "name": "village",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 88,
+   "header": "Survey No. / Block No.",
+   "name": "survey_block_no",
+   "kind": "str",
+   "n": 534
+  },
+  {
+   "idx": 89,
+   "header": "ID Type",
+   "name": "id_type",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 90,
+   "header": "ID No.",
+   "name": "id_no",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 91,
+   "header": "GPS-N",
+   "name": "gps_n",
+   "kind": "dec",
+   "n": 472
+  },
+  {
+   "idx": 92,
+   "header": "GPS-E",
+   "name": "gps_e",
+   "kind": "dec",
+   "n": 472
+  },
+  {
+   "idx": 93,
+   "header": "GPS",
+   "name": "gps",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 94,
+   "header": "Bene. Selection Year",
+   "name": "bene_selection_year",
+   "kind": "str",
+   "n": 547
+  },
+  {
+   "idx": 95,
+   "header": "Ha / DCP Plants",
+   "name": "ha_dcp_plants",
+   "kind": "dec",
+   "n": 534
+  },
+  {
+   "idx": 96,
+   "header": "Total No. of Plants",
+   "name": "total_no_of_plants",
+   "kind": "dec",
+   "n": 534
+  },
+  {
+   "idx": 97,
+   "header": "Survival % Data Date",
+   "name": "survival_data_date",
+   "kind": "date",
+   "n": 483
+  },
+  {
+   "idx": 98,
+   "header": "Survival %",
+   "name": "survival_percent",
+   "kind": "str",
+   "n": 534
+  },
+  {
+   "idx": 99,
+   "header": "SF Model + Year",
+   "name": "sf_model_year",
+   "kind": "text",
+   "n": 547
+  },
+  {
+   "idx": 100,
+   "header": "Deduction of Ropa Amount for VruxKheti",
+   "name": "ropa_deduction_vruxkheti",
+   "kind": "dec",
+   "n": 0
+  },
+  {
+   "idx": 101,
+   "header": "Range Case Number",
+   "name": "range_case_number",
+   "kind": "str",
+   "n": 13
+  },
+  {
+   "idx": 102,
+   "header": "Division Case Number",
+   "name": "division_case_number",
+   "kind": "str",
+   "n": 13
+  },
+  {
+   "idx": 103,
+   "header": "Extra 1",
+   "name": "extra_1",
+   "kind": "str",
+   "n": 0
+  },
+  {
+   "idx": 104,
+   "header": "Extra 2",
+   "name": "extra_2",
+   "kind": "str",
+   "n": 0
+  },
+  {
+   "idx": 105,
+   "header": "Extra 3",
+   "name": "extra_3",
+   "kind": "str",
+   "n": 0
+  },
+  {
+   "idx": 106,
+   "header": "Extra 4",
+   "name": "extra_4",
+   "kind": "str",
+   "n": 0
+  },
+  {
+   "idx": 108,
+   "header": "Payment Mode",
+   "name": "payment_mode",
+   "kind": "str",
+   "n": 7565
+  },
+  {
+   "idx": 109,
+   "header": "Year From Plot",
+   "name": "year_from_plot",
+   "kind": "str",
+   "n": 3022
+  }
+ ]
+}

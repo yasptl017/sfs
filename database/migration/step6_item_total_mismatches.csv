@@ -1,0 +1,2 @@
+﻿range,entry_type,sr_no,sum_of_item_amounts,voucher_sub_total,difference,payable_total,net_amount,older_export_sub_total,older_export_item_sum,note
+Modasa,D.Wagers Salary,51,30736.0,27386.0,-3350.0,27386.000000,27186.000000,27386.0,30736.0,line items and voucher totals disagree in the source sheet

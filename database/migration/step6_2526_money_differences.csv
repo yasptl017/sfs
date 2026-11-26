@@ -1,0 +1,29 @@
+﻿range,entry_type,sr_no,field,older_value,live_value (Master All),older_source
+Bayad,Bene. Entry,6,Amount as per Approved Rate,1259.0,8859.0,history00_snapshot
+Bayad,Bene. Entry,6,Net Amount,1259.0,8859.0,history00_snapshot
+Bayad,Bene. Entry,6,Payable Total Amount,1259.0,8859.0,history00_snapshot
+Bayad,Bene. Entry,6,Sub Total,1259.0,8859.0,history00_snapshot
+Himatnagar,Tender Entry,34,Amount as per Approved Rate,77850.0,72871.0,history00_snapshot
+Himatnagar,Tender Entry,34,Net Amount,76293.0,71414.0,history00_snapshot
+Himatnagar,Tender Entry,34,Payable Total Amount,77850.0,72871.0,history00_snapshot
+Himatnagar,Tender Entry,34,Sub Total,77850.0,72871.0,history00_snapshot
+Himatnagar,Tender Entry,34,TDS,1557.0,1457.0,history00_snapshot
+Himatnagar,Tender Entry,34,Total Deduction,1557.0,1457.0,history00_snapshot
+Idar,Tender Entry,40,Amount as per Approved Rate,82500.0,82600.0,history00_snapshot
+Idar,Tender Entry,40,Net Amount,80850.0,80948.0,history00_snapshot
+Idar,Tender Entry,40,Payable Total Amount,82500.0,82600.0,history00_snapshot
+Idar,Tender Entry,40,Sub Total,82500.0,82600.0,history00_snapshot
+Idar,Tender Entry,40,TDS,1650.0,1652.0,history00_snapshot
+Idar,Tender Entry,40,Total Deduction,1650.0,1652.0,history00_snapshot
+Idar,Tender Entry,41,Amount as per Approved Rate,193905.0,173905.0,history00_snapshot
+Idar,Tender Entry,41,Net Amount,190027.0,170427.0,history00_snapshot
+Idar,Tender Entry,41,Payable Total Amount,193905.0,173905.0,history00_snapshot
+Idar,Tender Entry,41,Sub Total,193905.0,173905.0,history00_snapshot
+Idar,Tender Entry,41,TDS,3878.0,3478.0,history00_snapshot
+Idar,Tender Entry,41,Total Deduction,3878.0,3478.0,history00_snapshot
+Idar,Tender Entry,73,Amount as per Approved Rate,387810.0,347810.0,history00_snapshot
+Idar,Tender Entry,73,Net Amount,380054.0,340854.0,history00_snapshot
+Idar,Tender Entry,73,Payable Total Amount,387810.0,347810.0,history00_snapshot
+Idar,Tender Entry,73,Sub Total,387810.0,347810.0,history00_snapshot
+Idar,Tender Entry,73,TDS,7756.0,6956.0,history00_snapshot
+Idar,Tender Entry,73,Total Deduction,7756.0,6956.0,history00_snapshot

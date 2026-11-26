@@ -1,0 +1,534 @@
+{
+ "d_wager_salaries": {
+  "sheet": "D.Wager Salary",
+  "header_row": 0,
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr.",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 4
+   },
+   {
+    "idx": 1,
+    "header": "D.Wager Code",
+    "name": "d_wager_code",
+    "kind": "text",
+    "maxlen": 8
+   },
+   {
+    "idx": 2,
+    "header": "D.Wager Name",
+    "name": "d_wager_name",
+    "kind": "text",
+    "maxlen": 41
+   },
+   {
+    "idx": 3,
+    "header": "Pay Scale",
+    "name": "pay_scale",
+    "kind": "text",
+    "maxlen": 13
+   },
+   {
+    "idx": 4,
+    "header": "Salary Year",
+    "name": "salary_year",
+    "kind": "int",
+    "maxlen": 6
+   },
+   {
+    "idx": 5,
+    "header": "Salary Month",
+    "name": "salary_month",
+    "kind": "text",
+    "maxlen": 9
+   },
+   {
+    "idx": 6,
+    "header": "Working Days",
+    "name": "working_days",
+    "kind": "dec",
+    "maxlen": 4
+   },
+   {
+    "idx": 7,
+    "header": "No. of Leaves",
+    "name": "no_of_leaves",
+    "kind": "dec",
+    "maxlen": 4
+   },
+   {
+    "idx": 8,
+    "header": "Basic Pay",
+    "name": "basic_pay",
+    "kind": "dec",
+    "maxlen": 11
+   },
+   {
+    "idx": 9,
+    "header": "Grade Pay",
+    "name": "grade_pay",
+    "kind": "dec",
+    "maxlen": 6
+   },
+   {
+    "idx": 10,
+    "header": "D.A. %",
+    "name": "d_a_percent",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 11,
+    "header": "D.A.",
+    "name": "d_a",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 12,
+    "header": "Medical Allowance",
+    "name": "medical_allowance",
+    "kind": "dec",
+    "maxlen": 11
+   },
+   {
+    "idx": 13,
+    "header": "CLA",
+    "name": "cla",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 14,
+    "header": "H.R.A. %",
+    "name": "h_r_a_percent",
+    "kind": "dec",
+    "maxlen": 4
+   },
+   {
+    "idx": 15,
+    "header": "HRA",
+    "name": "hra",
+    "kind": "dec",
+    "maxlen": 6
+   },
+   {
+    "idx": 16,
+    "header": "Total",
+    "name": "total",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 17,
+    "header": "GPF",
+    "name": "gpf",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 18,
+    "header": "CPF",
+    "name": "cpf",
+    "kind": "dec",
+    "maxlen": 6
+   },
+   {
+    "idx": 19,
+    "header": "P.Tax",
+    "name": "p_tax",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 20,
+    "header": "Group Insurance",
+    "name": "group_insurance",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 21,
+    "header": "TDS",
+    "name": "tds",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 22,
+    "header": "Total Deduction",
+    "name": "total_deduction",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 23,
+    "header": "Net Amount",
+    "name": "net_amount",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 24,
+    "header": "Manual CPF",
+    "name": "manual_cpf",
+    "kind": "dec",
+    "maxlen": 5
+   }
+  ],
+  "sources": {
+   "2025-26": [
+    "DIvision Range Fin. System/Division SFS 25-26 RFS.xlsx",
+    "Range Finance System/Bayad SFS 25-26 RFS.xlsx",
+    "Range Finance System/Bhiloda SFS 25-26 RFS.xlsx",
+    "Range Finance System/Dhansura SFS 25-26 RFS.xlsx",
+    "Range Finance System/Himatnagar SFS 25-26 RFS.xlsx",
+    "Range Finance System/Idar SFS 25-26 RFS.xlsx",
+    "Range Finance System/Khedbrahma SFS 25-26 RFS.xlsx",
+    "Range Finance System/Malpur SFS 25-26 RFS.xlsx",
+    "Range Finance System/Meghraj SFS 25-26 RFS.xlsx",
+    "Range Finance System/Modasa SFS 25-26 RFS.xlsx",
+    "Range Finance System/Prantij SFS 25-26 RFS.xlsx",
+    "Range Finance System/Talod SFS 25-26 RFS.xlsx",
+    "Range Finance System/Vadali SFS 25-26 RFS.xlsx",
+    "Range Finance System/Vijaynagar SFS 25-26 RFS.xlsx"
+   ],
+   "2026-27": [
+    "Division SFS 26-27 RFS.xlsx"
+   ]
+  },
+  "rows_seen": 1582
+ },
+ "d_wager_arrears": {
+  "sheet": "D.Wager Arrears",
+  "header_row": 1,
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr.",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 5
+   },
+   {
+    "idx": 1,
+    "header": "D.Wager Code",
+    "name": "d_wager_code",
+    "kind": "text",
+    "maxlen": 8
+   },
+   {
+    "idx": 2,
+    "header": "D.Wager Name",
+    "name": "d_wager_name",
+    "kind": "text",
+    "maxlen": 67
+   },
+   {
+    "idx": 3,
+    "header": "Pay Scale",
+    "name": "pay_scale",
+    "kind": "text",
+    "maxlen": 19
+   },
+   {
+    "idx": 4,
+    "header": "Pay Year",
+    "name": "pay_year",
+    "kind": "int",
+    "maxlen": 6
+   },
+   {
+    "idx": 5,
+    "header": "Pay Month",
+    "name": "pay_month",
+    "kind": "text",
+    "maxlen": 9
+   },
+   {
+    "idx": 6,
+    "header": "From Date",
+    "name": "from_date",
+    "kind": "date",
+    "maxlen": 19
+   },
+   {
+    "idx": 7,
+    "header": "To Date",
+    "name": "to_date",
+    "kind": "text",
+    "maxlen": 19
+   },
+   {
+    "idx": 8,
+    "header": "Basic Pay-1",
+    "name": "basic_pay_1",
+    "kind": "text",
+    "maxlen": 19
+   },
+   {
+    "idx": 9,
+    "header": "Grade Pay-1",
+    "name": "grade_pay_1",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 10,
+    "header": "D.A. %-1",
+    "name": "d_a_percent_1",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 11,
+    "header": "D.A.-1",
+    "name": "d_a_1",
+    "kind": "dec",
+    "maxlen": 8
+   },
+   {
+    "idx": 12,
+    "header": "Medical Allowance-1",
+    "name": "medical_allowance_1",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 13,
+    "header": "CLA-1",
+    "name": "cla_1",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 14,
+    "header": "H.R.A. %-1",
+    "name": "h_r_a_percent_1",
+    "kind": "dec",
+    "maxlen": 4
+   },
+   {
+    "idx": 15,
+    "header": "HRA-1",
+    "name": "hra_1",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 16,
+    "header": "Total-1",
+    "name": "total_1",
+    "kind": "dec",
+    "maxlen": 9
+   },
+   {
+    "idx": 17,
+    "header": "Basic Pay-2",
+    "name": "basic_pay_2",
+    "kind": "text",
+    "maxlen": 10
+   },
+   {
+    "idx": 18,
+    "header": "Grade Pay-2",
+    "name": "grade_pay_2",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 19,
+    "header": "D.A. %-2",
+    "name": "d_a_percent_2",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 20,
+    "header": "D.A.-2",
+    "name": "d_a_2",
+    "kind": "dec",
+    "maxlen": 8
+   },
+   {
+    "idx": 21,
+    "header": "Medical Allowance-2",
+    "name": "medical_allowance_2",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 22,
+    "header": "CLA-2",
+    "name": "cla_2",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 23,
+    "header": "H.R.A. %-2",
+    "name": "h_r_a_percent_2",
+    "kind": "dec",
+    "maxlen": 4
+   },
+   {
+    "idx": 24,
+    "header": "HRA-2",
+    "name": "hra_2",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 25,
+    "header": "Total-2",
+    "name": "total_2",
+    "kind": "dec",
+    "maxlen": 9
+   },
+   {
+    "idx": 26,
+    "header": "Basic Pay",
+    "name": "basic_pay",
+    "kind": "dec",
+    "maxlen": 8
+   },
+   {
+    "idx": 27,
+    "header": "Grade Pay",
+    "name": "grade_pay",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 28,
+    "header": "D.A. %",
+    "name": "d_a_percent",
+    "kind": "text",
+    "maxlen": 0
+   },
+   {
+    "idx": 29,
+    "header": "D.A.",
+    "name": "d_a",
+    "kind": "dec",
+    "maxlen": 9
+   },
+   {
+    "idx": 30,
+    "header": "Medical Allowance",
+    "name": "medical_allowance",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 31,
+    "header": "CLA",
+    "name": "cla",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 32,
+    "header": "H.R.A. %",
+    "name": "h_r_a_percent",
+    "kind": "text",
+    "maxlen": 0
+   },
+   {
+    "idx": 33,
+    "header": "HRA",
+    "name": "hra",
+    "kind": "dec",
+    "maxlen": 7
+   },
+   {
+    "idx": 34,
+    "header": "Total",
+    "name": "total",
+    "kind": "dec",
+    "maxlen": 8
+   },
+   {
+    "idx": 35,
+    "header": "GPF",
+    "name": "gpf",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 36,
+    "header": "CPF",
+    "name": "cpf",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 37,
+    "header": "P.Tax",
+    "name": "p_tax",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 38,
+    "header": "Group Insurance",
+    "name": "group_insurance",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 39,
+    "header": "TDS",
+    "name": "tds",
+    "kind": "dec",
+    "maxlen": 5
+   },
+   {
+    "idx": 40,
+    "header": "Total Deduction",
+    "name": "total_deduction",
+    "kind": "dec",
+    "maxlen": 3
+   },
+   {
+    "idx": 41,
+    "header": "Net Amount",
+    "name": "net_amount",
+    "kind": "dec",
+    "maxlen": 8
+   },
+   {
+    "idx": 42,
+    "header": "Arears Description",
+    "name": "arrears_description",
+    "kind": "text",
+    "maxlen": 801
+   }
+  ],
+  "sources": {
+   "2025-26": [
+    "DIvision Range Fin. System/Division SFS 25-26 RFS.xlsx",
+    "Range Finance System/Bayad SFS 25-26 RFS.xlsx",
+    "Range Finance System/Bhiloda SFS 25-26 RFS.xlsx",
+    "Range Finance System/Dhansura SFS 25-26 RFS.xlsx",
+    "Range Finance System/Himatnagar SFS 25-26 RFS.xlsx",
+    "Range Finance System/Idar SFS 25-26 RFS.xlsx",
+    "Range Finance System/Khedbrahma SFS 25-26 RFS.xlsx",
+    "Range Finance System/Malpur SFS 25-26 RFS.xlsx",
+    "Range Finance System/Meghraj SFS 25-26 RFS.xlsx",
+    "Range Finance System/Modasa SFS 25-26 RFS.xlsx",
+    "Range Finance System/Prantij SFS 25-26 RFS.xlsx",
+    "Range Finance System/Talod SFS 25-26 RFS.xlsx",
+    "Range Finance System/Vadali SFS 25-26 RFS.xlsx",
+    "Range Finance System/Vijaynagar SFS 25-26 RFS.xlsx"
+   ],
+   "2026-27": [
+    "Division SFS 26-27 RFS.xlsx"
+   ]
+  },
+  "rows_seen": 1452
+ }
+}

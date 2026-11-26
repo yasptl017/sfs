@@ -1,0 +1,2600 @@
+[
+ {
+  "table": "party_registrations",
+  "owner": "range",
+  "keep": [
+   "attachments"
+  ],
+  "key": [
+   4
+  ],
+  "status": true,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "Party Registration By Range"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "Party Registration By Range"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 765
+   },
+   {
+    "idx": 1,
+    "header": "Tender Code",
+    "name": "tender_code",
+    "kind": "str",
+    "maxlen": 1,
+    "n": 765
+   },
+   {
+    "idx": 2,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 3,
+    "header": "Round",
+    "name": "round",
+    "kind": "str",
+    "maxlen": 15,
+    "n": 765
+   },
+   {
+    "idx": 4,
+    "header": "Party Code",
+    "name": "party_code",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 765
+   },
+   {
+    "idx": 5,
+    "header": "Small Description",
+    "name": "small_description",
+    "kind": "text",
+    "maxlen": 698,
+    "n": 765
+   },
+   {
+    "idx": 6,
+    "header": "Party Name",
+    "name": "party_name",
+    "kind": "str",
+    "maxlen": 69,
+    "n": 765
+   },
+   {
+    "idx": 7,
+    "header": "Pan Card No.",
+    "name": "pan_card_no",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 367
+   },
+   {
+    "idx": 8,
+    "header": "GST No.",
+    "name": "gst_no",
+    "kind": "str",
+    "maxlen": 15,
+    "n": 216
+   },
+   {
+    "idx": 9,
+    "header": "Account No.",
+    "name": "account_no",
+    "kind": "str",
+    "maxlen": 19,
+    "n": 739
+   },
+   {
+    "idx": 10,
+    "header": "Bank Name",
+    "name": "bank_name",
+    "kind": "str",
+    "maxlen": 55,
+    "n": 765
+   },
+   {
+    "idx": 11,
+    "header": "IFSC",
+    "name": "ifsc",
+    "kind": "str",
+    "maxlen": 26,
+    "n": 739
+   },
+   {
+    "idx": 12,
+    "header": "Branch",
+    "name": "branch",
+    "kind": "str",
+    "maxlen": 38,
+    "n": 739
+   },
+   {
+    "idx": 13,
+    "header": "Approved %",
+    "name": "approved_percent",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 765
+   },
+   {
+    "idx": 14,
+    "header": "Deduction SGST %",
+    "name": "deduction_sgst",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 138
+   },
+   {
+    "idx": 15,
+    "header": "Deduction CGST %",
+    "name": "deduction_cgst",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 138
+   },
+   {
+    "idx": 16,
+    "header": "Deduction IGST %",
+    "name": "deduction_igst",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 6
+   },
+   {
+    "idx": 17,
+    "header": "Deduction Labour Cess %",
+    "name": "deduction_labour_cess",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 18,
+    "header": "TDS %",
+    "name": "tds",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 162
+   },
+   {
+    "idx": 19,
+    "header": "Deposit Deduction % from Bill",
+    "name": "deposit_deduction",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 1
+   },
+   {
+    "idx": 20,
+    "header": "Party Approval No.",
+    "name": "party_approval_no",
+    "kind": "text",
+    "maxlen": 104,
+    "n": 98
+   },
+   {
+    "idx": 21,
+    "header": "Party Aadhaar No.",
+    "name": "party_aadhaar_no",
+    "kind": "str",
+    "maxlen": 12,
+    "n": 73
+   },
+   {
+    "idx": 22,
+    "header": "Party Mobile No.",
+    "name": "party_mobile_no",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 175
+   },
+   {
+    "idx": 23,
+    "header": "Party Email",
+    "name": "party_email",
+    "kind": "str",
+    "maxlen": 34,
+    "n": 48
+   },
+   {
+    "idx": 24,
+    "header": "Party Address",
+    "name": "party_address",
+    "kind": "text",
+    "maxlen": 101,
+    "n": 277
+   },
+   {
+    "idx": 25,
+    "header": "Link of Doc",
+    "name": "link_of_doc",
+    "kind": "text",
+    "maxlen": 9,
+    "n": 2
+   },
+   {
+    "idx": 26,
+    "header": "Party Extra 1",
+    "name": "extra_1",
+    "kind": "str",
+    "maxlen": 23,
+    "n": 215
+   },
+   {
+    "idx": 27,
+    "header": "Party Extra 2",
+    "name": "extra_2",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 215
+   },
+   {
+    "idx": 28,
+    "header": "Party Extra 3",
+    "name": "extra_3",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 29,
+    "header": "Party Extra 4",
+    "name": "extra_4",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 30,
+    "header": "Party Status",
+    "name": "party_status",
+    "kind": "str",
+    "maxlen": 8,
+    "n": 765
+   },
+   {
+    "idx": 31,
+    "header": "Time Stamp",
+    "name": "source_time_stamp",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 765
+   },
+   {
+    "idx": 32,
+    "header": "Entered By",
+    "name": "entered_by",
+    "kind": "str",
+    "maxlen": 27,
+    "n": 765
+   },
+   {
+    "idx": 33,
+    "header": "No. of times Party Edited",
+    "name": "times_edited",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 765
+   }
+  ]
+ },
+ {
+  "table": "division_tender_parties",
+  "owner": "range",
+  "keep": [
+   "attachments"
+  ],
+  "key": [
+   5
+  ],
+  "status": true,
+  "division_id": true,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "PartyCode"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "PartyCode"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 305
+   },
+   {
+    "idx": 1,
+    "header": "Tender Type",
+    "name": "tender_type",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 305
+   },
+   {
+    "idx": 2,
+    "header": "Tender Mode",
+    "name": "tender_mode",
+    "kind": "str",
+    "maxlen": 9,
+    "n": 305
+   },
+   {
+    "idx": 3,
+    "header": "Tender No.",
+    "name": "tender_no",
+    "kind": "str",
+    "maxlen": 16,
+    "n": 305
+   },
+   {
+    "idx": 4,
+    "header": "Tender Code",
+    "name": "tender_code",
+    "kind": "str",
+    "maxlen": 18,
+    "n": 305
+   },
+   {
+    "idx": 5,
+    "header": "Party Code",
+    "name": "party_code",
+    "kind": "str",
+    "maxlen": 21,
+    "n": 305
+   },
+   {
+    "idx": 6,
+    "header": "Tender Opening Date",
+    "name": "tender_opening_date",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 305
+   },
+   {
+    "idx": 7,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 8,
+    "header": "Round",
+    "name": "round",
+    "kind": "str",
+    "maxlen": 9,
+    "n": 305
+   },
+   {
+    "idx": 9,
+    "header": "Beat",
+    "name": "beat",
+    "kind": "str",
+    "maxlen": 8,
+    "n": 305
+   },
+   {
+    "idx": 10,
+    "header": "Place",
+    "name": "place",
+    "kind": "text",
+    "maxlen": 9,
+    "n": 305
+   },
+   {
+    "idx": 11,
+    "header": "Small Description",
+    "name": "small_description",
+    "kind": "text",
+    "maxlen": 66,
+    "n": 305
+   },
+   {
+    "idx": 12,
+    "header": "Party Name",
+    "name": "party_name",
+    "kind": "str",
+    "maxlen": 41,
+    "n": 305
+   },
+   {
+    "idx": 13,
+    "header": "Pan Card No.",
+    "name": "pan_card_no",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 301
+   },
+   {
+    "idx": 14,
+    "header": "GST No.",
+    "name": "gst_no",
+    "kind": "str",
+    "maxlen": 15,
+    "n": 286
+   },
+   {
+    "idx": 15,
+    "header": "Account No.",
+    "name": "account_no",
+    "kind": "str",
+    "maxlen": 16,
+    "n": 303
+   },
+   {
+    "idx": 16,
+    "header": "Bank Name",
+    "name": "bank_name",
+    "kind": "str",
+    "maxlen": 51,
+    "n": 305
+   },
+   {
+    "idx": 17,
+    "header": "IFSC",
+    "name": "ifsc",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 303
+   },
+   {
+    "idx": 18,
+    "header": "Branch",
+    "name": "branch",
+    "kind": "str",
+    "maxlen": 33,
+    "n": 303
+   },
+   {
+    "idx": 19,
+    "header": "Approved %",
+    "name": "approved_percent",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 305
+   },
+   {
+    "idx": 20,
+    "header": "SGST %",
+    "name": "sgst",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 33
+   },
+   {
+    "idx": 21,
+    "header": "CGST %",
+    "name": "cgst",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 33
+   },
+   {
+    "idx": 22,
+    "header": "IGST %",
+    "name": "igst",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 23,
+    "header": "Labour Cess %",
+    "name": "labour_cess",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 24,
+    "header": "Deduction SGST %",
+    "name": "deduction_sgst",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 57
+   },
+   {
+    "idx": 25,
+    "header": "Deduction CGST %",
+    "name": "deduction_cgst",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 57
+   },
+   {
+    "idx": 26,
+    "header": "Deduction IGST %",
+    "name": "deduction_igst",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 27,
+    "header": "Deduction Labour Cess %",
+    "name": "deduction_labour_cess",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 23
+   },
+   {
+    "idx": 28,
+    "header": "TDS %",
+    "name": "tds",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 301
+   },
+   {
+    "idx": 29,
+    "header": "Deposit Deduction % from Bill",
+    "name": "deposit_deduction",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 30,
+    "header": "Party Approval No.",
+    "name": "party_approval_no",
+    "kind": "text",
+    "maxlen": 41,
+    "n": 275
+   },
+   {
+    "idx": 31,
+    "header": "Party Approval Date",
+    "name": "party_approval_date",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 296
+   },
+   {
+    "idx": 32,
+    "header": "Party Aadhaar No.",
+    "name": "party_aadhaar_no",
+    "kind": "str",
+    "maxlen": 12,
+    "n": 175
+   },
+   {
+    "idx": 33,
+    "header": "Party Mobile No.",
+    "name": "party_mobile_no",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 3
+   },
+   {
+    "idx": 34,
+    "header": "Party Email",
+    "name": "party_email",
+    "kind": "str",
+    "maxlen": 26,
+    "n": 1
+   },
+   {
+    "idx": 35,
+    "header": "Party Address",
+    "name": "party_address",
+    "kind": "text",
+    "maxlen": 132,
+    "n": 1
+   },
+   {
+    "idx": 36,
+    "header": "Tender Validity up to Date",
+    "name": "tender_validity_up_to_date",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 214
+   },
+   {
+    "idx": 37,
+    "header": "Tender Fee by DD / Cheque",
+    "name": "tender_fee_by_dd_cheque",
+    "kind": "str",
+    "maxlen": 4,
+    "n": 2
+   },
+   {
+    "idx": 38,
+    "header": "Tender Fee DD No. / Cheque No.",
+    "name": "tender_fee_dd_no_cheque_no",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 39,
+    "header": "Tender Fee DD / Cheque Date",
+    "name": "tender_fee_dd_cheque_date",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 40,
+    "header": "Tender Fee Amount",
+    "name": "tender_fee_amount",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 41,
+    "header": "EMD by DD / Cheque",
+    "name": "emd_by_dd_cheque",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 42,
+    "header": "EMD DD No. / Cheque No.",
+    "name": "emd_dd_no_cheque_no",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 43,
+    "header": "EMD DD / Cheque Date",
+    "name": "emd_dd_cheque_date",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 44,
+    "header": "EMD Amount",
+    "name": "emd_amount",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 45,
+    "header": "EMD Refund to Party Date",
+    "name": "emd_refund_to_party_date",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 46,
+    "header": "Security Deposite DD / FD / Remittance Deposite",
+    "name": "security_deposite_dd_fd_remittance_deposite",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 47,
+    "header": "Security Deposite DD No. / FD / Remittance Deposite No.",
+    "name": "security_deposite_dd_no_fd_remittance_deposite_no",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 48,
+    "header": "Security Deposite DD / FD / Remittance Deposite Date",
+    "name": "security_deposite_dd_fd_remittance_deposite_date",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 49,
+    "header": "Security Deposite Amount",
+    "name": "security_deposite_amount",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 50,
+    "header": "Security Deposite Received Date",
+    "name": "security_deposite_received_date",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 51,
+    "header": "Security Deposite Submitted to Remmitance ?",
+    "name": "security_deposite_submitted_to_remmitance",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 52,
+    "header": "Security Deposite Remittance Chalan No.",
+    "name": "security_deposite_remittance_chalan_no",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 53,
+    "header": "Security Deposite Remittance Date",
+    "name": "security_deposite_remittance_date",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 54,
+    "header": "Security Deposite given to Party Date",
+    "name": "security_deposite_given_to_party_date",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 55,
+    "header": "Link of Doc",
+    "name": "link_of_doc",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 56,
+    "header": "Party Extra 1",
+    "name": "extra_1",
+    "kind": "str",
+    "maxlen": 23,
+    "n": 79
+   },
+   {
+    "idx": 57,
+    "header": "Party Extra 2",
+    "name": "extra_2",
+    "kind": "str",
+    "maxlen": 15,
+    "n": 79
+   },
+   {
+    "idx": 58,
+    "header": "Party Extra 3",
+    "name": "extra_3",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 59,
+    "header": "Party Extra 4",
+    "name": "extra_4",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 60,
+    "header": "Party Status",
+    "name": "party_status",
+    "kind": "str",
+    "maxlen": 8,
+    "n": 305
+   },
+   {
+    "idx": 61,
+    "header": "Time Stamp",
+    "name": "source_time_stamp",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 305
+   },
+   {
+    "idx": 62,
+    "header": "Entered By",
+    "name": "entered_by",
+    "kind": "str",
+    "maxlen": 34,
+    "n": 305
+   },
+   {
+    "idx": 63,
+    "header": "No. of times Party Edited",
+    "name": "times_edited",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 305
+   },
+   {
+    "idx": 64,
+    "header": "Additional Limit",
+    "name": "additional_limit",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   }
+  ]
+ },
+ {
+  "table": "sf_beneficiaries",
+  "owner": "range",
+  "keep": [
+   "attachments"
+  ],
+  "key": [
+   5
+  ],
+  "status": true,
+  "division_id": false,
+  "sheets": {
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "SF Beneficiary"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 1989
+   },
+   {
+    "idx": 1,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 2,
+    "header": "Round",
+    "name": "round",
+    "kind": "str",
+    "maxlen": 15,
+    "n": 1989
+   },
+   {
+    "idx": 3,
+    "header": "Beat",
+    "name": "beat",
+    "kind": "str",
+    "maxlen": 18,
+    "n": 1989
+   },
+   {
+    "idx": 4,
+    "header": "Name of Yojana",
+    "name": "yojana_name",
+    "kind": "text",
+    "maxlen": 32,
+    "n": 1989
+   },
+   {
+    "idx": 5,
+    "header": "Bene. Code",
+    "name": "sf_bene_code",
+    "kind": "str",
+    "maxlen": 7,
+    "n": 1989
+   },
+   {
+    "idx": 6,
+    "header": "Bene. Full Name",
+    "name": "full_name",
+    "kind": "str",
+    "maxlen": 74,
+    "n": 1989
+   },
+   {
+    "idx": 7,
+    "header": "Bene. Name In Gujarati",
+    "name": "name_gujarati",
+    "kind": "str",
+    "maxlen": 81,
+    "n": 1989
+   },
+   {
+    "idx": 8,
+    "header": "Mobile No.",
+    "name": "mobile_no",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 1989
+   },
+   {
+    "idx": 9,
+    "header": "Gender",
+    "name": "gender",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 1989
+   },
+   {
+    "idx": 10,
+    "header": "Fathers Name in case of Female Bene.",
+    "name": "father_name",
+    "kind": "str",
+    "maxlen": 30,
+    "n": 1003
+   },
+   {
+    "idx": 11,
+    "header": "Birth Date",
+    "name": "birth_date",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 323
+   },
+   {
+    "idx": 12,
+    "header": "Address",
+    "name": "address",
+    "kind": "text",
+    "maxlen": 44,
+    "n": 1222
+   },
+   {
+    "idx": 13,
+    "header": "Pin Code",
+    "name": "pin_code",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 1120
+   },
+   {
+    "idx": 14,
+    "header": "Account No.",
+    "name": "account_no",
+    "kind": "str",
+    "maxlen": 16,
+    "n": 1983
+   },
+   {
+    "idx": 15,
+    "header": "Bank Name",
+    "name": "bank_name",
+    "kind": "str",
+    "maxlen": 46,
+    "n": 1989
+   },
+   {
+    "idx": 16,
+    "header": "IFSC",
+    "name": "ifsc",
+    "kind": "str",
+    "maxlen": 14,
+    "n": 1983
+   },
+   {
+    "idx": 17,
+    "header": "Branch",
+    "name": "branch",
+    "kind": "str",
+    "maxlen": 27,
+    "n": 1983
+   },
+   {
+    "idx": 18,
+    "header": "Category",
+    "name": "category",
+    "kind": "str",
+    "maxlen": 4,
+    "n": 1989
+   },
+   {
+    "idx": 19,
+    "header": "District",
+    "name": "district",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 1989
+   },
+   {
+    "idx": 20,
+    "header": "Taluka",
+    "name": "taluka",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 1989
+   },
+   {
+    "idx": 21,
+    "header": "Village",
+    "name": "village",
+    "kind": "str",
+    "maxlen": 33,
+    "n": 1989
+   },
+   {
+    "idx": 22,
+    "header": "Survey No. / Block No.",
+    "name": "survey_block_no",
+    "kind": "str",
+    "maxlen": 18,
+    "n": 1989
+   },
+   {
+    "idx": 23,
+    "header": "ID Type",
+    "name": "id_type",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 1989
+   },
+   {
+    "idx": 24,
+    "header": "ID No.",
+    "name": "id_no",
+    "kind": "str",
+    "maxlen": 14,
+    "n": 1989
+   },
+   {
+    "idx": 25,
+    "header": "GPS-N",
+    "name": "gps_n",
+    "kind": "str",
+    "maxlen": 12,
+    "n": 1989
+   },
+   {
+    "idx": 26,
+    "header": "GPS-E",
+    "name": "gps_e",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 1989
+   },
+   {
+    "idx": 27,
+    "header": "GPS",
+    "name": "gps",
+    "kind": "str",
+    "maxlen": 30,
+    "n": 1989
+   },
+   {
+    "idx": 28,
+    "header": "Bene. Selection Year",
+    "name": "selection_year",
+    "kind": "str",
+    "maxlen": 7,
+    "n": 1989
+   },
+   {
+    "idx": 29,
+    "header": "Ha / DCP Plants",
+    "name": "ha_dcp_plants",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 1989
+   },
+   {
+    "idx": 30,
+    "header": "Should deduct ropa rate for VruxKheti?",
+    "name": "should_deduct_ropa_rate_for_vruxkheti",
+    "kind": "str",
+    "maxlen": 2,
+    "n": 20
+   },
+   {
+    "idx": 31,
+    "header": "Link of Doc",
+    "name": "link_of_doc",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 32,
+    "header": "Party Extra 1",
+    "name": "extra_1",
+    "kind": "str",
+    "maxlen": 23,
+    "n": 1467
+   },
+   {
+    "idx": 33,
+    "header": "Party Extra 2",
+    "name": "extra_2",
+    "kind": "str",
+    "maxlen": 7,
+    "n": 1467
+   },
+   {
+    "idx": 34,
+    "header": "Party Extra 3",
+    "name": "extra_3",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 35,
+    "header": "Party Extra 4",
+    "name": "extra_4",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 36,
+    "header": "Party Status",
+    "name": "party_status",
+    "kind": "str",
+    "maxlen": 8,
+    "n": 1989
+   },
+   {
+    "idx": 37,
+    "header": "Time Stamp",
+    "name": "source_time_stamp",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 1989
+   },
+   {
+    "idx": 38,
+    "header": "Entered By",
+    "name": "entered_by",
+    "kind": "str",
+    "maxlen": 26,
+    "n": 1989
+   },
+   {
+    "idx": 39,
+    "header": "No. of times Party Edited",
+    "name": "times_edited",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 1989
+   }
+  ]
+ },
+ {
+  "table": "wl_beneficiaries",
+  "owner": "range",
+  "keep": [
+   "attachments"
+  ],
+  "key": [
+   5
+  ],
+  "status": true,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "WL Beneficiary"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "WL Beneficiary"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 16
+   },
+   {
+    "idx": 1,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 2,
+    "header": "Round",
+    "name": "round",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 16
+   },
+   {
+    "idx": 3,
+    "header": "Beat",
+    "name": "beat",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 16
+   },
+   {
+    "idx": 4,
+    "header": "Name of Yojana",
+    "name": "yojana_name",
+    "kind": "text",
+    "maxlen": 22,
+    "n": 16
+   },
+   {
+    "idx": 5,
+    "header": "Bene. Code",
+    "name": "wl_bene_code",
+    "kind": "str",
+    "maxlen": 7,
+    "n": 16
+   },
+   {
+    "idx": 6,
+    "header": "Bene. Full Name",
+    "name": "full_name",
+    "kind": "str",
+    "maxlen": 31,
+    "n": 16
+   },
+   {
+    "idx": 7,
+    "header": "Bene. Name In Gujarati",
+    "name": "name_gujarati",
+    "kind": "str",
+    "maxlen": 30,
+    "n": 16
+   },
+   {
+    "idx": 8,
+    "header": "Mobile No.",
+    "name": "mobile_no",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 16
+   },
+   {
+    "idx": 9,
+    "header": "Gender",
+    "name": "gender",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 16
+   },
+   {
+    "idx": 10,
+    "header": "Address",
+    "name": "address",
+    "kind": "text",
+    "maxlen": 10,
+    "n": 16
+   },
+   {
+    "idx": 11,
+    "header": "Pin Code",
+    "name": "pin_code",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 16
+   },
+   {
+    "idx": 12,
+    "header": "Account No.",
+    "name": "account_no",
+    "kind": "str",
+    "maxlen": 14,
+    "n": 16
+   },
+   {
+    "idx": 13,
+    "header": "Bank Name",
+    "name": "bank_name",
+    "kind": "str",
+    "maxlen": 46,
+    "n": 16
+   },
+   {
+    "idx": 14,
+    "header": "IFSC",
+    "name": "ifsc",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 16
+   },
+   {
+    "idx": 15,
+    "header": "Branch",
+    "name": "branch",
+    "kind": "str",
+    "maxlen": 9,
+    "n": 16
+   },
+   {
+    "idx": 16,
+    "header": "Category",
+    "name": "category",
+    "kind": "str",
+    "maxlen": 4,
+    "n": 16
+   },
+   {
+    "idx": 17,
+    "header": "District",
+    "name": "district",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 16
+   },
+   {
+    "idx": 18,
+    "header": "Taluka",
+    "name": "taluka",
+    "kind": "str",
+    "maxlen": 4,
+    "n": 16
+   },
+   {
+    "idx": 19,
+    "header": "Village",
+    "name": "village",
+    "kind": "str",
+    "maxlen": 10,
+    "n": 16
+   },
+   {
+    "idx": 20,
+    "header": "Survey No. / Block No.",
+    "name": "survey_block_no",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 21,
+    "header": "ID Type",
+    "name": "id_type",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 16
+   },
+   {
+    "idx": 22,
+    "header": "ID No.",
+    "name": "id_no",
+    "kind": "str",
+    "maxlen": 12,
+    "n": 16
+   },
+   {
+    "idx": 23,
+    "header": "GPS-N",
+    "name": "gps_n",
+    "kind": "str",
+    "maxlen": 9,
+    "n": 16
+   },
+   {
+    "idx": 24,
+    "header": "GPS-E",
+    "name": "gps_e",
+    "kind": "str",
+    "maxlen": 9,
+    "n": 16
+   },
+   {
+    "idx": 25,
+    "header": "GPS",
+    "name": "gps",
+    "kind": "str",
+    "maxlen": 20,
+    "n": 16
+   },
+   {
+    "idx": 26,
+    "header": "Bene. Selection Year",
+    "name": "selection_year",
+    "kind": "str",
+    "maxlen": 7,
+    "n": 16
+   },
+   {
+    "idx": 27,
+    "header": "Remark for WL Beneficiary",
+    "name": "remark",
+    "kind": "text",
+    "maxlen": 54,
+    "n": 16
+   },
+   {
+    "idx": 28,
+    "header": "Description",
+    "name": "description",
+    "kind": "text",
+    "maxlen": 245,
+    "n": 16
+   },
+   {
+    "idx": 29,
+    "header": "Range Case Number for Incident",
+    "name": "range_case_number_for_incident",
+    "kind": "str",
+    "maxlen": 3,
+    "n": 16
+   },
+   {
+    "idx": 30,
+    "header": "Division Case Number for Incident",
+    "name": "division_case_number_for_incident",
+    "kind": "str",
+    "maxlen": 2,
+    "n": 16
+   },
+   {
+    "idx": 31,
+    "header": "Name of Wild Animal Causing Incident",
+    "name": "name_of_wild_animal_causing_incident",
+    "kind": "text",
+    "maxlen": 5,
+    "n": 16
+   },
+   {
+    "idx": 32,
+    "header": "Date of Incident",
+    "name": "date_of_incident",
+    "kind": "date",
+    "maxlen": 0,
+    "n": 16
+   },
+   {
+    "idx": 33,
+    "header": "Names of Livestock Killed in Incident",
+    "name": "names_of_livestock_killed_in_incident",
+    "kind": "text",
+    "maxlen": 22,
+    "n": 16
+   },
+   {
+    "idx": 34,
+    "header": "Categories of Livestock Killed in Incident",
+    "name": "categories_of_livestock_killed_in_incident",
+    "kind": "text",
+    "maxlen": 66,
+    "n": 16
+   },
+   {
+    "idx": 35,
+    "header": "Total No. of Animals Killed",
+    "name": "total_no_of_animals_killed",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 16
+   },
+   {
+    "idx": 36,
+    "header": "Total Amount of Compensation Payable for Incident",
+    "name": "total_amount_of_compensation_payable_for_incident",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 16
+   },
+   {
+    "idx": 37,
+    "header": "Departmental Approval Order Number for Incident",
+    "name": "departmental_approval_order_number_for_incident",
+    "kind": "text",
+    "maxlen": 42,
+    "n": 16
+   },
+   {
+    "idx": 38,
+    "header": "Tender Code",
+    "name": "tender_code",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 39,
+    "header": "Party Code",
+    "name": "party_code",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 40,
+    "header": "Party Name",
+    "name": "party_name",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 41,
+    "header": "SOR Code",
+    "name": "sor_code",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 42,
+    "header": "Range Open Well No.",
+    "name": "range_open_well_no",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 43,
+    "header": "Division Open Well No.",
+    "name": "division_open_well_no",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 44,
+    "header": "Open Well Measurements (Running Meter)",
+    "name": "open_well_measurements_running_meter",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 45,
+    "header": "Open Well Running Meter Rate",
+    "name": "open_well_running_meter_rate",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 46,
+    "header": "Total Cost of Open Well Parapet",
+    "name": "total_cost_of_open_well_parapet",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 47,
+    "header": "10% of Total Cost of Open Well Parapet",
+    "name": "10_of_total_cost_of_open_well_parapet",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 48,
+    "header": "Beneficiary Share of Open Well Parapet Cost",
+    "name": "beneficiary_share_of_open_well_parapet_cost",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 49,
+    "header": "90% of Total Cost of Open Well Parapet",
+    "name": "90_of_total_cost_of_open_well_parapet",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 50,
+    "header": "Payable Total Amount for Open Well",
+    "name": "payable_total_amount_for_open_well",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 51,
+    "header": "Total Deduction for Open Well",
+    "name": "total_deduction_for_open_well",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 52,
+    "header": "Net Amount for Open Well",
+    "name": "net_amount_for_open_well",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 53,
+    "header": "Departmental Approval Order Number for Open Well",
+    "name": "departmental_approval_order_number_for_open_well",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 54,
+    "header": "Machan Description",
+    "name": "machan_description",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 55,
+    "header": "Total Estimated Cost of Machan",
+    "name": "total_estimated_cost_of_machan",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 56,
+    "header": "Approved %",
+    "name": "approved_percent",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 57,
+    "header": "Total Cost of Machan as per Approved Rate",
+    "name": "total_cost_of_machan_as_per_approved_rate",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 58,
+    "header": "25% of Total Cost of Machan",
+    "name": "25_of_total_cost_of_machan",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 59,
+    "header": "Beneficiary Share of Machan Cost",
+    "name": "beneficiary_share_of_machan_cost",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 60,
+    "header": "75% of Total Cost of Machan",
+    "name": "75_of_total_cost_of_machan",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 61,
+    "header": "Payable Total Amount for Machan",
+    "name": "payable_total_amount_for_machan",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 62,
+    "header": "Total Deduction for Machan",
+    "name": "total_deduction_for_machan",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 63,
+    "header": "Net Amount for Machan",
+    "name": "net_amount_for_machan",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 64,
+    "header": "Departmental Approval Order Number for Machan",
+    "name": "departmental_approval_order_number_for_machan",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 65,
+    "header": "Link of Doc",
+    "name": "link_of_doc",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 66,
+    "header": "Party Extra 1",
+    "name": "extra_1",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 67,
+    "header": "Party Extra 2",
+    "name": "extra_2",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 68,
+    "header": "Party Extra 3",
+    "name": "extra_3",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 69,
+    "header": "Party Extra 4",
+    "name": "extra_4",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 70,
+    "header": "Party Status",
+    "name": "party_status",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 16
+   },
+   {
+    "idx": 71,
+    "header": "Time Stamp",
+    "name": "source_time_stamp",
+    "kind": "datetime",
+    "maxlen": 0,
+    "n": 16
+   },
+   {
+    "idx": 72,
+    "header": "Entered By",
+    "name": "entered_by",
+    "kind": "str",
+    "maxlen": 19,
+    "n": 16
+   },
+   {
+    "idx": 73,
+    "header": "No. of times Party Edited",
+    "name": "times_edited",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 16
+   }
+  ]
+ },
+ {
+  "table": "d_wagers",
+  "owner": "range",
+  "keep": [],
+  "key": [
+   1
+  ],
+  "status": false,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "D.Wager Registration"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "D.Wager Registration"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 544
+   },
+   {
+    "idx": 1,
+    "header": "D.Wager Code",
+    "name": "d_wager_code",
+    "kind": "str",
+    "maxlen": 8,
+    "n": 544
+   },
+   {
+    "idx": 2,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 3,
+    "header": "D.Wager Name",
+    "name": "d_wager_name",
+    "kind": "str",
+    "maxlen": 67,
+    "n": 544
+   },
+   {
+    "idx": 4,
+    "header": "No. of Year of Service",
+    "name": "years_of_service",
+    "kind": "str",
+    "maxlen": 5,
+    "n": 403
+   },
+   {
+    "idx": 5,
+    "header": "Pan Card No.",
+    "name": "pan_card_no",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 330
+   },
+   {
+    "idx": 6,
+    "header": "Account No.",
+    "name": "account_no",
+    "kind": "str",
+    "maxlen": 15,
+    "n": 544
+   },
+   {
+    "idx": 7,
+    "header": "Bank Name",
+    "name": "bank_name",
+    "kind": "str",
+    "maxlen": 40,
+    "n": 544
+   },
+   {
+    "idx": 8,
+    "header": "IFSC",
+    "name": "ifsc",
+    "kind": "str",
+    "maxlen": 12,
+    "n": 544
+   },
+   {
+    "idx": 9,
+    "header": "Branch",
+    "name": "branch",
+    "kind": "str",
+    "maxlen": 21,
+    "n": 544
+   },
+   {
+    "idx": 10,
+    "header": "CPF No.",
+    "name": "cpf_no",
+    "kind": "str",
+    "maxlen": 16,
+    "n": 145
+   },
+   {
+    "idx": 11,
+    "header": "GPF No.",
+    "name": "gpf_no",
+    "kind": "str",
+    "maxlen": 13,
+    "n": 22
+   },
+   {
+    "idx": 12,
+    "header": "GPF %",
+    "name": "gpf_percent",
+    "kind": "str",
+    "maxlen": 2,
+    "n": 68
+   },
+   {
+    "idx": 13,
+    "header": "CPF %",
+    "name": "cpf_percent",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 131
+   }
+  ]
+ },
+ {
+  "table": "tender_items",
+  "owner": "range",
+  "keep": [],
+  "key": [
+   0,
+   2
+  ],
+  "status": false,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "Tender"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "Tender"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Tender Code",
+    "name": "tender_code",
+    "kind": "str",
+    "maxlen": 18,
+    "n": 642
+   },
+   {
+    "idx": 1,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 2,
+    "header": "Divi. Code",
+    "name": "divi_code",
+    "kind": "str",
+    "maxlen": 22,
+    "n": 642
+   },
+   {
+    "idx": 3,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 739
+   },
+   {
+    "idx": 4,
+    "header": "Particular",
+    "name": "particular",
+    "kind": "text",
+    "maxlen": 635,
+    "n": 739
+   },
+   {
+    "idx": 5,
+    "header": "Unit",
+    "name": "unit",
+    "kind": "str",
+    "maxlen": 20,
+    "n": 739
+   },
+   {
+    "idx": 6,
+    "header": "Rate",
+    "name": "rate",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 739
+   },
+   {
+    "idx": 7,
+    "header": "Tender approval No / Date",
+    "name": "approval_ref",
+    "kind": "text",
+    "maxlen": 43,
+    "n": 408
+   }
+  ]
+ },
+ {
+  "table": "bhav_patrak_items",
+  "owner": "range",
+  "keep": [],
+  "key": [
+   0,
+   2
+  ],
+  "status": false,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "Bhav Patrak"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "Bhav Patrak"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Tender Code",
+    "name": "tender_code",
+    "kind": "str",
+    "maxlen": 6,
+    "n": 79
+   },
+   {
+    "idx": 1,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 2,
+    "header": "Divi. Code",
+    "name": "divi_code",
+    "kind": "str",
+    "maxlen": 8,
+    "n": 79
+   },
+   {
+    "idx": 3,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 79
+   },
+   {
+    "idx": 4,
+    "header": "Particular",
+    "name": "particular",
+    "kind": "text",
+    "maxlen": 51,
+    "n": 79
+   },
+   {
+    "idx": 5,
+    "header": "Unit",
+    "name": "unit",
+    "kind": "str",
+    "maxlen": 1,
+    "n": 79
+   },
+   {
+    "idx": 6,
+    "header": "Rate",
+    "name": "rate",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 79
+   },
+   {
+    "idx": 7,
+    "header": "Bhav Patrak approval No / Date",
+    "name": "approval_ref",
+    "kind": "text",
+    "maxlen": 45,
+    "n": 79
+   }
+  ]
+ },
+ {
+  "table": "estimate_items",
+  "owner": "range",
+  "keep": [],
+  "key": [
+   0,
+   2
+  ],
+  "status": false,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "Estimate"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "Estimate"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Tender Code",
+    "name": "tender_code",
+    "kind": "str",
+    "maxlen": 12,
+    "n": 4885
+   },
+   {
+    "idx": 1,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 2,
+    "header": "Divi. Code",
+    "name": "divi_code",
+    "kind": "str",
+    "maxlen": 17,
+    "n": 4885
+   },
+   {
+    "idx": 3,
+    "header": "Sr.",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 4881
+   },
+   {
+    "idx": 4,
+    "header": "Place & Item Name",
+    "name": "place_item_name",
+    "kind": "text",
+    "maxlen": 281,
+    "n": 4881
+   },
+   {
+    "idx": 5,
+    "header": "Particular",
+    "name": "particular",
+    "kind": "text",
+    "maxlen": 1524,
+    "n": 4882
+   },
+   {
+    "idx": 6,
+    "header": "Unit",
+    "name": "unit",
+    "kind": "str",
+    "maxlen": 11,
+    "n": 4882
+   },
+   {
+    "idx": 7,
+    "header": "Rate",
+    "name": "rate",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 4882
+   },
+   {
+    "idx": 8,
+    "header": "Quantity",
+    "name": "quantity",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 4882
+   },
+   {
+    "idx": 9,
+    "header": "Amount",
+    "name": "amount",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 4882
+   },
+   {
+    "idx": 10,
+    "header": "Rate Approved Number and Date by DCF",
+    "name": "rate_approval_ref",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 11,
+    "header": "Remarks1",
+    "name": "remarks",
+    "kind": "text",
+    "maxlen": 1,
+    "n": 2
+   }
+  ]
+ },
+ {
+  "table": "wl_tender_items",
+  "owner": "range",
+  "keep": [],
+  "key": [
+   0,
+   4,
+   5,
+   6
+  ],
+  "status": false,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "WL Tender or MOU"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "WL Tender or MOU"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Tender Code",
+    "name": "tender_code",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 1,
+    "header": "Range",
+    "name": "range",
+    "kind": "range"
+   },
+   {
+    "idx": 2,
+    "header": "Name of Yojana",
+    "name": "yojana_name",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 3,
+    "header": "Type of Agreement",
+    "name": "agreement_type",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 4,
+    "header": "Divi. Code",
+    "name": "divi_code",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 5,
+    "header": "Sr.",
+    "name": "serial_number",
+    "kind": "int",
+    "maxlen": 0,
+    "n": 2
+   },
+   {
+    "idx": 6,
+    "header": "Particular",
+    "name": "particular",
+    "kind": "text",
+    "maxlen": 63,
+    "n": 2
+   },
+   {
+    "idx": 7,
+    "header": "Unit",
+    "name": "unit",
+    "kind": "str",
+    "maxlen": 3,
+    "n": 2
+   },
+   {
+    "idx": 8,
+    "header": "Rate",
+    "name": "rate",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 2
+   },
+   {
+    "idx": 9,
+    "header": "Quantity",
+    "name": "quantity",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 2
+   },
+   {
+    "idx": 10,
+    "header": "Amount",
+    "name": "amount",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 2
+   },
+   {
+    "idx": 11,
+    "header": "Rate Approved Number and Date by DCF",
+    "name": "rate_approval_ref",
+    "kind": "str",
+    "maxlen": 49,
+    "n": 2
+   },
+   {
+    "idx": 12,
+    "header": "Remarks1",
+    "name": "remarks",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   }
+  ]
+ },
+ {
+  "table": "party_additional_limits",
+  "owner": null,
+  "keep": [],
+  "key": [
+   1,
+   2,
+   10,
+   12,
+   4
+  ],
+  "status": false,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "Party Additional Limit"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "Party Additional Limit"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Sr",
+    "name": "serial_number",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 1,
+    "header": "Party Code",
+    "name": "party_code",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 2,
+    "header": "Party Name",
+    "name": "party_name",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 3,
+    "header": "System Limit",
+    "name": "system_limit",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 4,
+    "header": "Additional Limit",
+    "name": "additional_limit",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 1
+   },
+   {
+    "idx": 5,
+    "header": "Final Limit",
+    "name": "final_limit",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 6,
+    "header": "Remark",
+    "name": "remark",
+    "kind": "text",
+    "maxlen": 23,
+    "n": 1
+   },
+   {
+    "idx": 9,
+    "header": "Sr.",
+    "name": "serial_number_2",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 10,
+    "header": "Party Name without GST No",
+    "name": "party_name_2",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 11,
+    "header": "Party Upper Limit",
+    "name": "party_upper_limit",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 12,
+    "header": "Party Additional Limit",
+    "name": "party_additional_limit",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 2
+   },
+   {
+    "idx": 13,
+    "header": "Party Final Limit",
+    "name": "party_final_limit",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 14,
+    "header": "Remark 2",
+    "name": "remark_2",
+    "kind": "text",
+    "maxlen": 0,
+    "n": 0
+   }
+  ]
+ },
+ {
+  "table": "cancelled_cheques",
+  "owner": null,
+  "keep": [],
+  "key": [
+   3,
+   5,
+   6
+  ],
+  "status": false,
+  "division_id": false,
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "Cancelled Cheques"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "Cancelled Cheques"
+   ]
+  },
+  "columns": [
+   {
+    "idx": 0,
+    "header": "Month",
+    "name": "month",
+    "kind": "str",
+    "maxlen": 3,
+    "n": 1
+   },
+   {
+    "idx": 1,
+    "header": "Year",
+    "name": "year",
+    "kind": "str",
+    "maxlen": 0,
+    "n": 0
+   },
+   {
+    "idx": 2,
+    "header": "Type",
+    "name": "type",
+    "kind": "str",
+    "maxlen": 7,
+    "n": 1
+   },
+   {
+    "idx": 3,
+    "header": "Cheque No.",
+    "name": "cheque_no",
+    "kind": "str",
+    "maxlen": 13,
+    "n": 1
+   },
+   {
+    "idx": 4,
+    "header": "Cheque Date",
+    "name": "cheque_date",
+    "kind": "date",
+    "maxlen": 0,
+    "n": 1
+   },
+   {
+    "idx": 5,
+    "header": "Advice No.",
+    "name": "advice_no",
+    "kind": "str",
+    "maxlen": 2,
+    "n": 1
+   },
+   {
+    "idx": 6,
+    "header": "Amount",
+    "name": "amount",
+    "kind": "dec",
+    "maxlen": 0,
+    "n": 1
+   },
+   {
+    "idx": 7,
+    "header": "Party Name",
+    "name": "party_name",
+    "kind": "str",
+    "maxlen": 3,
+    "n": 1
+   },
+   {
+    "idx": 8,
+    "header": "Details",
+    "name": "details",
+    "kind": "text",
+    "maxlen": 292,
+    "n": 1
+   },
+   {
+    "idx": 9,
+    "header": "New Cheque No.",
+    "name": "new_cheque_no",
+    "kind": "str",
+    "maxlen": 1,
+    "n": 1
+   },
+   {
+    "idx": 10,
+    "header": "New Advice Date",
+    "name": "new_advice_date",
+    "kind": "str",
+    "maxlen": 1,
+    "n": 1
+   },
+   {
+    "idx": 11,
+    "header": "New Advice No.",
+    "name": "new_advice_no",
+    "kind": "str",
+    "maxlen": 1,
+    "n": 1
+   }
+  ]
+ },
+ {
+  "table": "sor_items",
+  "special": "sor",
+  "sheets": {
+   "2025-26": [
+    "Master Data SF Sabarkantha 25-26 DFS.xlsx",
+    "SOR"
+   ],
+   "2026-27": [
+    "Master Data SF Sabarkantha 26-27 DFS.xlsx",
+    "SOR"
+   ]
+  }
+ }
+]

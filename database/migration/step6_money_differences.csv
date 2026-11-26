@@ -1,0 +1,576 @@
+﻿range,entry_type,sr_no,field,older_value,live_value (Master All),older_source
+Bhiloda,Tender Entry,55,Amount as per Approved Rate,335596.2,198159.95,history00_snapshot
+Bhiloda,Tender Entry,55,Net Amount,328884.0,194197.0,history00_snapshot
+Bhiloda,Tender Entry,55,Payable Total Amount,335596.0,198160.0,history00_snapshot
+Bhiloda,Tender Entry,55,Sub Total,335596.2,198159.95,history00_snapshot
+Bhiloda,Tender Entry,55,TDS,6712.0,3963.0,history00_snapshot
+Bhiloda,Tender Entry,55,Total Deduction,6712.0,3963.0,history00_snapshot
+Bhiloda,Tender Entry,60,Amount as per Approved Rate,335596.2,198159.95,history00_snapshot
+Bhiloda,Tender Entry,60,Net Amount,328884.0,194197.0,history00_snapshot
+Bhiloda,Tender Entry,60,Payable Total Amount,335596.0,198160.0,history00_snapshot
+Bhiloda,Tender Entry,60,Sub Total,335596.2,198159.95,history00_snapshot
+Bhiloda,Tender Entry,60,TDS,6712.0,3963.0,history00_snapshot
+Bhiloda,Tender Entry,60,Total Deduction,6712.0,3963.0,history00_snapshot
+Dhansura,Tender Entry,101,Amount as per Approved Rate,37550.0,6242.5,history00_snapshot
+Dhansura,Tender Entry,101,Net Amount,37174.0,6181.0,history00_snapshot
+Dhansura,Tender Entry,101,Payable Total Amount,37550.0,6243.0,history00_snapshot
+Dhansura,Tender Entry,101,Sub Total,37550.0,6242.5,history00_snapshot
+Dhansura,Tender Entry,101,TDS,376.0,62.0,history00_snapshot
+Dhansura,Tender Entry,101,Total Deduction,376.0,62.0,history00_snapshot
+Dhansura,Tender Entry,103,Amount as per Approved Rate,37550.0,6242.5,history00_snapshot
+Dhansura,Tender Entry,103,Net Amount,37174.0,6181.0,history00_snapshot
+Dhansura,Tender Entry,103,Payable Total Amount,37550.0,6243.0,history00_snapshot
+Dhansura,Tender Entry,103,Sub Total,37550.0,6242.5,history00_snapshot
+Dhansura,Tender Entry,103,TDS,376.0,62.0,history00_snapshot
+Dhansura,Tender Entry,103,Total Deduction,376.0,62.0,history00_snapshot
+Dhansura,Tender Entry,147,Amount as per Approved Rate,37560.0,75120.0,history00_snapshot
+Dhansura,Tender Entry,147,Net Amount,37184.0,74369.0,history00_snapshot
+Dhansura,Tender Entry,147,Payable Total Amount,37560.0,75120.0,history00_snapshot
+Dhansura,Tender Entry,147,Sub Total,37560.0,75120.0,history00_snapshot
+Dhansura,Tender Entry,147,TDS,376.0,751.0,history00_snapshot
+Dhansura,Tender Entry,147,Total Deduction,376.0,751.0,history00_snapshot
+Division,Tender Entry,20,Adjustment (+ or -),,1.0,history00_snapshot
+Division,Tender Entry,20,Amount as per Approved Rate,660.36,51512.45,history00_snapshot
+Division,Tender Entry,20,CGST,59.0,4636.0,history00_snapshot
+Division,Tender Entry,20,Deduction CGST,7.0,515.0,history00_snapshot
+Division,Tender Entry,20,Deduction SGST,7.0,515.0,history00_snapshot
+Division,Tender Entry,20,Net Amount,757.0,59240.0,history00_snapshot
+Division,Tender Entry,20,Payable Total Amount,778.0,60785.0,history00_snapshot
+Division,Tender Entry,20,SGST,59.0,4636.0,history00_snapshot
+Division,Tender Entry,20,Sub Total,660.36,51512.45,history00_snapshot
+Division,Tender Entry,20,TDS,7.0,515.0,history00_snapshot
+Division,Tender Entry,20,Total Deduction,21.0,1545.0,history00_snapshot
+Himatnagar,Tender Entry,153,Amount as per Approved Rate,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,153,Net Amount,7425.0,7416.0,history00_snapshot
+Himatnagar,Tender Entry,153,Payable Total Amount,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,153,Sub Total,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,154,Amount as per Approved Rate,25000.0,24970.0,history00_snapshot
+Himatnagar,Tender Entry,154,Net Amount,24750.0,24720.0,history00_snapshot
+Himatnagar,Tender Entry,154,Payable Total Amount,25000.0,24970.0,history00_snapshot
+Himatnagar,Tender Entry,154,Sub Total,25000.0,24970.0,history00_snapshot
+Himatnagar,Tender Entry,155,Amount as per Approved Rate,16500.0,16480.2,history00_snapshot
+Himatnagar,Tender Entry,155,Net Amount,16335.0,16315.0,history00_snapshot
+Himatnagar,Tender Entry,155,Payable Total Amount,16500.0,16480.0,history00_snapshot
+Himatnagar,Tender Entry,155,Sub Total,16500.0,16480.2,history00_snapshot
+Himatnagar,Tender Entry,156,Amount as per Approved Rate,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,156,Net Amount,7425.0,7416.0,history00_snapshot
+Himatnagar,Tender Entry,156,Payable Total Amount,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,156,Sub Total,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,157,Amount as per Approved Rate,62550.0,62582.25,history00_snapshot
+Himatnagar,Tender Entry,157,Net Amount,61924.0,61956.0,history00_snapshot
+Himatnagar,Tender Entry,157,Payable Total Amount,62550.0,62582.0,history00_snapshot
+Himatnagar,Tender Entry,157,Sub Total,62550.0,62582.25,history00_snapshot
+Himatnagar,Tender Entry,158,Amount as per Approved Rate,125200.0,125164.0,history00_snapshot
+Himatnagar,Tender Entry,158,Net Amount,123948.0,123912.0,history00_snapshot
+Himatnagar,Tender Entry,158,Payable Total Amount,125200.0,125164.0,history00_snapshot
+Himatnagar,Tender Entry,158,Sub Total,125200.0,125164.0,history00_snapshot
+Himatnagar,Tender Entry,159,Amount as per Approved Rate,66760.0,66754.4,history00_snapshot
+Himatnagar,Tender Entry,159,Net Amount,66092.0,66086.0,history00_snapshot
+Himatnagar,Tender Entry,159,Payable Total Amount,66760.0,66754.0,history00_snapshot
+Himatnagar,Tender Entry,159,Sub Total,66760.0,66754.4,history00_snapshot
+Himatnagar,Tender Entry,160,Amount as per Approved Rate,25050.0,25048.65,history00_snapshot
+Himatnagar,Tender Entry,160,Payable Total Amount,25050.0,25049.0,history00_snapshot
+Himatnagar,Tender Entry,160,Sub Total,25050.0,25048.65,history00_snapshot
+Himatnagar,Tender Entry,160,TDS,251.0,250.0,history00_snapshot
+Himatnagar,Tender Entry,160,Total Deduction,251.0,250.0,history00_snapshot
+Himatnagar,Tender Entry,165,Amount as per Approved Rate,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,165,Net Amount,7425.0,7416.0,history00_snapshot
+Himatnagar,Tender Entry,165,Payable Total Amount,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,165,Sub Total,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,166,Amount as per Approved Rate,18750.0,18727.5,history00_snapshot
+Himatnagar,Tender Entry,166,Net Amount,18562.0,18541.0,history00_snapshot
+Himatnagar,Tender Entry,166,Payable Total Amount,18750.0,18728.0,history00_snapshot
+Himatnagar,Tender Entry,166,Sub Total,18750.0,18727.5,history00_snapshot
+Himatnagar,Tender Entry,166,TDS,188.0,187.0,history00_snapshot
+Himatnagar,Tender Entry,166,Total Deduction,188.0,187.0,history00_snapshot
+Himatnagar,Tender Entry,167,Amount as per Approved Rate,4000.0,3995.2,history00_snapshot
+Himatnagar,Tender Entry,167,Net Amount,3960.0,3955.0,history00_snapshot
+Himatnagar,Tender Entry,167,Payable Total Amount,4000.0,3995.0,history00_snapshot
+Himatnagar,Tender Entry,167,Sub Total,4000.0,3995.2,history00_snapshot
+Himatnagar,Tender Entry,168,Amount as per Approved Rate,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,168,Net Amount,7425.0,7416.0,history00_snapshot
+Himatnagar,Tender Entry,168,Payable Total Amount,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,168,Sub Total,7500.0,7491.0,history00_snapshot
+Himatnagar,Tender Entry,169,Amount as per Approved Rate,62550.0,62582.25,history00_snapshot
+Himatnagar,Tender Entry,169,Net Amount,61924.0,61956.0,history00_snapshot
+Himatnagar,Tender Entry,169,Payable Total Amount,62550.0,62582.0,history00_snapshot
+Himatnagar,Tender Entry,169,Sub Total,62550.0,62582.25,history00_snapshot
+Himatnagar,Tender Entry,170,Amount as per Approved Rate,93900.0,93873.0,history00_snapshot
+Himatnagar,Tender Entry,170,Net Amount,92961.0,92934.0,history00_snapshot
+Himatnagar,Tender Entry,170,Payable Total Amount,93900.0,93873.0,history00_snapshot
+Himatnagar,Tender Entry,170,Sub Total,93900.0,93873.0,history00_snapshot
+Himatnagar,Tender Entry,171,Amount as per Approved Rate,16690.0,16688.6,history00_snapshot
+Himatnagar,Tender Entry,171,Net Amount,16523.0,16522.0,history00_snapshot
+Himatnagar,Tender Entry,171,Payable Total Amount,16690.0,16689.0,history00_snapshot
+Himatnagar,Tender Entry,171,Sub Total,16690.0,16688.6,history00_snapshot
+Himatnagar,Tender Entry,172,Amount as per Approved Rate,25050.0,25048.65,history00_snapshot
+Himatnagar,Tender Entry,172,Payable Total Amount,25050.0,25049.0,history00_snapshot
+Himatnagar,Tender Entry,172,Sub Total,25050.0,25048.65,history00_snapshot
+Himatnagar,Tender Entry,172,TDS,251.0,250.0,history00_snapshot
+Himatnagar,Tender Entry,172,Total Deduction,251.0,250.0,history00_snapshot
+Idar,Tender Entry,243,Net Amount,349304.0,345775.0,history00_snapshot
+Idar,Tender Entry,243,TDS,3528.0,7057.0,history00_snapshot
+Idar,Tender Entry,243,Total Deduction,3528.0,7057.0,history00_snapshot
+Idar,Tender Entry,244,Net Amount,261978.0,259332.0,history00_snapshot
+Idar,Tender Entry,244,TDS,2646.0,5292.0,history00_snapshot
+Idar,Tender Entry,244,Total Deduction,2646.0,5292.0,history00_snapshot
+Idar,Tender Entry,245,Amount as per Approved Rate,320110.0,325064.0,history00_snapshot
+Idar,Tender Entry,245,Net Amount,313708.0,318563.0,history00_snapshot
+Idar,Tender Entry,245,Payable Total Amount,320110.0,325064.0,history00_snapshot
+Idar,Tender Entry,245,Sub Total,320110.0,325064.0,history00_snapshot
+Idar,Tender Entry,245,TDS,6402.0,6501.0,history00_snapshot
+Idar,Tender Entry,245,Total Deduction,6402.0,6501.0,history00_snapshot
+Idar,Tender Entry,246,Amount as per Approved Rate,160055.0,162532.0,history00_snapshot
+Idar,Tender Entry,246,Net Amount,156854.0,159281.0,history00_snapshot
+Idar,Tender Entry,246,Payable Total Amount,160055.0,162532.0,history00_snapshot
+Idar,Tender Entry,246,Sub Total,160055.0,162532.0,history00_snapshot
+Idar,Tender Entry,246,TDS,3201.0,3251.0,history00_snapshot
+Idar,Tender Entry,246,Total Deduction,3201.0,3251.0,history00_snapshot
+Idar,Tender Entry,255,Amount as per Approved Rate,52191.65,48970.24,history00_snapshot
+Idar,Tender Entry,255,Net Amount,51148.0,47991.0,history00_snapshot
+Idar,Tender Entry,255,Payable Total Amount,52192.0,48970.0,history00_snapshot
+Idar,Tender Entry,255,Sub Total,52191.65,48970.24,history00_snapshot
+Idar,Tender Entry,255,TDS,1044.0,979.0,history00_snapshot
+Idar,Tender Entry,255,Total Deduction,1044.0,979.0,history00_snapshot
+Idar,Tender Entry,260,Amount as per Approved Rate,32640.0,27584.0,history00_snapshot
+Idar,Tender Entry,260,Net Amount,31987.0,27032.0,history00_snapshot
+Idar,Tender Entry,260,Payable Total Amount,32640.0,27584.0,history00_snapshot
+Idar,Tender Entry,260,Sub Total,32640.0,27584.0,history00_snapshot
+Idar,Tender Entry,260,TDS,653.0,552.0,history00_snapshot
+Idar,Tender Entry,260,Total Deduction,653.0,552.0,history00_snapshot
+Khedbrahma,Free Entry,59,Deduction CGST,0.0,57.0,history00_snapshot
+Khedbrahma,Free Entry,59,Deduction SGST,0.0,57.0,history00_snapshot
+Khedbrahma,Free Entry,59,Net Amount,6780.0,6609.0,history00_snapshot
+Khedbrahma,Free Entry,59,TDS,0.0,57.0,history00_snapshot
+Khedbrahma,Free Entry,59,Total Deduction,0.0,171.0,history00_snapshot
+Khedbrahma,Free Entry,60,Deduction CGST,0.0,39.0,history00_snapshot
+Khedbrahma,Free Entry,60,Deduction SGST,0.0,39.0,history00_snapshot
+Khedbrahma,Free Entry,60,Net Amount,4620.0,4503.0,history00_snapshot
+Khedbrahma,Free Entry,60,TDS,0.0,39.0,history00_snapshot
+Khedbrahma,Free Entry,60,Total Deduction,0.0,117.0,history00_snapshot
+Khedbrahma,Free Entry,97,Deduction CGST,0.0,43.0,history00_snapshot
+Khedbrahma,Free Entry,97,Deduction SGST,0.0,43.0,history00_snapshot
+Khedbrahma,Free Entry,97,Net Amount,5075.0,4946.0,history00_snapshot
+Khedbrahma,Free Entry,97,TDS,0.0,43.0,history00_snapshot
+Khedbrahma,Free Entry,97,Total Deduction,0.0,129.0,history00_snapshot
+Khedbrahma,Free Entry,98,Deduction CGST,0.0,46.0,history00_snapshot
+Khedbrahma,Free Entry,98,Deduction SGST,0.0,46.0,history00_snapshot
+Khedbrahma,Free Entry,98,Net Amount,5473.0,5335.0,history00_snapshot
+Khedbrahma,Free Entry,98,TDS,0.0,46.0,history00_snapshot
+Khedbrahma,Free Entry,98,Total Deduction,0.0,138.0,history00_snapshot
+Khedbrahma,Free Entry,99,Deduction CGST,0.0,40.0,history00_snapshot
+Khedbrahma,Free Entry,99,Deduction SGST,0.0,40.0,history00_snapshot
+Khedbrahma,Free Entry,99,Net Amount,4776.0,4656.0,history00_snapshot
+Khedbrahma,Free Entry,99,TDS,0.0,40.0,history00_snapshot
+Khedbrahma,Free Entry,99,Total Deduction,0.0,120.0,history00_snapshot
+Khedbrahma,Free Entry,100,Deduction CGST,0.0,78.0,history00_snapshot
+Khedbrahma,Free Entry,100,Deduction SGST,0.0,78.0,history00_snapshot
+Khedbrahma,Free Entry,100,Net Amount,9254.0,9020.0,history00_snapshot
+Khedbrahma,Free Entry,100,TDS,0.0,78.0,history00_snapshot
+Khedbrahma,Free Entry,100,Total Deduction,0.0,234.0,history00_snapshot
+Khedbrahma,Free Entry,101,Deduction CGST,0.0,61.0,history00_snapshot
+Khedbrahma,Free Entry,101,Deduction SGST,0.0,61.0,history00_snapshot
+Khedbrahma,Free Entry,101,Net Amount,7186.0,7003.0,history00_snapshot
+Khedbrahma,Free Entry,101,TDS,0.0,61.0,history00_snapshot
+Khedbrahma,Free Entry,101,Total Deduction,0.0,183.0,history00_snapshot
+Khedbrahma,Free Entry,102,Deduction CGST,0.0,52.0,history00_snapshot
+Khedbrahma,Free Entry,102,Deduction SGST,0.0,52.0,history00_snapshot
+Khedbrahma,Free Entry,102,Net Amount,6080.0,5924.0,history00_snapshot
+Khedbrahma,Free Entry,102,TDS,0.0,52.0,history00_snapshot
+Khedbrahma,Free Entry,102,Total Deduction,0.0,156.0,history00_snapshot
+Khedbrahma,Free Entry,103,Deduction CGST,0.0,31.0,history00_snapshot
+Khedbrahma,Free Entry,103,Deduction SGST,0.0,31.0,history00_snapshot
+Khedbrahma,Free Entry,103,Net Amount,3704.0,3611.0,history00_snapshot
+Khedbrahma,Free Entry,103,TDS,0.0,31.0,history00_snapshot
+Khedbrahma,Free Entry,103,Total Deduction,0.0,93.0,history00_snapshot
+Khedbrahma,Free Entry,104,Deduction CGST,0.0,18.0,history00_snapshot
+Khedbrahma,Free Entry,104,Deduction SGST,0.0,18.0,history00_snapshot
+Khedbrahma,Free Entry,104,Net Amount,2110.0,2056.0,history00_snapshot
+Khedbrahma,Free Entry,104,TDS,0.0,18.0,history00_snapshot
+Khedbrahma,Free Entry,104,Total Deduction,0.0,54.0,history00_snapshot
+Khedbrahma,Free Entry,105,Deduction CGST,0.0,25.0,history00_snapshot
+Khedbrahma,Free Entry,105,Deduction SGST,0.0,25.0,history00_snapshot
+Khedbrahma,Free Entry,105,Net Amount,2965.0,2890.0,history00_snapshot
+Khedbrahma,Free Entry,105,TDS,0.0,25.0,history00_snapshot
+Khedbrahma,Free Entry,105,Total Deduction,0.0,75.0,history00_snapshot
+Khedbrahma,Free Entry,106,Deduction CGST,0.0,30.0,history00_snapshot
+Khedbrahma,Free Entry,106,Deduction SGST,0.0,30.0,history00_snapshot
+Khedbrahma,Free Entry,106,Net Amount,3485.0,3395.0,history00_snapshot
+Khedbrahma,Free Entry,106,TDS,0.0,30.0,history00_snapshot
+Khedbrahma,Free Entry,106,Total Deduction,0.0,90.0,history00_snapshot
+Khedbrahma,Free Entry,107,Deduction CGST,0.0,9.0,history00_snapshot
+Khedbrahma,Free Entry,107,Deduction SGST,0.0,9.0,history00_snapshot
+Khedbrahma,Free Entry,107,Net Amount,1120.0,1093.0,history00_snapshot
+Khedbrahma,Free Entry,107,TDS,0.0,9.0,history00_snapshot
+Khedbrahma,Free Entry,107,Total Deduction,0.0,27.0,history00_snapshot
+Khedbrahma,Free Entry,108,Deduction CGST,0.0,39.0,history00_snapshot
+Khedbrahma,Free Entry,108,Deduction SGST,0.0,39.0,history00_snapshot
+Khedbrahma,Free Entry,108,Net Amount,4600.0,4483.0,history00_snapshot
+Khedbrahma,Free Entry,108,TDS,0.0,39.0,history00_snapshot
+Khedbrahma,Free Entry,108,Total Deduction,0.0,117.0,history00_snapshot
+Khedbrahma,Free Entry,109,Deduction CGST,0.0,29.0,history00_snapshot
+Khedbrahma,Free Entry,109,Deduction SGST,0.0,29.0,history00_snapshot
+Khedbrahma,Free Entry,109,Net Amount,3400.0,3313.0,history00_snapshot
+Khedbrahma,Free Entry,109,TDS,0.0,29.0,history00_snapshot
+Khedbrahma,Free Entry,109,Total Deduction,0.0,87.0,history00_snapshot
+Khedbrahma,Free Entry,110,Deduction CGST,0.0,15.0,history00_snapshot
+Khedbrahma,Free Entry,110,Deduction SGST,0.0,15.0,history00_snapshot
+Khedbrahma,Free Entry,110,Net Amount,1800.0,1755.0,history00_snapshot
+Khedbrahma,Free Entry,110,TDS,0.0,15.0,history00_snapshot
+Khedbrahma,Free Entry,110,Total Deduction,0.0,45.0,history00_snapshot
+Khedbrahma,Free Entry,111,Deduction CGST,0.0,85.0,history00_snapshot
+Khedbrahma,Free Entry,111,Deduction SGST,0.0,85.0,history00_snapshot
+Khedbrahma,Free Entry,111,Net Amount,10000.0,9745.0,history00_snapshot
+Khedbrahma,Free Entry,111,TDS,0.0,85.0,history00_snapshot
+Khedbrahma,Free Entry,111,Total Deduction,0.0,255.0,history00_snapshot
+Khedbrahma,Tender Entry,121,Amount as per Approved Rate,7149.0,4549.0,history00_snapshot
+Khedbrahma,Tender Entry,121,Net Amount,7006.0,4458.0,history00_snapshot
+Khedbrahma,Tender Entry,121,Payable Total Amount,7149.0,4549.0,history00_snapshot
+Khedbrahma,Tender Entry,121,Sub Total,7149.0,4549.0,history00_snapshot
+Khedbrahma,Tender Entry,121,TDS,143.0,91.0,history00_snapshot
+Khedbrahma,Tender Entry,121,Total Deduction,143.0,91.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Amount as per Approved Rate,243760.3438,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,CGST,21938.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Deduction CGST,2438.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Deduction Labour Cess,2438.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Deduction SGST,2438.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Net Amount,275447.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Payable Total Amount,287636.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,SGST,21938.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Sub Total,253257.5,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,TDS,4875.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,123,Total Deduction,12189.0,0.0,history00_snapshot
+Khedbrahma,Tender Entry,148,Amount as per Approved Rate,4800.0,5056.0,history00_snapshot
+Khedbrahma,Tender Entry,148,Net Amount,4704.0,4955.0,history00_snapshot
+Khedbrahma,Tender Entry,148,Payable Total Amount,4800.0,5056.0,history00_snapshot
+Khedbrahma,Tender Entry,148,Sub Total,4800.0,5056.0,history00_snapshot
+Khedbrahma,Tender Entry,148,TDS,96.0,101.0,history00_snapshot
+Khedbrahma,Tender Entry,148,Total Deduction,96.0,101.0,history00_snapshot
+Khedbrahma,Tender Entry,149,Amount as per Approved Rate,14400.0,15168.0,history00_snapshot
+Khedbrahma,Tender Entry,149,Net Amount,14112.0,14865.0,history00_snapshot
+Khedbrahma,Tender Entry,149,Payable Total Amount,14400.0,15168.0,history00_snapshot
+Khedbrahma,Tender Entry,149,Sub Total,14400.0,15168.0,history00_snapshot
+Khedbrahma,Tender Entry,149,TDS,288.0,303.0,history00_snapshot
+Khedbrahma,Tender Entry,149,Total Deduction,288.0,303.0,history00_snapshot
+Khedbrahma,Tender Entry,150,Amount as per Approved Rate,38400.0,40448.0,history00_snapshot
+Khedbrahma,Tender Entry,150,Net Amount,37632.0,39639.0,history00_snapshot
+Khedbrahma,Tender Entry,150,Payable Total Amount,38400.0,40448.0,history00_snapshot
+Khedbrahma,Tender Entry,150,Sub Total,38400.0,40448.0,history00_snapshot
+Khedbrahma,Tender Entry,150,TDS,768.0,809.0,history00_snapshot
+Khedbrahma,Tender Entry,150,Total Deduction,768.0,809.0,history00_snapshot
+Khedbrahma,Tender Entry,151,Amount as per Approved Rate,28800.0,30336.0,history00_snapshot
+Khedbrahma,Tender Entry,151,Net Amount,28224.0,29729.0,history00_snapshot
+Khedbrahma,Tender Entry,151,Payable Total Amount,28800.0,30336.0,history00_snapshot
+Khedbrahma,Tender Entry,151,Sub Total,28800.0,30336.0,history00_snapshot
+Khedbrahma,Tender Entry,151,TDS,576.0,607.0,history00_snapshot
+Khedbrahma,Tender Entry,151,Total Deduction,576.0,607.0,history00_snapshot
+Khedbrahma,Tender Entry,152,Amount as per Approved Rate,19200.0,20224.0,history00_snapshot
+Khedbrahma,Tender Entry,152,Net Amount,18816.0,19820.0,history00_snapshot
+Khedbrahma,Tender Entry,152,Payable Total Amount,19200.0,20224.0,history00_snapshot
+Khedbrahma,Tender Entry,152,Sub Total,19200.0,20224.0,history00_snapshot
+Khedbrahma,Tender Entry,152,TDS,384.0,404.0,history00_snapshot
+Khedbrahma,Tender Entry,152,Total Deduction,384.0,404.0,history00_snapshot
+Khedbrahma,Tender Entry,177,Amount as per Approved Rate,6744.0,2022.4,history00_snapshot
+Khedbrahma,Tender Entry,177,Net Amount,6609.0,1982.0,history00_snapshot
+Khedbrahma,Tender Entry,177,Payable Total Amount,6744.0,2022.0,history00_snapshot
+Khedbrahma,Tender Entry,177,Sub Total,6744.0,2022.4,history00_snapshot
+Khedbrahma,Tender Entry,177,TDS,135.0,40.0,history00_snapshot
+Khedbrahma,Tender Entry,177,Total Deduction,135.0,40.0,history00_snapshot
+Khedbrahma,Tender Entry,178,Amount as per Approved Rate,20232.0,6067.2,history00_snapshot
+Khedbrahma,Tender Entry,178,Net Amount,19827.0,5946.0,history00_snapshot
+Khedbrahma,Tender Entry,178,Payable Total Amount,20232.0,6067.0,history00_snapshot
+Khedbrahma,Tender Entry,178,Sub Total,20232.0,6067.2,history00_snapshot
+Khedbrahma,Tender Entry,178,TDS,405.0,121.0,history00_snapshot
+Khedbrahma,Tender Entry,178,Total Deduction,405.0,121.0,history00_snapshot
+Khedbrahma,Tender Entry,179,Amount as per Approved Rate,53952.0,16179.2,history00_snapshot
+Khedbrahma,Tender Entry,179,Net Amount,52873.0,15855.0,history00_snapshot
+Khedbrahma,Tender Entry,179,Payable Total Amount,53952.0,16179.0,history00_snapshot
+Khedbrahma,Tender Entry,179,Sub Total,53952.0,16179.2,history00_snapshot
+Khedbrahma,Tender Entry,179,TDS,1079.0,324.0,history00_snapshot
+Khedbrahma,Tender Entry,179,Total Deduction,1079.0,324.0,history00_snapshot
+Khedbrahma,Tender Entry,180,Amount as per Approved Rate,40464.0,12134.4,history00_snapshot
+Khedbrahma,Tender Entry,180,Net Amount,39655.0,11891.0,history00_snapshot
+Khedbrahma,Tender Entry,180,Payable Total Amount,40464.0,12134.0,history00_snapshot
+Khedbrahma,Tender Entry,180,Sub Total,40464.0,12134.4,history00_snapshot
+Khedbrahma,Tender Entry,180,TDS,809.0,243.0,history00_snapshot
+Khedbrahma,Tender Entry,180,Total Deduction,809.0,243.0,history00_snapshot
+Khedbrahma,Tender Entry,181,Amount as per Approved Rate,26976.0,8089.6,history00_snapshot
+Khedbrahma,Tender Entry,181,Net Amount,26436.0,7928.0,history00_snapshot
+Khedbrahma,Tender Entry,181,Payable Total Amount,26976.0,8090.0,history00_snapshot
+Khedbrahma,Tender Entry,181,Sub Total,26976.0,8089.6,history00_snapshot
+Khedbrahma,Tender Entry,181,TDS,540.0,162.0,history00_snapshot
+Khedbrahma,Tender Entry,181,Total Deduction,540.0,162.0,history00_snapshot
+Khedbrahma,Tender Entry,182,Amount as per Approved Rate,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,182,Net Amount,9179.0,2750.0,history00_snapshot
+Khedbrahma,Tender Entry,182,Payable Total Amount,9366.0,2806.0,history00_snapshot
+Khedbrahma,Tender Entry,182,Sub Total,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,182,TDS,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,182,Total Deduction,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,183,Amount as per Approved Rate,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,183,Net Amount,9179.0,2750.0,history00_snapshot
+Khedbrahma,Tender Entry,183,Payable Total Amount,9366.0,2806.0,history00_snapshot
+Khedbrahma,Tender Entry,183,Sub Total,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,183,TDS,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,183,Total Deduction,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,184,Amount as per Approved Rate,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,184,Net Amount,9179.0,2750.0,history00_snapshot
+Khedbrahma,Tender Entry,184,Payable Total Amount,9366.0,2806.0,history00_snapshot
+Khedbrahma,Tender Entry,184,Sub Total,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,184,TDS,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,184,Total Deduction,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,185,Amount as per Approved Rate,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,185,Net Amount,9179.0,2750.0,history00_snapshot
+Khedbrahma,Tender Entry,185,Payable Total Amount,9366.0,2806.0,history00_snapshot
+Khedbrahma,Tender Entry,185,Sub Total,9365.73,2806.08,history00_snapshot
+Khedbrahma,Tender Entry,185,TDS,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,185,Total Deduction,187.0,56.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Amount as per Approved Rate,2718.6486,271864.4775,history00_snapshot
+Khedbrahma,Tender Entry,213,CGST,245.0,24468.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Deduction CGST,27.0,2719.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Deduction Labour Cess,27.0,2719.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Deduction SGST,27.0,2719.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Net Amount,3074.0,307206.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Payable Total Amount,3209.0,320800.0,history00_snapshot
+Khedbrahma,Tender Entry,213,SGST,245.0,24468.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Sub Total,2824.57,282456.6,history00_snapshot
+Khedbrahma,Tender Entry,213,TDS,54.0,5437.0,history00_snapshot
+Khedbrahma,Tender Entry,213,Total Deduction,135.0,13594.0,history00_snapshot
+Malpur,Free Entry,42,Net Amount,96155.0,97107.0,history00_snapshot
+Malpur,Free Entry,42,TDS,1904.0,952.0,history00_snapshot
+Malpur,Free Entry,42,Total Deduction,3808.0,2856.0,history00_snapshot
+Meghraj,Tender Entry,88,Amount as per Approved Rate,36436.5,27480.41,history00_snapshot
+Meghraj,Tender Entry,88,Net Amount,35708.0,26930.0,history00_snapshot
+Meghraj,Tender Entry,88,Payable Total Amount,36437.0,27480.0,history00_snapshot
+Meghraj,Tender Entry,88,Sub Total,36436.5,27480.41,history00_snapshot
+Meghraj,Tender Entry,88,TDS,729.0,550.0,history00_snapshot
+Meghraj,Tender Entry,88,Total Deduction,729.0,550.0,history00_snapshot
+Modasa,Tender Entry,73,Amount as per Approved Rate,40500.0,30000.0,history00_snapshot
+Modasa,Tender Entry,73,Net Amount,39690.0,29400.0,history00_snapshot
+Modasa,Tender Entry,73,Payable Total Amount,40500.0,30000.0,history00_snapshot
+Modasa,Tender Entry,73,Sub Total,40500.0,30000.0,history00_snapshot
+Modasa,Tender Entry,73,TDS,810.0,600.0,history00_snapshot
+Modasa,Tender Entry,73,Total Deduction,810.0,600.0,history00_snapshot
+Prantij,Free Entry,16,CGST,,728.6,history00_snapshot
+Prantij,Free Entry,16,Deduction CGST,96.0,81.0,history00_snapshot
+Prantij,Free Entry,16,Deduction SGST,96.0,81.0,history00_snapshot
+Prantij,Free Entry,16,Net Amount,9265.0,9310.0,history00_snapshot
+Prantij,Free Entry,16,SGST,,728.6,history00_snapshot
+Prantij,Free Entry,16,Sub Total,9552.8,8095.59,history00_snapshot
+Prantij,Free Entry,16,TDS,96.0,81.0,history00_snapshot
+Prantij,Free Entry,16,Total Deduction,288.0,243.0,history00_snapshot
+Prantij,Free Entry,17,CGST,,434.84,history00_snapshot
+Prantij,Free Entry,17,Deduction CGST,57.0,48.0,history00_snapshot
+Prantij,Free Entry,17,Deduction SGST,57.0,48.0,history00_snapshot
+Prantij,Free Entry,17,Net Amount,5530.0,5557.0,history00_snapshot
+Prantij,Free Entry,17,SGST,,434.84,history00_snapshot
+Prantij,Free Entry,17,Sub Total,5701.24,4831.56,history00_snapshot
+Prantij,Free Entry,17,TDS,57.0,48.0,history00_snapshot
+Prantij,Free Entry,17,Total Deduction,171.0,144.0,history00_snapshot
+Prantij,Free Entry,18,CGST,,520.18,history00_snapshot
+Prantij,Free Entry,18,Deduction CGST,68.0,58.0,history00_snapshot
+Prantij,Free Entry,18,Deduction SGST,68.0,58.0,history00_snapshot
+Prantij,Free Entry,18,Net Amount,6616.0,6646.0,history00_snapshot
+Prantij,Free Entry,18,SGST,,520.18,history00_snapshot
+Prantij,Free Entry,18,Sub Total,6820.1,5779.75,history00_snapshot
+Prantij,Free Entry,18,TDS,68.0,58.0,history00_snapshot
+Prantij,Free Entry,18,Total Deduction,204.0,174.0,history00_snapshot
+Prantij,Free Entry,19,CGST,,236.98,history00_snapshot
+Prantij,Free Entry,19,Deduction CGST,31.0,26.0,history00_snapshot
+Prantij,Free Entry,19,Deduction SGST,31.0,26.0,history00_snapshot
+Prantij,Free Entry,19,Net Amount,3014.0,3029.0,history00_snapshot
+Prantij,Free Entry,19,SGST,,236.98,history00_snapshot
+Prantij,Free Entry,19,Sub Total,3107.1,2633.14,history00_snapshot
+Prantij,Free Entry,19,TDS,31.0,26.0,history00_snapshot
+Prantij,Free Entry,19,Total Deduction,93.0,78.0,history00_snapshot
+Prantij,Free Entry,20,CGST,,420.76,history00_snapshot
+Prantij,Free Entry,20,Deduction CGST,55.0,47.0,history00_snapshot
+Prantij,Free Entry,20,Deduction SGST,55.0,47.0,history00_snapshot
+Prantij,Free Entry,20,Net Amount,5352.0,5376.0,history00_snapshot
+Prantij,Free Entry,20,SGST,,420.76,history00_snapshot
+Prantij,Free Entry,20,Sub Total,5516.58,4675.07,history00_snapshot
+Prantij,Free Entry,20,TDS,55.0,47.0,history00_snapshot
+Prantij,Free Entry,20,Total Deduction,165.0,141.0,history00_snapshot
+Prantij,Tender Entry,95,Amount as per Approved Rate,4870.0,4867.5,history00_snapshot
+Prantij,Tender Entry,95,Net Amount,4773.0,4771.0,history00_snapshot
+Prantij,Tender Entry,95,Payable Total Amount,4870.0,4868.0,history00_snapshot
+Prantij,Tender Entry,95,Sub Total,4870.0,4867.5,history00_snapshot
+Prantij,Tender Entry,97,Amount as per Approved Rate,60000.0,63200.0,history00_snapshot
+Prantij,Tender Entry,97,Net Amount,58800.0,61936.0,history00_snapshot
+Prantij,Tender Entry,97,Payable Total Amount,60000.0,63200.0,history00_snapshot
+Prantij,Tender Entry,97,Sub Total,60000.0,63200.0,history00_snapshot
+Prantij,Tender Entry,97,TDS,1200.0,1264.0,history00_snapshot
+Prantij,Tender Entry,97,Total Deduction,1200.0,1264.0,history00_snapshot
+Prantij,Tender Entry,99,Amount as per Approved Rate,4870.0,4867.5,history00_snapshot
+Prantij,Tender Entry,99,Net Amount,4773.0,4771.0,history00_snapshot
+Prantij,Tender Entry,99,Payable Total Amount,4870.0,4868.0,history00_snapshot
+Prantij,Tender Entry,99,Sub Total,4870.0,4867.5,history00_snapshot
+Prantij,Tender Entry,101,Amount as per Approved Rate,60000.0,63200.0,history00_snapshot
+Prantij,Tender Entry,101,Net Amount,58800.0,61936.0,history00_snapshot
+Prantij,Tender Entry,101,Payable Total Amount,60000.0,63200.0,history00_snapshot
+Prantij,Tender Entry,101,Sub Total,60000.0,63200.0,history00_snapshot
+Prantij,Tender Entry,101,TDS,1200.0,1264.0,history00_snapshot
+Prantij,Tender Entry,101,Total Deduction,1200.0,1264.0,history00_snapshot
+Prantij,Tender Entry,107,Amount as per Approved Rate,38400.0,15168.0,history00_snapshot
+Prantij,Tender Entry,107,Net Amount,37632.0,14865.0,history00_snapshot
+Prantij,Tender Entry,107,Payable Total Amount,38400.0,15168.0,history00_snapshot
+Prantij,Tender Entry,107,Sub Total,38400.0,15168.0,history00_snapshot
+Prantij,Tender Entry,107,TDS,768.0,303.0,history00_snapshot
+Prantij,Tender Entry,107,Total Deduction,768.0,303.0,history00_snapshot
+Prantij,Tender Entry,115,Amount as per Approved Rate,28800.0,30336.0,history00_snapshot
+Prantij,Tender Entry,115,Net Amount,28224.0,29729.0,history00_snapshot
+Prantij,Tender Entry,115,Payable Total Amount,28800.0,30336.0,history00_snapshot
+Prantij,Tender Entry,115,Sub Total,28800.0,30336.0,history00_snapshot
+Prantij,Tender Entry,115,TDS,576.0,607.0,history00_snapshot
+Prantij,Tender Entry,115,Total Deduction,576.0,607.0,history00_snapshot
+Prantij,Tender Entry,118,Amount as per Approved Rate,6666.0,7021.52,history00_snapshot
+Prantij,Tender Entry,118,Net Amount,6533.0,6882.0,history00_snapshot
+Prantij,Tender Entry,118,Payable Total Amount,6666.0,7022.0,history00_snapshot
+Prantij,Tender Entry,118,Sub Total,6666.0,7021.52,history00_snapshot
+Prantij,Tender Entry,118,TDS,133.0,140.0,history00_snapshot
+Prantij,Tender Entry,118,Total Deduction,133.0,140.0,history00_snapshot
+Prantij,Tender Entry,120,Amount as per Approved Rate,9600.0,10112.0,history00_snapshot
+Prantij,Tender Entry,120,Net Amount,9408.0,9910.0,history00_snapshot
+Prantij,Tender Entry,120,Payable Total Amount,9600.0,10112.0,history00_snapshot
+Prantij,Tender Entry,120,Sub Total,9600.0,10112.0,history00_snapshot
+Prantij,Tender Entry,120,TDS,192.0,202.0,history00_snapshot
+Prantij,Tender Entry,120,Total Deduction,192.0,202.0,history00_snapshot
+Prantij,Tender Entry,123,Amount as per Approved Rate,5120.0,2022.4,history00_snapshot
+Prantij,Tender Entry,123,Net Amount,5018.0,1982.0,history00_snapshot
+Prantij,Tender Entry,123,Payable Total Amount,5120.0,2022.0,history00_snapshot
+Prantij,Tender Entry,123,Sub Total,5120.0,2022.4,history00_snapshot
+Prantij,Tender Entry,123,TDS,102.0,40.0,history00_snapshot
+Prantij,Tender Entry,123,Total Deduction,102.0,40.0,history00_snapshot
+Prantij,Tender Entry,125,Amount as per Approved Rate,11520.0,12134.4,history00_snapshot
+Prantij,Tender Entry,125,Net Amount,11290.0,11891.0,history00_snapshot
+Prantij,Tender Entry,125,Payable Total Amount,11520.0,12134.0,history00_snapshot
+Prantij,Tender Entry,125,Sub Total,11520.0,12134.4,history00_snapshot
+Prantij,Tender Entry,125,TDS,230.0,243.0,history00_snapshot
+Prantij,Tender Entry,125,Total Deduction,230.0,243.0,history00_snapshot
+Prantij,Tender Entry,127,Amount as per Approved Rate,1332.0,1403.04,history00_snapshot
+Prantij,Tender Entry,127,Net Amount,1305.0,1375.0,history00_snapshot
+Prantij,Tender Entry,127,Payable Total Amount,1332.0,1403.0,history00_snapshot
+Prantij,Tender Entry,127,Sub Total,1332.0,1403.04,history00_snapshot
+Prantij,Tender Entry,127,TDS,27.0,28.0,history00_snapshot
+Prantij,Tender Entry,127,Total Deduction,27.0,28.0,history00_snapshot
+Prantij,Tender Entry,129,Amount as per Approved Rate,10200.0,12640.0,history00_snapshot
+Prantij,Tender Entry,129,Net Amount,9996.0,12387.0,history00_snapshot
+Prantij,Tender Entry,129,Payable Total Amount,10200.0,12640.0,history00_snapshot
+Prantij,Tender Entry,129,Sub Total,10200.0,12640.0,history00_snapshot
+Prantij,Tender Entry,129,TDS,204.0,253.0,history00_snapshot
+Prantij,Tender Entry,129,Total Deduction,204.0,253.0,history00_snapshot
+Prantij,Tender Entry,131,Amount as per Approved Rate,12000.0,12640.0,history00_snapshot
+Prantij,Tender Entry,131,Net Amount,11760.0,12387.0,history00_snapshot
+Prantij,Tender Entry,131,Payable Total Amount,12000.0,12640.0,history00_snapshot
+Prantij,Tender Entry,131,Sub Total,12000.0,12640.0,history00_snapshot
+Prantij,Tender Entry,131,TDS,240.0,253.0,history00_snapshot
+Prantij,Tender Entry,131,Total Deduction,240.0,253.0,history00_snapshot
+Prantij,Tender Entry,134,Amount as per Approved Rate,5120.0,2022.4,history00_snapshot
+Prantij,Tender Entry,134,Net Amount,5018.0,1982.0,history00_snapshot
+Prantij,Tender Entry,134,Payable Total Amount,5120.0,2022.0,history00_snapshot
+Prantij,Tender Entry,134,Sub Total,5120.0,2022.4,history00_snapshot
+Prantij,Tender Entry,134,TDS,102.0,40.0,history00_snapshot
+Prantij,Tender Entry,134,Total Deduction,102.0,40.0,history00_snapshot
+Prantij,Tender Entry,136,Amount as per Approved Rate,7680.0,8089.6,history00_snapshot
+Prantij,Tender Entry,136,Net Amount,7526.0,7928.0,history00_snapshot
+Prantij,Tender Entry,136,Payable Total Amount,7680.0,8090.0,history00_snapshot
+Prantij,Tender Entry,136,Sub Total,7680.0,8089.6,history00_snapshot
+Prantij,Tender Entry,136,TDS,154.0,162.0,history00_snapshot
+Prantij,Tender Entry,136,Total Deduction,154.0,162.0,history00_snapshot
+Prantij,Tender Entry,138,Amount as per Approved Rate,1332.0,1403.04,history00_snapshot
+Prantij,Tender Entry,138,Net Amount,1305.0,1375.0,history00_snapshot
+Prantij,Tender Entry,138,Payable Total Amount,1332.0,1403.0,history00_snapshot
+Prantij,Tender Entry,138,Sub Total,1332.0,1403.04,history00_snapshot
+Prantij,Tender Entry,138,TDS,27.0,28.0,history00_snapshot
+Prantij,Tender Entry,138,Total Deduction,27.0,28.0,history00_snapshot
+Prantij,Tender Entry,141,Amount as per Approved Rate,13332.0,14043.04,history00_snapshot
+Prantij,Tender Entry,141,Net Amount,13065.0,13762.0,history00_snapshot
+Prantij,Tender Entry,141,Payable Total Amount,13332.0,14043.0,history00_snapshot
+Prantij,Tender Entry,141,Sub Total,13332.0,14043.04,history00_snapshot
+Prantij,Tender Entry,141,TDS,267.0,281.0,history00_snapshot
+Prantij,Tender Entry,141,Total Deduction,267.0,281.0,history00_snapshot
+Prantij,Tender Entry,143,Amount as per Approved Rate,1332.0,1403.04,history00_snapshot
+Prantij,Tender Entry,143,Net Amount,1305.0,1375.0,history00_snapshot
+Prantij,Tender Entry,143,Payable Total Amount,1332.0,1403.0,history00_snapshot
+Prantij,Tender Entry,143,Sub Total,1332.0,1403.04,history00_snapshot
+Prantij,Tender Entry,143,TDS,27.0,28.0,history00_snapshot
+Prantij,Tender Entry,143,Total Deduction,27.0,28.0,history00_snapshot
+Prantij,Tender Entry,145,Amount as per Approved Rate,2664.0,2806.08,history00_snapshot
+Prantij,Tender Entry,145,Net Amount,2611.0,2750.0,history00_snapshot
+Prantij,Tender Entry,145,Payable Total Amount,2664.0,2806.0,history00_snapshot
+Prantij,Tender Entry,145,Sub Total,2664.0,2806.08,history00_snapshot
+Prantij,Tender Entry,145,TDS,53.0,56.0,history00_snapshot
+Prantij,Tender Entry,145,Total Deduction,53.0,56.0,history00_snapshot
+Talod,Tender Entry,65,Amount as per Approved Rate,135000.0,82500.0,history00_snapshot
+Talod,Tender Entry,65,Net Amount,133650.0,81675.0,history00_snapshot
+Talod,Tender Entry,65,Payable Total Amount,135000.0,82500.0,history00_snapshot
+Talod,Tender Entry,65,Sub Total,135000.0,82500.0,history00_snapshot
+Talod,Tender Entry,65,TDS,1350.0,825.0,history00_snapshot
+Talod,Tender Entry,65,Total Deduction,1350.0,825.0,history00_snapshot
+Talod,Tender Entry,66,Amount as per Approved Rate,90000.0,60000.0,history00_snapshot
+Talod,Tender Entry,66,Net Amount,89100.0,59400.0,history00_snapshot
+Talod,Tender Entry,66,Payable Total Amount,90000.0,60000.0,history00_snapshot
+Talod,Tender Entry,66,Sub Total,90000.0,60000.0,history00_snapshot
+Talod,Tender Entry,66,TDS,900.0,600.0,history00_snapshot
+Talod,Tender Entry,66,Total Deduction,900.0,600.0,history00_snapshot
+Talod,Tender Entry,67,Amount as per Approved Rate,81800.0,122600.0,history00_snapshot
+Talod,Tender Entry,67,Net Amount,80982.0,121374.0,history00_snapshot
+Talod,Tender Entry,67,Payable Total Amount,81800.0,122600.0,history00_snapshot
+Talod,Tender Entry,67,Sub Total,81800.0,122600.0,history00_snapshot
+Talod,Tender Entry,67,TDS,818.0,1226.0,history00_snapshot
+Talod,Tender Entry,67,Total Deduction,818.0,1226.0,history00_snapshot
+Talod,Tender Entry,69,Amount as per Approved Rate,98900.0,115000.0,history00_snapshot
+Talod,Tender Entry,69,Net Amount,97911.0,113850.0,history00_snapshot
+Talod,Tender Entry,69,Payable Total Amount,98900.0,115000.0,history00_snapshot
+Talod,Tender Entry,69,Sub Total,98900.0,115000.0,history00_snapshot
+Talod,Tender Entry,69,TDS,989.0,1150.0,history00_snapshot
+Talod,Tender Entry,69,Total Deduction,989.0,1150.0,history00_snapshot
+Talod,Tender Entry,71,Amount as per Approved Rate,210000.0,144000.0,history00_snapshot
+Talod,Tender Entry,71,Net Amount,207900.0,142560.0,history00_snapshot
+Talod,Tender Entry,71,Payable Total Amount,210000.0,144000.0,history00_snapshot
+Talod,Tender Entry,71,Sub Total,210000.0,144000.0,history00_snapshot
+Talod,Tender Entry,71,TDS,2100.0,1440.0,history00_snapshot
+Talod,Tender Entry,71,Total Deduction,2100.0,1440.0,history00_snapshot
+Vadali,D.Wagers Arrears,1,Amount as per Approved Rate,26420.0,56240.0,history00_snapshot
+Vadali,D.Wagers Arrears,1,Net Amount,26420.0,56240.0,history00_snapshot
+Vadali,D.Wagers Arrears,1,Payable Total Amount,26420.0,56240.0,history00_snapshot
+Vadali,D.Wagers Arrears,1,Sub Total,26420.0,56240.0,history00_snapshot
+Vadali,Tender Entry,93,Amount as per Approved Rate,16800.0,17700.0,history00_snapshot
+Vadali,Tender Entry,93,CGST,0.0,,history00_snapshot
+Vadali,Tender Entry,93,IGST,0.0,,history00_snapshot
+Vadali,Tender Entry,93,Labour Cess,0.0,,history00_snapshot
+Vadali,Tender Entry,93,Net Amount,16632.0,17346.0,history00_snapshot
+Vadali,Tender Entry,93,Payable Total Amount,16800.0,17700.0,history00_snapshot
+Vadali,Tender Entry,93,SGST,0.0,,history00_snapshot
+Vadali,Tender Entry,93,Sub Total,16800.0,17700.0,history00_snapshot
+Vadali,Tender Entry,93,TDS,168.0,354.0,history00_snapshot
+Vadali,Tender Entry,93,Total Deduction,168.0,354.0,history00_snapshot
+Vijaynagar,Tender Entry,58,Amount as per Approved Rate,91012.5,93873.38,history00_snapshot
+Vijaynagar,Tender Entry,58,Net Amount,89193.0,91996.0,history00_snapshot
+Vijaynagar,Tender Entry,58,Payable Total Amount,91013.0,93873.0,history00_snapshot
+Vijaynagar,Tender Entry,58,Sub Total,91012.5,93873.38,history00_snapshot
+Vijaynagar,Tender Entry,58,TDS,1820.0,1877.0,history00_snapshot
+Vijaynagar,Tender Entry,58,Total Deduction,1820.0,1877.0,history00_snapshot
+Vijaynagar,Tender Entry,59,Amount as per Approved Rate,318675.0,328555.5,history00_snapshot
+Vijaynagar,Tender Entry,59,Net Amount,312301.0,321985.0,history00_snapshot
+Vijaynagar,Tender Entry,59,Payable Total Amount,318675.0,328556.0,history00_snapshot
+Vijaynagar,Tender Entry,59,Sub Total,318675.0,328555.5,history00_snapshot
+Vijaynagar,Tender Entry,59,TDS,6374.0,6571.0,history00_snapshot
+Vijaynagar,Tender Entry,59,Total Deduction,6374.0,6571.0,history00_snapshot
+Vijaynagar,Tender Entry,60,Amount as per Approved Rate,30337.5,31291.13,history00_snapshot
+Vijaynagar,Tender Entry,60,Net Amount,29731.0,30665.0,history00_snapshot
+Vijaynagar,Tender Entry,60,Payable Total Amount,30338.0,31291.0,history00_snapshot
+Vijaynagar,Tender Entry,60,Sub Total,30337.5,31291.13,history00_snapshot
+Vijaynagar,Tender Entry,60,TDS,607.0,626.0,history00_snapshot
+Vijaynagar,Tender Entry,60,Total Deduction,607.0,626.0,history00_snapshot
+Vijaynagar,Tender Entry,61,Amount as per Approved Rate,60731.25,62621.63,history00_snapshot
+Vijaynagar,Tender Entry,61,Net Amount,59516.0,61370.0,history00_snapshot
+Vijaynagar,Tender Entry,61,Payable Total Amount,60731.0,62622.0,history00_snapshot
+Vijaynagar,Tender Entry,61,Sub Total,60731.25,62621.63,history00_snapshot
+Vijaynagar,Tender Entry,61,TDS,1215.0,1252.0,history00_snapshot
+Vijaynagar,Tender Entry,61,Total Deduction,1215.0,1252.0,history00_snapshot
+Vijaynagar,Tender Entry,62,Amount as per Approved Rate,45525.0,46936.5,history00_snapshot
+Vijaynagar,Tender Entry,62,Net Amount,44614.0,45998.0,history00_snapshot
+Vijaynagar,Tender Entry,62,Payable Total Amount,45525.0,46937.0,history00_snapshot
+Vijaynagar,Tender Entry,62,Sub Total,45525.0,46936.5,history00_snapshot
+Vijaynagar,Tender Entry,62,TDS,911.0,939.0,history00_snapshot
+Vijaynagar,Tender Entry,62,Total Deduction,911.0,939.0,history00_snapshot
